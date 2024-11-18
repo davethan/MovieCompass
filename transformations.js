@@ -67,22 +67,37 @@ const extractAthinoramaMovieDetails = (html_data) => {
         const timeTables = $(cinema).children('div.grid.schedule-grid');
         timeTables.each((i, timeTable) => {
             const times = $(timeTable).find('span.time').text().trim();
-            schedule[index].cinemaSchedule.push(times);
+            schedule[index].cinemaSchedule.push(splitByHours(times));
         });
     });
 
     return {
         greekTitle,
-        originalTitle,
-        year,
-        duration,
-        summary,
-        directors: drcts,
-        actors,
-        imdbLink,
+        // originalTitle,
+        // year,
+        // duration,
+        // summary,
+        // directors: drcts,
+        // actors,
+        // imdbLink,
         schedule,
     };
 };
+
+const splitByHours = (input) => {
+    // Matches "hh.mm" or "hh.mm/ hh.mm" or "hh.mm /hh.mm"
+    const timePattern = /\b\d{2}\.\d{2}(?:\s*\/\s*\d{2}\.\d{2})?\b/g;
+
+    const parts = input.split(timePattern);
+    const times = input.match(timePattern);
+    if (!times) return [];
+
+    return times.map((time, index) => {
+        let precedingText = parts[index].trim();
+        if (precedingText[0] === ',') precedingText = precedingText.substring(1).trim();
+        return `${precedingText} ${time}`.trim();
+    });
+}
 
 module.exports = {
     extractHrefFromFirstLi,
