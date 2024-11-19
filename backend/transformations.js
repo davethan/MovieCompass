@@ -1,3 +1,4 @@
+const { v4: uuidv4 } = require('uuid');
 const cheerio = require('cheerio');
 
 const extractImdbMovieCode = (html) => {
@@ -10,13 +11,9 @@ const extractDataFromIMDB = (html) => {
     const $ = cheerio.load(html);
     
     const container = $('.sc-9a2a0028-3.bwWOiy');
-    const title = container.find('h1[data-testid="hero__pageTitle"] .hero__primary-text').text().trim();
     const rating = container.find('div[data-testid="hero-rating-bar__aggregate-rating"] span.sc-d541859f-1').text().trim();
 
-    return {
-        title,
-        rating
-    };
+    return rating;
 };
 
 const parseAthinoramaMovies = (html_data) => {
@@ -27,7 +24,8 @@ const parseAthinoramaMovies = (html_data) => {
     container.find('li').each((_, li) => {
         const link = $(li).find('a');
         const url = link.attr('href');
-        athinoramaMovieURLs.push(url);
+        const id = uuidv4();
+        athinoramaMovieURLs.push({url, id});
     });
 
     return athinoramaMovieURLs;
