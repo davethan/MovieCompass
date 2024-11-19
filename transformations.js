@@ -1,6 +1,6 @@
 const cheerio = require('cheerio');
 
-const extractHrefFromFirstLi = (html) => {
+const extractImdbMovieCode = (html) => {
     const regex = /<ul class="ipc-metadata-list[^"]*--dividers-after[^"]*".*?<li.*?<a[^>]*href="([^"]+)"/s;
     const match = regex.exec(html);
     return match ? match[1] : null;
@@ -60,33 +60,35 @@ const extractAthinoramaMovieDetails = (html_data) => {
     });
 
     const cinemas = $('div.guide-list.locations-list').children().children('div.item.card-item');
-    const schedule = [];
+    const theaters = [];
     cinemas.each((index, cinema) => {
         const cinemaTitle = $(cinema).find('h2.item-title').children('a').text().trim();
-        schedule[index] = { cinema: cinemaTitle, cinemaSchedule: [] };
+        const isOutdoor = $(cinema).children().first().children().first().find('div.tags').text().includes('Θερινός') || false;
+        theaters[index] = { cinema: cinemaTitle, isOutdoor, cinemaSchedule: [] };
         const timeTables = $(cinema).children('div.grid.schedule-grid');
         timeTables.each((i, timeTable) => {
             const times = $(timeTable).find('span.time').text().trim();
-            schedule[index].cinemaSchedule.push(splitByHours(times));
+            theaters[index].cinemaSchedule.push(splitByHours(times));
         });
+        theaters[index].cinemaSchedule = theaters[index].cinemaSchedule.flat();
     });
 
     return {
         greekTitle,
-        // originalTitle,
-        // year,
-        // duration,
-        // summary,
-        // directors: drcts,
-        // actors,
-        // imdbLink,
-        schedule,
+        originalTitle,
+        year,
+        duration,
+        summary,
+        directors: drcts,
+        actors,
+        imdbLink,
+        cinemas: theaters,
     };
 };
 
 const splitByHours = (input) => {
-    // Matches "hh.mm" or "hh.mm/ hh.mm" or "hh.mm /hh.mm"
-    const timePattern = /\b\d{2}\.\d{2}(?:\s*\/\s*\d{2}\.\d{2})?\b/g;
+    // Matches "hh.mm" or "hh.mm/ hh.mm" or "hh.mm /hh.mm" or "hh.mm/ hh.mm/ hh.mm/ hh.mm"
+    const timePattern = /\b\d{2}\.\d{2}(?:\s*\/\s*\d{2}\.\d{2})*\b/g;
 
     const parts = input.split(timePattern);
     const times = input.match(timePattern);
@@ -100,7 +102,7 @@ const splitByHours = (input) => {
 }
 
 module.exports = {
-    extractHrefFromFirstLi,
+    extractImdbMovieCode,
     extractDataFromIMDB,
     parseAthinoramaMovies,
     extractAthinoramaMovieDetails,
