@@ -1,7 +1,7 @@
 const express = require('express');
 const axios = require('axios');
 const {
-    extractHrefFromFirstLi,
+    extractImdbMovieCode,
     extractDataFromIMDB,
     parseAthinoramaMovies,
     extractAthinoramaMovieDetails,
@@ -24,9 +24,9 @@ app.get("/", async (req, res) => {
         // const allData = await Promise.allSettled(athinoramaRequests);
         // const resolvedData = allData.map((result) => result.status === "fulfilled" ? result.value : { error: "Failed to fetch data for a movie" });
         //////////////////////
-        const athinoramaDetails = await getAthinoramaMovieDetails(athinoramaCurrentMovieURLs[10]); //10
+        const resolvedData = await getAthinoramaMovieDetails(athinoramaCurrentMovieURLs[21]); //10
         // const rating = await getImdbMovieRating(athinoramaDetails.imdbLink);
-        res.status(200).send(athinoramaDetails);
+        res.status(200).send(resolvedData);
     } catch (error) {
         console.log(error)
         res.status(500).send("Failed");
@@ -37,7 +37,7 @@ app.get("/", async (req, res) => {
 app.get("/imdbMovieDetails", async (req, res) => {
     try {
         const query = 'my dinner with andre';
-        const movieData = await getImdbMovieRating(query);
+        const movieData = await searchImdbMovieRating(query);
         res.status(200).send(movieData);
     } catch {
         res.status(500).send("Failed");
@@ -75,7 +75,7 @@ const searchImdbMovieRating = async (movieTitle) => {
             params: { q: movieTitle },
             headers: headers
         });
-        const imdbMovieCode = extractHrefFromFirstLi(imdbFindQuery.data);
+        const imdbMovieCode = extractImdbMovieCode(imdbFindQuery.data);
         const imdbFindSpecificMovie = await axios.get(`https://www.imdb.com${imdbMovieCode}`, {
             headers: headers
         });
