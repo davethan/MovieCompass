@@ -71,6 +71,14 @@ const extractAthinoramaMovieDetails = (html_data) => {
             theaters[index].cinemaSchedule.push(splitByHours(times));
         });
         theaters[index].cinemaSchedule = theaters[index].cinemaSchedule.flat();
+        //adds ':' after the days if not there.
+        theaters[index].cinemaSchedule = theaters[index].cinemaSchedule.map(str => {
+            if (str.includes(':')) return str;
+            return str.replace(/(\.\s*)(\d)/, '.: $2');
+        });
+    });
+    theaters.forEach((theater) => {
+        theater.cinemaSchedule = parseSchedule(theater.cinemaSchedule);
     });
 
     return {
@@ -99,6 +107,66 @@ const splitByHours = (input) => {
         if (precedingText[0] === ',') precedingText = precedingText.substring(1).trim();
         return `${precedingText} ${time}`.trim();
     });
+};
+
+const getDaysInRange = (start, end) => {
+    const daysOrder = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+    let startIndex = daysOrder.indexOf(start);
+    let endIndex = daysOrder.indexOf(end);
+
+    if (startIndex <= endIndex) {
+        return daysOrder.slice(startIndex, endIndex + 1);
+    } else {
+        // Handle wrap-around for ranges like "Πέμ.-Τρι."
+        return [...daysOrder.slice(startIndex), ...daysOrder.slice(0, endIndex + 1)];
+    }
+};
+
+const parseSchedule = (schedule) => {
+    console.log("schedule", schedule);
+    const daysMap = {
+        "Δευτ.": "Monday",
+        "Τρ.": "Tuesday",
+        "Τετ.": "Wednesday",
+        "Πέμ.": "Thursday",
+        "Παρ.": "Friday",
+        "Σάβ.": "Saturday",
+        "Κυρ.": "Sunday",
+    };
+
+    const weeklySchedule = {
+        Monday: [],
+        Tuesday: [],
+        Wednesday: [],
+        Thursday: [],
+        Friday: [],
+        Saturday: [],
+        Sunday: [],
+    };
+
+    for (const entry of schedule) {
+        const [daysPart, timesPart] = entry.split(":").map(str => str.trim());
+        const times = timesPart.split("/").map(time => time.trim());
+        const daysGroups = daysPart.split(",");
+
+        for (const group of daysGroups) {
+            const [startDay, endDay] = group.includes("-")
+                ? group.split("-").map(day => daysMap[day.trim()])
+                : [daysMap[group.trim()], daysMap[group.trim()]];
+
+            const days = endDay ? getDaysInRange(startDay, endDay) : [startDay];
+            for (const day of days) {
+                weeklySchedule[day].push(...times);
+            }
+        }
+    };
+
+    // Remove duplicates and sort times for each day
+    for (const day in weeklySchedule) {
+        weeklySchedule[day] = [...new Set(weeklySchedule[day])].sort();
+    };
+
+    return weeklySchedule;
 }
 
 module.exports = {

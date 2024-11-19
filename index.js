@@ -17,14 +17,14 @@ app.get("/", async (req, res) => {
             res.status(404).send("Failed to fetch current athinorama movies.");
             return;
         }
-        // let athinoramaRequests = [];
-        // athinoramaCurrentMovieURLs.forEach((movie) => {
-        //     athinoramaRequests.push(getAthinoramaMovieDetails(movie));
-        // });
-        // const allData = await Promise.allSettled(athinoramaRequests);
-        // const resolvedData = allData.map((result) => result.status === "fulfilled" ? result.value : { error: "Failed to fetch data for a movie" });
+        let athinoramaRequests = [];
+        athinoramaCurrentMovieURLs.forEach((movie) => {
+            athinoramaRequests.push(getAthinoramaMovieDetails(movie));
+        });
+        const allData = await Promise.allSettled(athinoramaRequests);
+        const resolvedData = allData.map((result) => result.status === "fulfilled" ? result.value : { error: "Failed to fetch data for a movie" });
         //////////////////////
-        const resolvedData = await getAthinoramaMovieDetails(athinoramaCurrentMovieURLs[21]); //10
+        // const resolvedData = await getAthinoramaMovieDetails(athinoramaCurrentMovieURLs[10]); //10
         // const rating = await getImdbMovieRating(athinoramaDetails.imdbLink);
         res.status(200).send(resolvedData);
     } catch (error) {
