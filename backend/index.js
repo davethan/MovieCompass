@@ -12,21 +12,7 @@ app.use(express.json());
 
 app.get("/", async (req, res) => {
     try {
-        const athinoramaCurrentMovieURLs = await getAthinoramaCurrentMovies();
-        if (!athinoramaCurrentMovieURLs || athinoramaCurrentMovieURLs.length === 0) {
-            res.status(404).send("Failed to fetch current athinorama movies.");
-            return;
-        }
-        let athinoramaRequests = [];
-        athinoramaCurrentMovieURLs.forEach((movie) => {
-            athinoramaRequests.push(getAthinoramaMovieDetails(movie));
-        });
-        const allData = await Promise.allSettled(athinoramaRequests);
-        const resolvedData = allData.map((result) => result.status === "fulfilled" ? result.value : { error: "Failed to fetch data for a movie" });
-        //////////////////////
-        // const resolvedData = await getAthinoramaMovieDetails(athinoramaCurrentMovieURLs[10]); //10
-        // const rating = await getImdbMovieRating(athinoramaDetails.imdbLink);
-        res.status(200).send(resolvedData);
+        res.status(200).send('server responding!');
     } catch (error) {
         console.log(error)
         res.status(500).send("Failed");
@@ -34,12 +20,22 @@ app.get("/", async (req, res) => {
 });
 
 // Fetches the imdb data of a specific film
-app.get("/imdbMovieDetails", async (req, res) => {
+app.post("/imdbMovieRating", async (req, res) => {
     try {
-        const query = 'my dinner with andre';
-        const movieData = await searchImdbMovieRating(query);
-        res.status(200).send(movieData);
+        const rating = await getImdbMovieRating(req.body.imdbLink);
+        res.status(200).send(rating);
     } catch {
+        res.status(500).send("Failed");
+    }
+});
+
+// Fetches the athinorama data of a specific film
+app.post("/athinoramaMovieDetails", async (req, res) => {
+    try {
+        const movieData = await getAthinoramaMovieDetails(req.body.url);
+        res.status(200).send(movieData);
+    } catch (error) {
+        console.log(error);
         res.status(500).send("Failed");
     }
 });
@@ -102,14 +98,11 @@ const getImdbMovieRating = async (movieURL) => {
         const imdbFindSpecificMovie = await axios.get(movieURL, {
             headers: headers
         });
-        const movieData = extractDataFromIMDB(imdbFindSpecificMovie.data);
-        return movieData;
+        const rating = extractDataFromIMDB(imdbFindSpecificMovie.data);
+        return rating;
     } catch (error) {
-        console.error('Error fetching IMDB data:', movieTitle);
-        return {
-            title: movieTitle,
-            rating: '',
-        };
+        console.error('Error fetching IMDB data', error);
+        return '';
     }
 };
 
@@ -119,6 +112,7 @@ const getAthinoramaMovieDetails = async (movie) => {
         return extractAthinoramaMovieDetails(response.data);
     } catch (error) {
         console.log(`Failed to fetch ${movie} details`);
+        throw (error);
     }
 };
 
