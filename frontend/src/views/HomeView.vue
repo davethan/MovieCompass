@@ -1,7 +1,7 @@
 <template>
   <main>
-    <div class="container">
-      <div class="movieCard" v-for="movie in state" :key="movie.id">
+    <div class="d-flex flex-column gap-3">
+      <div class="card" v-for="movie in state" :key="movie.id">
         <h2>{{ movie.greekTitle }}</h2>
         <div>{{ movie.duration }}</div>
         <div>{{ movie.imdbRating }}</div>
@@ -23,17 +23,3 @@ onMounted(async () => {
   // if (!response) state.value = moviesStore.ATHINORAMA_URLS;
 })
 </script>
-
-<style scoped>
-.movieCard {
-  border: 1px;
-  padding: 1rem;
-  border-style: solid;
-}
-
-.container {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-</style>
