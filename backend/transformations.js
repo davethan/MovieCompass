@@ -123,7 +123,6 @@ const getDaysInRange = (start, end) => {
 };
 
 const parseSchedule = (schedule) => {
-    console.log("schedule", schedule);
     const daysMap = {
         "Δευτ.": "Monday",
         "Τρ.": "Tuesday",
