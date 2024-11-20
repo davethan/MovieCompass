@@ -19,20 +19,20 @@
       <div class="card-body">
         <div class="d-flex gap-3">
           <div>
-            Από: <template v-for="(director, index) in movie.directors">
+            Σκηνοθεσία: <template v-for="(director, index) in movie.directors">
               {{ director }}<span :key="index" v-if="index < movie.directors.length - 1">, </span>
             </template>
           </div>
         </div>
+        <div class="my-4">
+          {{ movie.summary }}
+        </div>
         <div class="d-flex gap-3">
           <div v-if="movie.actors.length">
-            Με τους: <template v-for="(actor, index) in movie.actors">
+            Παίζουν: <template v-for="(actor, index) in movie.actors">
               {{ actor }}<span :key="index" v-if="index < movie.actors.length - 1">, </span>
             </template>
           </div>
-        </div>
-        <div class="mt-4">
-          {{ movie.summary }}
         </div>
       </div>
     </div>
