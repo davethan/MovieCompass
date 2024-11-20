@@ -1,14 +1,19 @@
 <template>
-  <main>
-    <div class="d-flex flex-column gap-3">
-      <div class="card" v-for="movie in state" :key="movie.id">
+  <div v-if="loading">
+    <div class="spinner-border" role="status" />
+  </div>
+  <div v-else class="d-flex flex-column gap-3">
+    <div class="card bg-dark text-light" v-for="movie in state" :key="movie.id">
+      <div class="card-header">
         <h2>{{ movie.greekTitle }}</h2>
+      </div>
+      <div class="card-body">
         <div>{{ movie.duration }}</div>
         <div>{{ movie.imdbRating }}</div>
         <div>{{ movie.summary }}</div>
       </div>
     </div>
-  </main>
+  </div>
 </template>
 
 <script setup>
@@ -17,9 +22,11 @@ import { useMoviesStore } from '@/stores/movies';
 
 const moviesStore = useMoviesStore();
 const state = ref(moviesStore.MOVIES);
+const loading = ref(false);
 
 onMounted(async () => {
-  // const response = await moviesStore.getAllCurrentMoviesDetails();
-  // if (!response) state.value = moviesStore.ATHINORAMA_URLS;
+  loading.value = true;
+  //await moviesStore.getAllCurrentMoviesDetails();
+  // loading.value = false;
 })
 </script>

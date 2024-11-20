@@ -1,9 +1,15 @@
 @import './base.css';
+/* @import 'bootstrap/scss/bootstrap'; */
 
-#app {
+/* :root {
+  --bs-card-bg: var(--color-background-soft);
+  --bs-card-color: var(--color-text);
+  --bs-card-border-color: var(--color-border);
+} */
+
+.appBody {
   max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+  margin: 1rem auto;
   font-weight: normal;
 }
 
