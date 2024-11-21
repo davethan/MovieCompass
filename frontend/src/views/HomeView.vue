@@ -1,11 +1,12 @@
 <template>
   <div class="d-flex flex-column gap-3">
-    <div class="d-flex gap-2 align-items-center">
+    <div class="d-flex gap-2 align-items-center flex-wrap">
       <button :class="`btn btn-outline-light ${sortedBy === 1 ? 'text-primary' : ''}`"
         @click="sortByPopularity()">Popularity</button>
       <button :class="`btn btn-outline-light ${sortedBy === 2 ? 'text-primary' : ''}`"
         @click="sortByRating()">Rating</button>
       <button class="btn btn-outline-light" @click="filterByToday()">Today</button>
+      <button class="btn btn-outline-light" @click="resetDayFilter()">reset Day filter</button>
       {{ state.length }}/{{ moviesStore.MOVIES.length }}
     </div>
     <div class="card bg-dark text-light" v-for="movie in state" :key="movie.id">
@@ -67,7 +68,7 @@ const formatDuration = (minutes) => {
 
 const sortByPopularity = () => {
   sortedBy.value = 1;
-  state.value = moviesStore.MOVIES.sort((a, b) => {
+  state.value = state.value.sort((a, b) => {
     if (a.cinemas.length !== b.cinemas.length) {
       return b.cinemas.length - a.cinemas.length;
     }
@@ -86,7 +87,7 @@ const sortByPopularity = () => {
 
 const sortByRating = () => {
   sortedBy.value = 2;
-  state.value = moviesStore.MOVIES.sort((a, b) => {
+  state.value = state.value.sort((a, b) => {
     if (a.imdbRating && b.imdbRating) {
       if (b.imdbRating !== a.imdbRating) {
         return b.imdbRating - a.imdbRating;
@@ -105,16 +106,20 @@ const sortByRating = () => {
 const filterByToday = () => {
   const date = new Date();
   const today = date.toLocaleDateString('en-US', { weekday: 'long' });
-  state.value = moviesStore.MOVIES.filter((film) => {
+  state.value = state.value.filter((film) => {
     return film.cinemas.some((cinema) => {
       return cinema.cinemaSchedule[today] && cinema.cinemaSchedule[today].length > 0;
     });
   });
 };
 
+const resetDayFilter = () => {
+  state.value = moviesStore.MOVIES
+}
+
 const filterBySelectedDays = (days) => {
   days = ['Wednesday', 'Monday']
-  state.value = moviesStore.MOVIES.filter((film) => {
+  state.value = state.value.filter((film) => {
     return film.cinemas.some((cinema) => {
       return days.some((day) => {
         return cinema.cinemaSchedule[day] && cinema.cinemaSchedule[day].length > 0;
@@ -123,5 +128,8 @@ const filterBySelectedDays = (days) => {
   });
 };
 
-onMounted(() => sortByPopularity());
+onMounted(() => {
+  state.value = moviesStore.MOVIES;
+  sortByPopularity()
+});
 </script>
