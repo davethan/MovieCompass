@@ -57,23 +57,31 @@ const extractAthinoramaMovieDetails = (html_data) => {
         actors.push(actor);
     });
 
-    const cinemas = $('div.guide-list.locations-list').children().children('div.item.card-item');
+    const locationsAndCinemas = $('div.guide-list.locations-list').children().children();
     const theaters = [];
-    cinemas.each((index, cinema) => {
-        const cinemaTitle = $(cinema).find('h2.item-title').children('a').text().trim();
-        const isOutdoor = $(cinema).children().first().children().first().find('div.tags').text().includes('Θερινός') || false;
-        theaters[index] = { cinema: cinemaTitle, isOutdoor, cinemaSchedule: [] };
-        const timeTables = $(cinema).children('div.grid.schedule-grid');
-        timeTables.each((i, timeTable) => {
-            const times = $(timeTable).find('span.time').text().trim();
-            theaters[index].cinemaSchedule.push(splitByHours(times));
-        });
-        theaters[index].cinemaSchedule = theaters[index].cinemaSchedule.flat();
-        //adds ':' after the days if not there.
-        theaters[index].cinemaSchedule = theaters[index].cinemaSchedule.map(str => {
-            if (str.includes(':')) return str;
-            return str.replace(/(\.\s*)(\d)/, '.: $2');
-        });
+    let location = '';
+    let counter = 0;
+    locationsAndCinemas.each((index, locationOrCinema) => {
+        const isLocation = $(locationOrCinema).hasClass('sticky-breaker-title');
+        if (isLocation) location = $(locationOrCinema).children().text().trim();
+        else {
+            const cinemaLocation = location;
+            const cinemaTitle = $(locationOrCinema).find('h2.item-title').children('a').text().trim();
+            const isOutdoor = $(locationOrCinema).children().first().children().first().find('div.tags').text().includes('Θερινός') || false;
+            theaters[counter] = { cinema: cinemaTitle, cinemaLocation, isOutdoor, cinemaSchedule: [] };
+            const timeTables = $(locationOrCinema).children('div.grid.schedule-grid');
+            timeTables.each((i, timeTable) => {
+                const times = $(timeTable).find('span.time').text().trim();
+                theaters[counter].cinemaSchedule.push(splitByHours(times));
+            });
+            theaters[counter].cinemaSchedule = theaters[counter].cinemaSchedule.flat();
+            //adds ':' after the days if not there.
+            theaters[counter].cinemaSchedule = theaters[counter].cinemaSchedule.map(str => {
+                if (str.includes(':')) return str;
+                return str.replace(/(\.\s*)(\d)/, '.: $2');
+            });
+            counter++;
+        }
     });
     theaters.forEach((theater) => {
         theater.cinemaSchedule = parseSchedule(theater.cinemaSchedule);

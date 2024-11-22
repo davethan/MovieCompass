@@ -19,6 +19,7 @@ import { useMoviesStore } from './stores/movies';
 const moviesStore = useMoviesStore();
 
 onMounted(async () => {
-  // await moviesStore.getAllCurrentMoviesDetails();
+  await moviesStore.getAllCurrentMoviesDetails();
+  moviesStore.getAllImdbRatings();
 })
 </script>

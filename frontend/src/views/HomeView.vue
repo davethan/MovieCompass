@@ -3,8 +3,11 @@
     <div class="d-flex gap-2 align-items-center flex-wrap">
       <button :class="`btn btn-outline-light ${sortedBy === 1 ? 'text-primary' : ''}`"
         @click="sortByPopularity()">Popularity</button>
-      <button :class="`btn btn-outline-light ${sortedBy === 2 ? 'text-primary' : ''}`"
+      <button v-if="!moviesStore.loadingRating" :class="`btn btn-outline-light ${sortedBy === 2 ? 'text-primary' : ''}`"
         @click="sortByRating()">Rating</button>
+      <div v-else class="btn btn-outline-light placeholder-glow" disabled>
+        <span class="placeholder col-6"></span>
+      </div>
       <button class="btn btn-outline-light" @click="filterByToday()">Today</button>
       <button class="btn btn-outline-light" @click="resetDayFilter()">reset Day filter</button>
       {{ state.length }}/{{ moviesStore.MOVIES.length }}
@@ -14,11 +17,13 @@
         <h1>{{ movie.greekTitle }}</h1>
         <div class="d-flex justify-content-between flex-wrap column-gap-3">
           <div>{{ movie.originalTitle }} </div>
-          <div class="d-flex justify-content-end gap-3">
+          <div class="d-flex justify-content-end gap-3 align-items-center">
             <div>Σε {{ movie.cinemas.length }} σινεμά</div>
             <div> {{ formatDuration(movie.duration) }} </div>
             <div>{{ movie.year }} </div>
-            <div>{{ movie.imdbRating ? `${movie.imdbRating}/10` : '' }} </div>
+            <div v-if="movie.imdbRating">{{ `${movie.imdbRating}/10` }} </div>
+            <div v-else class="rating-placeholder placeholder-glow"> <span class="placeholder rounded-3 col-12"></span>
+            </div>
           </div>
         </div>
       </div>
@@ -133,3 +138,10 @@ onMounted(() => {
   sortByPopularity()
 });
 </script>
+
+<style scoped>
+.rating-placeholder {
+  height: 1.7rem;
+  width: 30px;
+}
+</style>
