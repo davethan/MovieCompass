@@ -142,6 +142,6 @@ onMounted(() => {
 <style scoped>
 .rating-placeholder {
   height: 1.7rem;
-  width: 30px;
+  width: 40px;
 }
 </style>
