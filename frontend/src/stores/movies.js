@@ -32,7 +32,7 @@ const actions = {
   async getMovieImdbRatingAction(payload) {
     const { imdbLink, id } = payload;
     if (!imdbLink) {
-      this.setAthinoramaMovieRatingAction(id, 'Δεν βρέθηκε');
+      this.setAthinoramaMovieRatingAction(id, 'None');
       return true;
     }
     try {
@@ -81,7 +81,7 @@ const actions = {
     }
   },
   setAthinoramaUrlsAction(payload) {
-    this.ATHINORAMA_URLS = [...payload].slice(0, 20);
+    this.ATHINORAMA_URLS = [...payload]//.slice(0, 3);
   },
   setAthinoramaMovieDetailsAction(payload) {
     this.MOVIES.push(payload)
