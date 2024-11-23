@@ -9,11 +9,12 @@
         <span class="placeholder col-6"></span>
       </div>
       <button class="btn btn-outline-light" @click="filterByToday()">Today</button>
-      <button class="btn btn-outline-light" @click="resetDayFilter()">reset Day filter</button>
+      <button class="btn btn-outline-light" @click="resetDayFilter()">Reset Today</button>
+      <button class="btn btn-outline-light" @click="resetDayFilter()">Filter by location</button>
       {{ state.length }}/{{ moviesStore.MOVIES.length }}
     </div>
-    <div class="card bg-dark text-light" v-for="movie in state" :key="movie.id">
-      <div class="card-header">
+    <div class="card border-0" v-for="movie in state" :key="movie.id">
+      <div class="card-header border-0">
         <h1>{{ movie.greekTitle }}</h1>
         <div class="d-flex justify-content-between flex-wrap column-gap-3">
           <div>{{ movie.originalTitle }} </div>
