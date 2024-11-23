@@ -1,20 +1,18 @@
 <template>
-  <div class="offcanvas offcanvas-start bg-dark text-light" tabindex="-1" id="offcanvasExample"
-    aria-labelledby="offcanvasExampleLabel">
+  <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
     <div class="offcanvas-header">
-      <h5 class="offcanvas-title" id="offcanvasExampleLabel">Offcanvas</h5>
-      <button type="button" class="btn-close btn-close-white text-reset" data-bs-dismiss="offcanvas"
-        aria-label="Close"></button>
+      <button type="button" class="mx-0 py-0 btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      <h5 class="ms-auto offcanvas-title" id="offcanvasExampleLabel">MovieCompass</h5>
     </div>
     <div class="offcanvas-body">
       <div class="list-group">
-        <div class="list-group-item bg-dark text-light">
+        <div class="list-group-item">
           Search
         </div>
-        <div class="list-group-item bg-dark text-light">
+        <div class="list-group-item">
           Sort by
         </div>
-        <div class="list-group-item bg-dark text-light">
+        <div class="list-group-item">
           Choose by day
         </div>
       </div>

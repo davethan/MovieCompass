@@ -1,10 +1,12 @@
 <template>
-  <LoadingView v-if="moviesStore.loading" />
-  <div v-else>
-    <TheHeader />
-    <!-- <RouterLink to="/">Home</RouterLink> -->
-    <div class="appBody">
-      <RouterView />
+  <div data-bs-theme="dark">
+    <LoadingView v-if="moviesStore.loading" />
+    <div v-else>
+      <TheHeader />
+      <!-- <RouterLink to="/">Home</RouterLink> -->
+      <div class="appBody">
+        <RouterView />
+      </div>
     </div>
   </div>
 </template>

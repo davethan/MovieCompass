@@ -1,5 +1,7 @@
-$primary: #8193ff; 
-$secondary: #82ff92; 
+$theme-colors: (
+  "primary": #BB86FC,
+  "secondary": #03DAC6,
+);
 
 @import 'bootstrap/scss/bootstrap';
 
@@ -9,8 +11,8 @@ $secondary: #82ff92;
   --vt-c-white-mute: #f2f2f2;
 
   --vt-c-black: #121212;
-  --vt-c-black-soft: #222222;
-  --vt-c-black-mute: #282828;
+  --vt-c-black-soft: #2c2c2c;
+  --vt-c-black-mute: #1F1F1F;
 
   --vt-c-indigo: #2c3e50;
 
@@ -34,6 +36,12 @@ $secondary: #82ff92;
   --color-border-hover: var(--vt-c-divider-dark-1);
   --color-heading: var(--vt-c-text-dark-1);
   --color-text: var(--vt-c-text-dark-2);
+}
+
+[data-bs-theme=dark] {
+  --bs-body-bg: var(--color-background-mute);
+  --bs-body-color: var(--color-text);
+  --bs-card-cap-bg: var(--color-background-mute)
 }
 
 *,
