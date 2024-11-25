@@ -1,6 +1,9 @@
 <template>
   <div class="d-flex flex-column gap-3">
-    <div class="card border-0" v-for="movie in state" :key="movie.id">
+    <div class="text-center mt-5" v-if="!state.length">
+      Δεν βρέθηκαν ταινίες με αυτά τα κριτήρια.
+    </div>
+    <div class="card border-0" v-for="movie in state" :key="movie.id" @click="goToMoviePage(movie.id)">
       <div class="card-header border-0">
         <h2 class="text-primary">{{ movie.greekTitle }}</h2>
         <div class="d-flex justify-content-between flex-wrap column-gap-3">
@@ -41,24 +44,14 @@
 </template>
 
 <script setup>
+import { useRouter } from 'vue-router';
 import { onMounted, inject } from 'vue';
+import { formatDuration } from '@/tools/tools';
 // import { useMoviesStore } from '@/stores/movies';
 
 // const moviesStore = useMoviesStore();
+const router = useRouter();
 const state = inject("state");
-
-const formatDuration = (minutes) => {
-  const hours = Math.floor(minutes / 60);
-  const restMinutes = minutes % 60;
-
-  if (hours === 0) {
-    return `${restMinutes}'`;
-  } else if (restMinutes === 0) {
-    return `${hours}h`;
-  } else {
-    return `${hours}h ${restMinutes}'`;
-  }
-};
 
 const sortByPopularity = () => {
   state.value = state.value.sort((a, b) => {
@@ -76,6 +69,10 @@ const sortByPopularity = () => {
     }
     return 0;
   });
+};
+
+const goToMoviePage = (id) => {
+  router.push({ name: 'IndividualMovie', params: { filmId: id } });
 };
 
 onMounted(() => {

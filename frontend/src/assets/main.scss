@@ -3,8 +3,6 @@ $theme-colors: (
   "secondary": #03DAC6,
 );
 
-@import 'bootstrap/scss/bootstrap';
-
 :root {
   --vt-c-white: #ffffff;
   --vt-c-white-soft: #f8f8f8;
@@ -43,6 +41,8 @@ $theme-colors: (
   --bs-body-color: var(--color-text);
   --bs-card-cap-bg: var(--color-background-mute)
 }
+
+@import 'bootstrap/scss/bootstrap';
 
 *,
 *::before,

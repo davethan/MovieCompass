@@ -81,7 +81,7 @@ const actions = {
     }
   },
   setAthinoramaUrlsAction(payload) {
-    this.ATHINORAMA_URLS = [...payload]//.slice(0, 3);
+    this.ATHINORAMA_URLS = [...payload].slice(0, 3);
   },
   setAthinoramaMovieDetailsAction(payload) {
     this.MOVIES.push(payload)
@@ -100,7 +100,7 @@ const actions = {
 };
 
 const getters = {
-
+  getIndividualMovie: (state) => (movieId) => state.MOVIES.find((film) => film.id === movieId)
 };
 
 export const useMoviesStore = defineStore('movies', {
