@@ -20,15 +20,19 @@
             <span class="placeholder h-100 rounded-2 col-12"></span>
           </div>
         </div>
-        <div class="col-4">
+        <div class="col-3">
           <button :class="`btn w-100 ${filteredByDay === EVERY_DAY ? 'btn-primary' : 'btn-outline-primary'}`"
             @click="resetDayFilter()">Κάθε μέρα</button>
         </div>
-        <div class="col-4">
+        <div class="col-3">
           <button :class="`btn w-100 ${filteredByDay === TODAY ? 'btn-primary' : 'btn-outline-primary'}`"
             @click="filterByToday()">Σήμερα</button>
         </div>
-        <div class="col-4">
+        <div class="col-3">
+          <button :class="`btn w-100 ${filteredByDay === TOMORROW ? 'btn-primary' : 'btn-outline-primary'}`"
+            @click="filterByTomorrow()">Αύριο</button>
+        </div>
+        <div class="col-3">
           <button :class="`btn w-100 ${filteredByDay === WEEKEND ? 'btn-primary' : 'btn-outline-primary'}`"
             @click="filterByWeekend()">Το ΣΚ</button>
         </div>
@@ -59,7 +63,7 @@ import { useMoviesStore } from '@/stores/movies';
 const moviesStore = useMoviesStore();
 const state = inject("state");
 
-const EVERY_DAY = 1, TODAY = 2, WEEKEND = 3;
+const EVERY_DAY = 1, TODAY = 2, TOMORROW = 3, WEEKEND = 4;
 const ALL_CINEMAS = 1, SUMMER_CINEMAS = 2, WINTER_CINEMAS = 3;
 const POPULARITY = 1, RATING = 2;
 
@@ -105,6 +109,17 @@ const sortByRating = () => {
 };
 
 const filterByToday = () => {
+  filteredByDay.value = TODAY;
+  const date = new Date();
+  const today = date.toLocaleDateString('en-US', { weekday: 'long' });
+  state.value = state.value.filter((film) => {
+    return film.cinemas.some((cinema) => {
+      return cinema.cinemaSchedule[today] && cinema.cinemaSchedule[today].length > 0;
+    });
+  });
+};
+
+const filterByTomorrow = () => {
   filteredByDay.value = TODAY;
   const date = new Date();
   const today = date.toLocaleDateString('en-US', { weekday: 'long' });
