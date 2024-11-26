@@ -1,9 +1,18 @@
 <template>
   <div class="d-flex flex-column flex-lg-row gap-3 flex-wrap">
-    <div class="text-center mt-5" v-if="!state.length">
-      Δεν βρέθηκαν ταινίες με αυτά τα κριτήρια.
+    <div v-if="!state.length" class="text-center">
+      <div class="card border-0 film-item">
+        <div class="card-header">
+          <h2>Ουψ!</h2>
+        </div>
+        <div class="card-body">
+          <div class="my-2">
+            Δεν βρέθηκε κάποια ταινία με αυτά τα κριτήρια. Δοκιμάστε να αφαιρέσετε κάποια απ' αυτά.
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="card border-0 film-item" v-for="movie in state" :key="movie.id" @click="goToMoviePage(movie.id)">
+    <div v-else class="card border-0 film-item" v-for="movie in state" :key="movie.id" @click="goToMoviePage(movie.id)">
       <div class="card-header">
         <h2 class="text-primary">{{ movie.greekTitle }}</h2>
         <div class="d-flex justify-content-between flex-wrap column-gap-3">
@@ -23,7 +32,7 @@
       <div class="card-body">
         <div class="d-flex gap-3">
           <div>
-            Σκηνοθεσία: <template v-for="(director, index) in movie.directors">
+            <b>Σκηνοθεσία:</b> <template v-for="(director, index) in movie.directors">
               {{ director }}<span :key="index" v-if="index < movie.directors.length - 1">, </span>
             </template>
           </div>
@@ -33,7 +42,7 @@
         </div>
         <div class="d-flex gap-3">
           <div v-if="movie.actors.length">
-            Παίζουν: <template v-for="(actor, index) in movie.actors">
+            <b>Παίζουν:</b> <template v-for="(actor, index) in movie.actors">
               {{ actor }}<span :key="index" v-if="index < movie.actors.length - 1">, </span>
             </template>
           </div>
