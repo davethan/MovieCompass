@@ -4,7 +4,7 @@
       <i v-if="route.name === 'home'" class="bi bi-list fs-1 cursor-pointer" data-bs-toggle="offcanvas"
         data-bs-target="#offcanvasExample" />
       <i v-else class="bi bi-arrow-left fs-1 cursor-pointer" @click="router.back" />
-      <div>Movie Compass </div>
+      <h2 class="m-0">Athens Cinemas</h2>
     </div>
     <div class="ml-auto">{{ state.length }}/{{ moviesStore.MOVIES.length }}</div>
   </div>

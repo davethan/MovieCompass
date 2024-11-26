@@ -20,7 +20,7 @@
       <div class="card-body">
         <div class="d-flex gap-3">
           <div>
-            Σκηνοθεσία: <template v-for="(director, index) in state.directors">
+            <b>Σκηνοθεσία:</b><template v-for="(director, index) in state.directors">
               {{ director }}<span :key="index" v-if="index < state.directors.length - 1">, </span>
             </template>
           </div>
@@ -30,16 +30,21 @@
         </div>
         <div class="d-flex gap-3">
           <div v-if="state.actors.length">
-            Παίζουν: <template v-for="(actor, index) in state.actors">
+            <b>Παίζουν:</b> <template v-for="(actor, index) in state.actors">
               {{ actor }}<span :key="index" v-if="index < state.actors.length - 1">, </span>
             </template>
           </div>
         </div>
-        <!-- <div class="">
-          <svg width="10" height="10">
-            <use xlink:href="../../public/imdbIcon.svg" />
-          </svg>
-        </div> -->
+        <div class="d-flex justify-content-end align-items-end gap-2">
+          <a :href="athinoramaUrl" target="_blank" rel="noopener noreferrer">
+            <img src="@/assets/images/athinorama.jpg" alt="Athinorama" width="30" height="30" class="cursor-pointer" />
+          </a>
+          <a :href="state.imdbLink" target="_blank" rel="noopener noreferrer">
+            <svg class="cursor-pointer" width="40" height="40">
+              <use xlink:href="@/assets/images/imdbIcon.svg#imdbIcon" />
+            </svg>
+          </a>
+        </div>
       </div>
     </div>
     <div class="mt-3 mb-3 text-center">
@@ -114,6 +119,12 @@ const uniqueCinemaLocations = computed(() => {
 const filteredCinemas = computed(() => {
   if (filteredByLocation.value === 'ΟΛΑ') return state.value.cinemas;
   else return state.value.cinemas.filter(cinema => cinema.cinemaLocation === filteredByLocation.value);
+})
+
+const athinoramaUrl = computed(() => {
+  let url = movieStore.ATHINORAMA_URLS.find((url) => url.id === state.value.id).url;
+  url = `https://www.athinorama.gr${url}`;
+  return url;
 })
 
 const dayNameMapping = {

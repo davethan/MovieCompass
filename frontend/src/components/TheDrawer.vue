@@ -3,7 +3,7 @@
     <div class="offcanvas-header">
       <button type="button" class="mx-0 py-0 btn-close" data-bs-dismiss="offcanvas" aria-label="Close"
         @click="handleClose"></button>
-      <h5 class="ms-auto offcanvas-title" id="offcanvasExampleLabel">Εργαλεία</h5>
+      <h5 class="ms-auto offcanvas-title" id="offcanvasExampleLabel"><b>Athens Cinemas</b></h5>
     </div>
     <div class="offcanvas-body">
       <div class="row g-2">
