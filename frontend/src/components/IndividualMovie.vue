@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="card border-0 mb-1">
-      <div class="card-header border-0">
+      <div class="card-header">
         <h2 class="text-primary">{{ state.greekTitle }}</h2>
         <div class="d-flex justify-content-between flex-wrap column-gap-3">
           <div>{{ state.originalTitle }} </div>
@@ -35,20 +35,50 @@
             </template>
           </div>
         </div>
+        <!-- <div class="">
+          <svg width="10" height="10">
+            <use xlink:href="../../public/imdbIcon.svg" />
+          </svg>
+        </div> -->
       </div>
     </div>
-    <div class="card border-0">
-      <div class="card-header border-0">
-        Πρόγραμμα
+    <div class="mt-3 mb-3 text-center">
+      <div class="d-flex justify-content-center flex-wrap gap-2">
+        <div>
+          <button :class="`btn ${filteredByLocation === 'ΟΛΑ' ? ' btn-secondary' : 'btn-outline-secondary'}`"
+            @click="filteredByLocation = 'ΟΛΑ'">
+            ΟΛΑ
+          </button>
+        </div>
+        <div v-for="(uniqueLocation, i) in uniqueCinemaLocations" :key="i">
+          <button
+            :class="`btn flex-item110 ${filteredByLocation === uniqueLocation ? ' btn-secondary' : 'btn-outline-secondary'}`"
+            @click="filteredByLocation = uniqueLocation">
+            {{ uniqueLocation }}
+          </button>
+        </div>
       </div>
-      <div class="card-body">
-        <div class="mb-3" v-for="(cinema, i) in state.cinemas" :key="i">
-          <div>{{ cinema.cinema }}</div>
-          <div>{{ cinema.cinemaLocation }}</div>
-          <div>{{ cinema.isOutdoor }}</div>
-          <div v-for="[dayName, hours] in Object.entries(cinema.cinemaSchedule)" :key="dayName">
-            <div>{{ `${dayName}: ${hours.join(', ') || ''}` }}</div>
+    </div>
+    <div class="d-flex flex-column justify-content-center flex-md-row gap-3 flex-wrap">
+      <div v-for="(cinema, i) in filteredCinemas" :key="i" class="card border-0 cinema-item">
+        <div class="card-header">
+          <h2>{{ cinema.cinema }}</h2>
+          <div class="d-flex justify-content-between flex-wrap ">
+            <div>{{ cinema.cinemaLocation }}</div>
+            <div v-if="cinema.isOutdoor"><i class="bi bi-brightness-high-fill is-outdoor" /></div>
           </div>
+        </div>
+        <div class="card-body">
+          <template v-for="[dayName, hours] in Object.entries(cinema.cinemaSchedule)">
+            <div v-if="hours.length" class="row my-2" :key="dayName">
+              <div class="col-5 text-truncate">
+                {{ mapDayName(dayName) }}
+              </div>
+              <div class="col-7">
+                {{ `${hours.join(' ') || ''}` }}
+              </div>
+            </div>
+          </template>
         </div>
       </div>
     </div>
@@ -56,7 +86,7 @@
 </template>
 
 <script setup>
-import { ref, defineProps, onBeforeMount } from 'vue';
+import { ref, defineProps, onBeforeMount, computed } from 'vue';
 import { formatDuration } from '@/tools/tools';
 import { useMoviesStore } from '@/stores/movies';
 
@@ -69,9 +99,33 @@ const props = defineProps({
 
 const movieStore = useMoviesStore();
 const state = ref('');
+const filteredByLocation = ref('ΟΛΑ');
+
+const uniqueCinemaLocations = computed(() => {
+  const cinemaLocations = state.value.cinemas.map((cinema) => cinema.cinemaLocation);
+  return [...new Set(cinemaLocations)];
+});
+
+const filteredCinemas = computed(() => {
+  if (filteredByLocation.value === 'ΟΛΑ') return state.value.cinemas;
+  else return state.value.cinemas.filter(cinema => cinema.cinemaLocation === filteredByLocation.value);
+})
+
+const dayNameMapping = {
+  Monday: 'Δευτέρα',
+  Tuesday: 'Τρίτη',
+  Wednesday: 'Τετάρτη',
+  Thursday: 'Πέμπτη',
+  Friday: 'Παρασκευή',
+  Saturday: 'Σάββατο',
+  Sunday: 'Κυριακή'
+};
+
+const mapDayName = (dayName) => {
+  return dayNameMapping[dayName] || dayName;
+};
 
 onBeforeMount(() => {
-  state.value = movieStore.getIndividualMovie(props.filmId)
+  state.value = movieStore.getIndividualMovie(props.filmId);
 });
 </script>
-
