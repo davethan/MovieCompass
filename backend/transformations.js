@@ -12,8 +12,9 @@ const extractDataFromIMDB = (html) => {
     
     const container = $('.sc-9a2a0028-3.bwWOiy');
     const rating = container.find('div[data-testid="hero-rating-bar__aggregate-rating"] span.sc-d541859f-1').text().trim();
+    const popularity = container.find('div[data-testid="hero-rating-bar__aggregate-rating"] div.sc-d541859f-3.dwhNqC').text().trim();
 
-    return rating;
+    return {rating, popularity};
 };
 
 const parseAthinoramaMovies = (html_data) => {
@@ -148,30 +149,32 @@ const parseSchedule = (schedule) => {
         Saturday: [],
         Sunday: [],
     };
+    try {
+        for (const entry of schedule) {
+            const [daysPart, timesPart] = entry.split(":").map(str => str.trim());
+            const times = timesPart.split("/").map(time => time.trim());
+            const daysGroups = daysPart.split(",");
 
-    for (const entry of schedule) {
-        const [daysPart, timesPart] = entry.split(":").map(str => str.trim());
-        const times = timesPart.split("/").map(time => time.trim());
-        const daysGroups = daysPart.split(",");
-
-        for (const group of daysGroups) {
-            const [startDay, endDay] = group.includes("-")
-                ? group.split("-").map(day => daysMap[day.trim()])
-                : [daysMap[group.trim()], daysMap[group.trim()]];
-
-            const days = endDay ? getDaysInRange(startDay, endDay) : [startDay];
-            for (const day of days) {
-                weeklySchedule[day].push(...times);
+            for (const group of daysGroups) {
+                const [startDay, endDay] = group.includes("-")
+                    ? group.split("-").map(day => daysMap[day.trim()])
+                    : [daysMap[group.trim()], daysMap[group.trim()]];
+                
+                const days = endDay ? getDaysInRange(startDay, endDay) : [startDay];
+                for (const day of days) {
+                    weeklySchedule[day].push(...times);
+                }
             }
-        }
-    };
+        };
 
-    // Remove duplicates and sort times for each day
-    for (const day in weeklySchedule) {
-        weeklySchedule[day] = [...new Set(weeklySchedule[day])].sort();
-    };
-
-    return weeklySchedule;
+        // Remove duplicates and sort times for each day
+        for (const day in weeklySchedule) {
+            weeklySchedule[day] = [...new Set(weeklySchedule[day])].sort();
+        };
+        return weeklySchedule;
+    } catch {
+        return [];
+    }
 }
 
 module.exports = {

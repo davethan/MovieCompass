@@ -29,19 +29,17 @@ const actions = {
       return false;
     }
   },
-  async getMovieImdbRatingAction(payload) {
+  async getMovieImdbDataAction(payload) {
     const { imdbLink, id } = payload;
-    if (!imdbLink) {
-      this.setAthinoramaMovieRatingAction(id, 'None');
-      return true;
-    }
     try {
+      if (!imdbLink) throw new Error(`No link found for ${imdbLink}`);
       const response = await axios.post('http://localhost:5000/imdbMovieRating', { imdbLink });
-      this.setAthinoramaMovieRatingAction(id, response.data);
+      this.setAthinoramaMovieImdbDataAction(id, response.data);
       return true;
     }
     catch (error) {
       console.log(error)
+      this.setAthinoramaMovieImdbDataAction(id, 'None');
       return false;
     }
   },
@@ -55,8 +53,7 @@ const actions = {
         requests.push(this.getMovieAthinoramaInfoAction(athUrl));
       });
       //all settled...
-      response = await Promise.all(requests);
-      if (!response) throw(false)
+      await Promise.allSettled(requests);
       this.setLoadingAction(false);
       return true;
     } catch (error) {
@@ -69,12 +66,11 @@ const actions = {
     try {
       const requests = [];
       this.MOVIES.forEach((film) => {
-        requests.push(this.getMovieImdbRatingAction(film));
+        requests.push(this.getMovieImdbDataAction(film));
       });
       this.setLoadingRatingAction(true);
-      const response = await Promise.allSettled(requests);
+      await Promise.allSettled(requests);
       this.setLoadingRatingAction(false);
-      if (!response) throw(false)
     } catch (error) {
       this.setLoadingRatingAction(false);
       console.log(error);
@@ -82,15 +78,17 @@ const actions = {
     }
   },
   setAthinoramaUrlsAction(payload) {
-    this.ATHINORAMA_URLS = [...payload]//.slice(0, 13);
+    this.ATHINORAMA_URLS = [...payload]//.slice(38, 41);
   },
   setAthinoramaMovieDetailsAction(payload) {
     this.MOVIES.push(payload)
   },
-  setAthinoramaMovieRatingAction(id, rating) {
-    console.log("id, rating", id, rating);
+  setAthinoramaMovieImdbDataAction(id, payload) {
     this.MOVIES.forEach((film) => {
-      if (film.id === id) film.imdbRating = rating;
+      if (film.id === id) {
+        film.imdbRating = payload.rating ? payload.rating : 'None';
+        film.popularity = payload.popularity ? payload.popularity : 'None';
+      };
     })
   },
   setLoadingAction(value) {
