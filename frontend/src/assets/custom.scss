@@ -8,8 +8,8 @@
 
 body {
   min-height: 100vh;
-  color: var(--color-text);
-  background: var(--color-background);
+  color: $color-text;
+  background: $black;
   line-height: 1.6;
   font-family:
     Inter,
@@ -38,6 +38,10 @@ body {
   font-weight: normal;
 }
 
+.cursor-pointer {
+  cursor: pointer;
+}
+
 a,
 .green {
   text-decoration: none;
@@ -47,7 +51,7 @@ a,
 }
 
 .navbar {
-  background-color: var(--color-background-soft) !important;
+  background-color: $black-soft !important;
 }
 
 .rating-placeholder {
@@ -64,11 +68,11 @@ a,
 }
 
 .offcanvas {
-  background-color: var(--color-background);
+  background-color: $black
 }
 
-.card-header {
-  background-color: var(--color-background-mute);
+.card, .card-header {
+  background-color: $black-medium;
 }
 
 .film-item {
@@ -77,12 +81,22 @@ a,
   cursor: pointer;
 }
 
+.cinema-item {
+  flex: 0 1 24%;
+}
+
 @media (hover: hover) {
   a:hover {
     background-color: hsla(160, 100%, 37%, 0.2);
   }
   .film-item:hover .card-header,
-  .film-item:hover .card-body {
-    background-color: var(--color-background-soft)
+  .film-item:hover .card-body,
+  .cinema-item:hover .card-header,
+  .cinema-item:hover .card-body {
+    background-color: $black-highlight;
   }
+}
+
+.is-outdoor {
+  color: $yellow;
 }

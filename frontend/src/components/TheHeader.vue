@@ -1,9 +1,9 @@
 <template>
   <div class="navbar sticky-top navbar-dark bg-dark px-3">
     <div class="d-flex gap-3 justify-content-between align-items-center">
-      <i v-if="route.name === 'home'" class="bi bi-list fs-1" data-bs-toggle="offcanvas"
+      <i v-if="route.name === 'home'" class="bi bi-list fs-1 cursor-pointer" data-bs-toggle="offcanvas"
         data-bs-target="#offcanvasExample" />
-      <i v-else class="bi bi-arrow-left fs-1" @click="router.back" />
+      <i v-else class="bi bi-arrow-left fs-1 cursor-pointer" @click="router.back" />
       <div>Movie Compass </div>
     </div>
     <div class="ml-auto">{{ state.length }}/{{ moviesStore.MOVIES.length }}</div>

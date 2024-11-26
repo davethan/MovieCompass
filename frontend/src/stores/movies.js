@@ -40,7 +40,8 @@ const actions = {
       this.setAthinoramaMovieRatingAction(id, response.data);
       return true;
     }
-    catch {
+    catch (error) {
+      console.log(error)
       return false;
     }
   },
@@ -81,12 +82,13 @@ const actions = {
     }
   },
   setAthinoramaUrlsAction(payload) {
-    this.ATHINORAMA_URLS = [...payload]//.slice(0, 3);
+    this.ATHINORAMA_URLS = [...payload]//.slice(0, 13);
   },
   setAthinoramaMovieDetailsAction(payload) {
     this.MOVIES.push(payload)
   },
   setAthinoramaMovieRatingAction(id, rating) {
+    console.log("id, rating", id, rating);
     this.MOVIES.forEach((film) => {
       if (film.id === id) film.imdbRating = rating;
     })
