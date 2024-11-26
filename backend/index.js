@@ -22,8 +22,8 @@ app.get("/", async (req, res) => {
 // Fetches the imdb data of a specific film
 app.post("/imdbMovieRating", async (req, res) => {
     try {
-        const rating = await getImdbMovieRating(req.body.imdbLink);
-        res.status(200).send(rating);
+        const response = await getImdbMovieRating(req.body.imdbLink);
+        res.status(200).send(response);
     } catch {
         res.status(500).send("Failed");
     }
@@ -98,8 +98,8 @@ const getImdbMovieRating = async (movieURL) => {
         const imdbFindSpecificMovie = await axios.get(movieURL, {
             headers: headers
         });
-        const rating = extractDataFromIMDB(imdbFindSpecificMovie.data);
-        return rating;
+        const response = extractDataFromIMDB(imdbFindSpecificMovie.data);
+        return response;
     } catch (error) {
         console.error('Error fetching IMDB data', error);
         return '';
