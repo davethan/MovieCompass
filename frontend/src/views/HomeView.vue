@@ -1,14 +1,14 @@
 <template>
-  <div class="d-flex flex-column gap-3">
+  <div class="d-flex flex-column flex-lg-row gap-3 flex-wrap">
     <div class="text-center mt-5" v-if="!state.length">
       Δεν βρέθηκαν ταινίες με αυτά τα κριτήρια.
     </div>
-    <div class="card border-0" v-for="movie in state" :key="movie.id" @click="goToMoviePage(movie.id)">
-      <div class="card-header border-0">
+    <div class="card border-0 film-item" v-for="movie in state" :key="movie.id" @click="goToMoviePage(movie.id)">
+      <div class="card-header">
         <h2 class="text-primary">{{ movie.greekTitle }}</h2>
         <div class="d-flex justify-content-between flex-wrap column-gap-3">
           <div>{{ movie.originalTitle }} </div>
-          <div class="d-flex justify-content-end gap-3 align-items-center">
+          <div class="d-flex justify-content-end flex-wrap gap-3 align-items-center">
             <div>Σε {{ movie.cinemas.length }} σινεμά</div>
             <div> {{ formatDuration(movie.duration) }} </div>
             <div>{{ movie.year }} </div>
@@ -79,10 +79,3 @@ onMounted(() => {
   sortByPopularity()
 });
 </script>
-
-<style scoped>
-.rating-placeholder {
-  height: 1.7rem;
-  width: 40px;
-}
-</style>
