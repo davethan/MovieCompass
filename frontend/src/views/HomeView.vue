@@ -1,6 +1,6 @@
 <template>
-  <div class="d-flex flex-column flex-lg-row gap-3 flex-wrap">
-    <div v-if="!state.length" class="text-center">
+  <div class="row g-3">
+    <div v-if="!state.length" class="col-lg-12 text-center">
       <div class="card border-0 film-item">
         <div class="card-header">
           <h2>Ουψ!</h2>
@@ -12,39 +12,42 @@
         </div>
       </div>
     </div>
-    <div v-else class="card border-0 film-item" v-for="movie in state" :key="movie.id" @click="goToMoviePage(movie.id)">
-      <div class="card-header">
-        <h2 class="text-primary">{{ movie.greekTitle }}</h2>
-        <div class="d-flex justify-content-between flex-wrap column-gap-3">
-          <div>{{ movie.originalTitle }} </div>
-          <div class="d-flex justify-content-end flex-wrap gap-3 align-items-center">
-            <div>Σε {{ movie.cinemas.length }} σινεμά</div>
-            <div> {{ formatDuration(movie.duration) }} </div>
-            <div>{{ movie.year }} </div>
-            <div v-if="movie.imdbRating">
-              {{ movie.imdbRating === "None" ? 'Η βαθμολογία δεν βρέθηκε' : `${movie.imdbRating}/10` }}
-            </div>
-            <div v-else class="rating-placeholder placeholder-glow"> <span class="placeholder rounded-3 col-12"></span>
+    <div v-else class="col-lg-3" v-for="movie in state" :key="movie.id">
+      <div class="card film-item cursor-pointer" @click="goToMoviePage(movie.id)">
+        <div class="card-header">
+          <h2 class="text-primary">{{ movie.greekTitle }}</h2>
+          <div class="d-flex justify-content-between flex-wrap column-gap-3">
+            <div>{{ movie.originalTitle }} </div>
+            <div class="d-flex justify-content-end flex-wrap gap-3 align-items-center">
+              <div>Σε {{ movie.cinemas.length }} σινεμά</div>
+              <div> {{ formatDuration(movie.duration) }} </div>
+              <div>{{ movie.year }} </div>
+              <div v-if="movie.imdbRating">
+                {{ movie.imdbRating === "None" ? 'Η βαθμολογία δεν βρέθηκε' : `${movie.imdbRating}/10` }}
+              </div>
+              <div v-else class="rating-placeholder placeholder-glow"> <span
+                  class="placeholder rounded-3 col-12"></span>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="card-body">
-        <div class="d-flex gap-3">
-          <div>
-            <b>Σκηνοθεσία:</b> <template v-for="(director, index) in movie.directors">
-              {{ director }}<span :key="index" v-if="index < movie.directors.length - 1">, </span>
-            </template>
+        <div class="card-body">
+          <div class="d-flex gap-3">
+            <div>
+              <b>Σκηνοθεσία:</b> <template v-for="(director, index) in movie.directors">
+                {{ director }}<span :key="index" v-if="index < movie.directors.length - 1">, </span>
+              </template>
+            </div>
           </div>
-        </div>
-        <div class="my-4">
-          {{ movie.summary }}
-        </div>
-        <div class="d-flex gap-3">
-          <div v-if="movie.actors.length">
-            <b>Παίζουν:</b> <template v-for="(actor, index) in movie.actors">
-              {{ actor }}<span :key="index" v-if="index < movie.actors.length - 1">, </span>
-            </template>
+          <div class="my-4">
+            {{ movie.summary }}
+          </div>
+          <div class="d-flex gap-3">
+            <div v-if="movie.actors.length">
+              <b>Παίζουν:</b> <template v-for="(actor, index) in movie.actors">
+                {{ actor }}<span :key="index" v-if="index < movie.actors.length - 1">, </span>
+              </template>
+            </div>
           </div>
         </div>
       </div>
@@ -56,9 +59,9 @@
 import { useRouter } from 'vue-router';
 import { onMounted, inject } from 'vue';
 import { formatDuration } from '@/tools/tools';
-// import { useMoviesStore } from '@/stores/movies';
+import { useMoviesStore } from '@/stores/movies';
 
-// const moviesStore = useMoviesStore();
+const moviesStore = useMoviesStore();
 const router = useRouter();
 const state = inject("state");
 
@@ -81,6 +84,7 @@ const sortByPopularity = () => {
 };
 
 const goToMoviePage = (id) => {
+  moviesStore.setSelectedMovieAction(id);
   router.push({ name: 'IndividualMovie', params: { filmId: id } });
 };
 
