@@ -4,6 +4,7 @@ import axios from 'axios';
 const state = () => ({
   ATHINORAMA_URLS: [],
   MOVIES: [],
+  selectedMovieId: '',
   loading: false,
   loadingRating: false
 });
@@ -37,8 +38,7 @@ const actions = {
       this.setAthinoramaMovieImdbDataAction(id, response.data);
       return true;
     }
-    catch (error) {
-      console.log(error)
+    catch {
       this.setAthinoramaMovieImdbDataAction(id, 'None');
       return false;
     }
@@ -78,7 +78,7 @@ const actions = {
     }
   },
   setAthinoramaUrlsAction(payload) {
-    this.ATHINORAMA_URLS = [...payload]//.slice(38, 41);
+    this.ATHINORAMA_URLS = [...payload].slice(35, 45);
   },
   setAthinoramaMovieDetailsAction(payload) {
     this.MOVIES.push(payload)
@@ -96,11 +96,15 @@ const actions = {
   },
   setLoadingRatingAction(value) {
     this.loadingRating = value;
+  },
+  setSelectedMovieAction(value) {
+    this.selectedMovieId = value;
   }
 };
 
 const getters = {
-  getIndividualMovie: (state) => (movieId) => state.MOVIES.find((film) => film.id === movieId)
+  getIndividualMovie: (state) => (movieId) => state.MOVIES.find((film) => film.id === movieId),
+  getSelectedMovie: (state) => state.MOVIES.find((film) => film.id === state.selectedMovieId) || ''
 };
 
 export const useMoviesStore = defineStore('movies', {

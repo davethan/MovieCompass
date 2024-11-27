@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="card border-0 mb-1">
+    <div class="card border-0 mb-1 col-lg-6 mx-auto">
       <div class="card-header">
         <h2 class="text-primary">{{ state.greekTitle }}</h2>
         <div class="d-flex justify-content-between flex-wrap column-gap-3">
@@ -20,7 +20,7 @@
       <div class="card-body">
         <div class="d-flex gap-3">
           <div>
-            <b>Σκηνοθεσία:</b><template v-for="(director, index) in state.directors">
+            <b>Σκηνοθεσία: </b><template v-for="(director, index) in state.directors">
               {{ director }}<span :key="index" v-if="index < state.directors.length - 1">, </span>
             </template>
           </div>
@@ -30,7 +30,7 @@
         </div>
         <div class="d-flex gap-3">
           <div v-if="state.actors.length">
-            <b>Παίζουν:</b> <template v-for="(actor, index) in state.actors">
+            <b>Παίζουν: </b> <template v-for="(actor, index) in state.actors">
               {{ actor }}<span :key="index" v-if="index < state.actors.length - 1">, </span>
             </template>
           </div>

@@ -32,7 +32,6 @@ body {
 
 
 .appBody {
-  max-width: 1280px;
   margin: 1rem auto;
   padding: 0px 1rem;
   font-weight: normal;
@@ -51,6 +50,7 @@ a,
 
 .navbar {
   background-color: $black-soft !important;
+  color: $color-text-dark-light !important;
 }
 
 .rating-placeholder {
@@ -67,21 +67,21 @@ a,
 }
 
 .offcanvas {
-  background-color: $black
+  background-color: $black;
+  color: $color-text-dark-light;
 }
 
 .card, .card-header {
   background-color: $black-medium;
 }
 
-.film-item {
-  flex: 1 1 0px;
-  min-width: 24%;
-  cursor: pointer;
+.cinema-item {
+  flex: 0 1 24%  
 }
 
-.cinema-item {
-  flex: 0 1 24%;
+.film-item {
+  height: 100%;
+  border: 0px;
 }
 
 @media (hover: hover) {
