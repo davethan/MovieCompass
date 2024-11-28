@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia';
 import axios from 'axios';
-
-const BASE_URL = 'http://localhost:5000';
+const { VITE_BACKEND_URL } = import.meta.env;
 
 const state = () => ({
   ATHINORAMA_URLS: [],
@@ -14,7 +13,7 @@ const state = () => ({
 const actions = {
   async getAthinoramaUrlsAction() {
     try {
-      const response = await axios.get(`${BASE_URL}/athinoramaCurrentMovies`);
+      const response = await axios.get(`${VITE_BACKEND_URL}/athinoramaCurrentMovies`);
       this.setAthinoramaUrlsAction(response.data);
       return true;
     }
@@ -24,7 +23,7 @@ const actions = {
   },
   async getMovieAthinoramaInfoAction(payload) {
     try {
-      const response = await axios.post(`${BASE_URL}/athinoramaMovieDetails`, { url: payload.url });
+      const response = await axios.post(`${VITE_BACKEND_URL}/athinoramaMovieDetails`, { url: payload.url });
       this.setAthinoramaMovieDetailsAction({ ...response.data, id: payload.id });
       return true;
     }
@@ -36,7 +35,7 @@ const actions = {
     const { imdbLink, id } = payload;
     try {
       if (!imdbLink) throw new Error(`No link found for ${imdbLink}`);
-      const response = await axios.post(`${BASE_URL}/imdbMovieRating`, { imdbLink });
+      const response = await axios.post(`${VITE_BACKEND_URL}/imdbMovieRating`, { imdbLink });
       this.setAthinoramaMovieImdbDataAction(id, response.data);
       return true;
     }
