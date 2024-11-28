@@ -14,7 +14,7 @@
             <div class="tag-outlined"> {{ formatDuration(state.duration) }} </div>
             <div class="tag-outlined">{{ state.year }} </div>
             <div class="tag-outlined" v-if="state.imdbRating">
-              {{ state.imdbRating === "None" ? 'Η βαθμολογία δεν βρέθηκε' : `${state.imdbRating}/10` }}
+              {{ state.imdbRating === "None" ? '?/10' : `${state.imdbRating}/10` }}
             </div>
             <div v-else class="rating-placeholder placeholder-glow"> <span class="placeholder rounded-3 col-12"></span>
             </div>
