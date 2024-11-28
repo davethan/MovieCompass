@@ -16,13 +16,14 @@
       <div class="card film-item cursor-pointer" @click="goToMoviePage(movie.id)">
         <div class="card-header">
           <h2 class="text-primary">{{ movie.greekTitle }}</h2>
-          <div class="d-flex justify-content-between flex-wrap column-gap-3">
+          <div class="d-flex justify-content-between flex-wrap column-gap-3 row-gap-1">
             <div>{{ movie.originalTitle }} </div>
-            <div class="d-flex justify-content-end flex-wrap gap-3 align-items-center">
-              <div>Σε {{ movie.cinemas.length }} σινεμά</div>
-              <div> {{ formatDuration(movie.duration) }} </div>
-              <div>{{ movie.year }} </div>
-              <div v-if="movie.imdbRating">
+            <div class="d-flex justify-content-end flex-wrap gap-1 align-items-center">
+              <div class="tag-outlined">Σε {{ movie.cinemas.length }} σινεμά
+              </div>
+              <div class="tag-outlined"> {{ formatDuration(movie.duration) }} </div>
+              <div class="tag-outlined">{{ movie.year }} </div>
+              <div class="tag-outlined" v-if="movie.imdbRating">
                 {{ movie.imdbRating === "None" ? 'Η βαθμολογία δεν βρέθηκε' : `${movie.imdbRating}/10` }}
               </div>
               <div v-else class="rating-placeholder placeholder-glow"> <span
