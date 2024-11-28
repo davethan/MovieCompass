@@ -41,7 +41,17 @@
         </div>
         <div class="col-12 mb-2" />
         <div class="col-12">
-          <button class="btn w-100 btn-outline-primary">Περιοχές</button>
+          <button :class="`btn w-100 h-100 ${filteredByLocation === 'ALL' ? ' btn-primary' : 'btn-outline-primary'}`"
+            @click="handleLocationChange('ALL')">
+            <i class="bi bi-geo-alt-fill me-1" />ΟΛΕΣ
+          </button>
+        </div>
+        <div class="col-6" v-for="(uniqueLocation, i) in uniqueCinemaLocations" :key="i">
+          <button
+            :class="`btn w-100 h-100 ${filteredByLocation === uniqueLocation ? ' btn-primary' : 'btn-outline-primary'}`"
+            @click="handleLocationChange(uniqueLocation)">
+            {{ uniqueLocation }}
+          </button>
         </div>
       </div>
     </div>
@@ -49,17 +59,26 @@
 </template>
 
 <script setup>
-import { ref, inject, unref } from 'vue';
+import { ref, unref, computed } from 'vue';
 import { useMoviesStore } from '@/stores/movies';
 
 const moviesStore = useMoviesStore();
-const state = inject("state");
+
+const props = defineProps({
+  state: {
+    type: Object,
+    default: (() => { })
+  }
+});
+
+const emit = defineEmits(['filter-changed']);
 
 const EVERY_DAY = 1, TODAY = 2, TOMORROW = 3, WEEKEND = 4;
 const ALL_CINEMAS = 1, SUMMER_CINEMAS = 2, WINTER_CINEMAS = 3;
 
 const filteredByDay = ref(EVERY_DAY);
 const filteredByCinema = ref(ALL_CINEMAS);
+const filteredByLocation = ref('ALL');
 
 const handleClose = () => {
   window.scrollTo(0, 0);
@@ -67,49 +86,19 @@ const handleClose = () => {
 
 const handleDayChange = (value) => {
   filteredByDay.value = value;
-  applyFiltersAndSort();
+  emit('filter-changed', { day: filteredByDay.value, cinemaType: filteredByCinema.value, location: filteredByLocation.value });
 };
 const handleCinemaChange = (value) => {
   filteredByCinema.value = value;
-  applyFiltersAndSort();
+  emit('filter-changed', { day: filteredByDay.value, cinemaType: filteredByCinema.value, location: filteredByLocation.value });
+};
+const handleLocationChange = (value) => {
+  filteredByLocation.value = value;
+  emit('filter-changed', { day: filteredByDay.value, cinemaType: filteredByCinema.value, location: filteredByLocation.value });
 };
 
-const applyFiltersAndSort = () => {
-  let filteredMovies = [...unref(moviesStore).MOVIES];
-
-  if (filteredByDay.value === TODAY) {
-    const date = new Date();
-    const today = date.toLocaleDateString('en-US', { weekday: 'long' });
-    filteredMovies = filterByDays(filteredMovies, [today]);
-  } else if (filteredByDay.value === TOMORROW) {
-    const date = new Date();
-    date.setDate(date.getDate() + 1);
-    const tomorrow = date.toLocaleDateString('en-US', { weekday: 'long' });
-    filteredMovies = filterByDays(filteredMovies, [tomorrow]);
-  } else if (filteredByDay.value === WEEKEND) {
-    filteredMovies = filterByDays(filteredMovies, ['Saturday', 'Sunday']);
-  }
-
-  if (filteredByCinema.value === SUMMER_CINEMAS) {
-    filteredMovies = filterByCinemas(filteredMovies, true);
-  } else if (filteredByCinema.value === WINTER_CINEMAS) {
-    filteredMovies = filterByCinemas(filteredMovies, false);
-  }
-
-  state.value = filteredMovies;
-};
-
-const filterByDays = (filteredMovies, days) => {
-  return filteredMovies.filter((film) => {
-    return film.cinemas.some((cinema) => {
-      return days.some((day) => {
-        return cinema.cinemaSchedule[day] && cinema.cinemaSchedule[day].length > 0;
-      })
-    });
-  });
-};
-
-const filterByCinemas = (filteredMovies, isOutdoor) => {
-  return filteredMovies.filter((film) => film.cinemas.some((cinema) => cinema.isOutdoor === isOutdoor));
-};
+const uniqueCinemaLocations = computed(() => {
+  const cinemaLocations = unref(props).state.cinemas.map((cinema) => cinema.cinemaLocation);
+  return [...new Set(cinemaLocations)];
+});
 </script>
