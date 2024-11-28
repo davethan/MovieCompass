@@ -1,8 +1,12 @@
 <template>
   <div>
-    <div class="card border-0 mb-1 col-lg-6 mx-auto">
+    <div class="card border-0 mb-3 col-lg-6 mx-auto">
       <div class="card-header">
-        <h2 class="text-primary">{{ state.greekTitle }}</h2>
+        <div class="d-flex justify-content-between gap-2">
+          <h2 class="text-primary">{{ state.greekTitle }}</h2>
+          <i class="bi bi-list fs-3 cursor-pointer" data-bs-toggle="offcanvas"
+            data-bs-target="#individualMovieDrawer" />
+        </div>
         <div class="d-flex justify-content-between flex-wrap column-gap-3 row-gap-1">
           <div>{{ state.originalTitle }} </div>
           <div class="d-flex justify-content-end flex-wrap gap-1 align-items-center">
@@ -47,23 +51,6 @@
         </div>
       </div>
     </div>
-    <div class="mt-3 mb-3 text-center">
-      <div class="d-flex justify-content-center flex-wrap gap-2">
-        <div>
-          <button :class="`btn ${filteredByLocation === 'ΟΛΑ' ? ' btn-secondary' : 'btn-outline-secondary'}`"
-            @click="filteredByLocation = 'ΟΛΑ'">
-            ΟΛΑ
-          </button>
-        </div>
-        <div v-for="(uniqueLocation, i) in uniqueCinemaLocations" :key="i">
-          <button
-            :class="`btn flex-item110 ${filteredByLocation === uniqueLocation ? ' btn-secondary' : 'btn-outline-secondary'}`"
-            @click="filteredByLocation = uniqueLocation">
-            {{ uniqueLocation }}
-          </button>
-        </div>
-      </div>
-    </div>
     <div class="d-flex flex-column justify-content-center flex-md-row gap-3 flex-wrap">
       <div v-for="(cinema, i) in filteredCinemas" :key="i" class="card border-0 cinema-item">
         <div class="card-header">
@@ -92,12 +79,14 @@
         </div>
       </div>
     </div>
+    <IndividualMovieDrawer @filter-changed="filterCinemas" :state="state" />
   </div>
 </template>
 
 <script setup>
-import { ref, defineProps, onBeforeMount, computed } from 'vue';
+import { ref, defineProps, onBeforeMount, computed, unref } from 'vue';
 import { formatDuration } from '@/tools/tools';
+import IndividualMovieDrawer from './IndividualMovieDrawer.vue';
 import { useMoviesStore } from '@/stores/movies';
 
 const props = defineProps({
@@ -107,25 +96,47 @@ const props = defineProps({
   }
 });
 
-const movieStore = useMoviesStore();
+const moviesStore = useMoviesStore();
 const state = ref('');
-const filteredByLocation = ref('ΟΛΑ');
+const filteredCinemas = ref(state.value.cinemas);
 
-const uniqueCinemaLocations = computed(() => {
-  const cinemaLocations = state.value.cinemas.map((cinema) => cinema.cinemaLocation);
-  return [...new Set(cinemaLocations)];
-});
-
-const filteredCinemas = computed(() => {
-  if (filteredByLocation.value === 'ΟΛΑ') return state.value.cinemas;
-  else return state.value.cinemas.filter(cinema => cinema.cinemaLocation === filteredByLocation.value);
-})
+const TODAY = 2, TOMORROW = 3, WEEKEND = 4;
+const SUMMER_CINEMAS = 2, WINTER_CINEMAS = 3;
 
 const athinoramaUrl = computed(() => {
-  let url = movieStore.ATHINORAMA_URLS.find((url) => url.id === state.value.id).url;
+  let url = moviesStore.ATHINORAMA_URLS.find((url) => url.id === state.value.id).url;
   url = `https://www.athinorama.gr${url}`;
   return url;
 })
+
+const filterCinemas = ({ day, cinemaType, location }) => {
+  filteredCinemas.value = [...unref(state).cinemas];
+
+  if (day === TODAY) {
+    const date = new Date();
+    const today = date.toLocaleDateString('en-US', { weekday: 'long' });
+    filteredCinemas.value = filteredCinemas.value.filter((cinema) => {
+      return cinema.cinemaSchedule[today] && cinema.cinemaSchedule[today].length > 0;
+    })
+  } else if (day === TOMORROW) {
+    const date = new Date();
+    date.setDate(date.getDate() + 1);
+    const tomorrow = date.toLocaleDateString('en-US', { weekday: 'long' });
+    filteredCinemas.value = filteredCinemas.value.filter((cinema) => {
+      return cinema.cinemaSchedule[tomorrow] && cinema.cinemaSchedule[tomorrow].length > 0;
+    })
+  } else if (day === WEEKEND) {
+    filteredCinemas.value = filteredCinemas.value.filter((cinema) => {
+      return ((cinema.cinemaSchedule.Saturday && cinema.cinemaSchedule.Saturday.length > 0) ||
+        (cinema.cinemaSchedule.Sunday && cinema.cinemaSchedule.Sunday.length > 0));
+    })
+  }
+
+  if (cinemaType === SUMMER_CINEMAS) filteredCinemas.value = filteredCinemas.value.filter((cinema) => cinema.isOutdoor);
+  else if (cinemaType === WINTER_CINEMAS) filteredCinemas.value = filteredCinemas.value.filter((cinema) => !cinema.isOutdoor);
+
+  if (location !== 'ALL') filteredCinemas.value = filteredCinemas.value.filter((cinema) => cinema.cinemaLocation === location);
+}
 
 const dayNameMapping = {
   Monday: 'Δευτέρα',
@@ -142,6 +153,7 @@ const mapDayName = (dayName) => {
 };
 
 onBeforeMount(() => {
-  state.value = movieStore.getIndividualMovie(props.filmId);
+  state.value = moviesStore.getIndividualMovie(props.filmId);
+  filteredCinemas.value = [...unref(state).cinemas];
 });
 </script>

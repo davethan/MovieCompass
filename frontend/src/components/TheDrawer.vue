@@ -51,10 +51,6 @@
           <button :class="`btn w-100 ${filteredByCinema === WINTER_CINEMAS ? 'btn-primary' : 'btn-outline-primary'}`"
             @click="handleCinemaChange(WINTER_CINEMAS)"><i class="bi bi-cloud-fill me-1" />Χειμερινοί</button>
         </div>
-        <div class="col-12 mb-2" />
-        <div class="col-12">
-          <button class="btn w-100 btn-outline-primary">Περιοχές</button>
-        </div>
       </div>
     </div>
   </div>
