@@ -3,13 +3,13 @@
     <div class="card border-0 mb-1 col-lg-6 mx-auto">
       <div class="card-header">
         <h2 class="text-primary">{{ state.greekTitle }}</h2>
-        <div class="d-flex justify-content-between flex-wrap column-gap-3">
+        <div class="d-flex justify-content-between flex-wrap column-gap-3 row-gap-1">
           <div>{{ state.originalTitle }} </div>
-          <div class="d-flex justify-content-end gap-3 align-items-center">
-            <div>Σε {{ state.cinemas.length }} σινεμά</div>
-            <div> {{ formatDuration(state.duration) }} </div>
-            <div>{{ state.year }} </div>
-            <div v-if="state.imdbRating">
+          <div class="d-flex justify-content-end flex-wrap gap-1 align-items-center">
+            <div class="tag-outlined">Σε {{ state.cinemas.length }} σινεμά</div>
+            <div class="tag-outlined"> {{ formatDuration(state.duration) }} </div>
+            <div class="tag-outlined">{{ state.year }} </div>
+            <div class="tag-outlined" v-if="state.imdbRating">
               {{ state.imdbRating === "None" ? 'Η βαθμολογία δεν βρέθηκε' : `${state.imdbRating}/10` }}
             </div>
             <div v-else class="rating-placeholder placeholder-glow"> <span class="placeholder rounded-3 col-12"></span>

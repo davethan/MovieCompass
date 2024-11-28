@@ -80,6 +80,7 @@ a,
 }
 
 .film-item {
+  overflow: hidden;
   height: 100%;
   border: 0px;
 }
@@ -91,6 +92,13 @@ a,
   .cinema-item:hover .card-body {
     background-color: $black-highlight;
   }
+}
+
+.tag-outlined {
+  border: 1px solid $secondary; 
+  padding-left: 0.5rem; 
+  padding-right: 0.5rem;
+  border-radius: 0.5rem;
 }
 
 .is-outdoor {
