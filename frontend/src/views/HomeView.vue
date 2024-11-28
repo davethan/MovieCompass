@@ -24,7 +24,7 @@
               <div class="tag-outlined"> {{ formatDuration(movie.duration) }} </div>
               <div class="tag-outlined">{{ movie.year }} </div>
               <div class="tag-outlined" v-if="movie.imdbRating">
-                {{ movie.imdbRating === "None" ? 'Η βαθμολογία δεν βρέθηκε' : `${movie.imdbRating}/10` }}
+                {{ movie.imdbRating === "None" ? '?/10' : `${movie.imdbRating}/10` }}
               </div>
               <div v-else class="rating-placeholder placeholder-glow"> <span
                   class="placeholder rounded-3 col-12"></span>
