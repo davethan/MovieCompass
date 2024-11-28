@@ -24,7 +24,7 @@
         <div class="col-12 mb-2" />
         <div class="col-12">
           <button :class="`btn w-100 ${filteredByDay === EVERY_DAY ? 'btn-primary' : 'btn-outline-primary'}`"
-            @click="handleDayChange(EVERY_DAY)">Κάθε μέρα</button>
+            @click="handleDayChange(EVERY_DAY)"><i class="bi bi-calendar-week-fill me-1" />Κάθε μέρα</button>
         </div>
         <div class="col-4">
           <button :class="`btn w-100 ${filteredByDay === TODAY ? 'btn-primary' : 'btn-outline-primary'}`"
