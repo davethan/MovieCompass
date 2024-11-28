@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:UPLOAD": "vite build --mode UPLOAD",
     "preview": "vite preview",
     "lint": "eslint . --fix",
     "format": "prettier --write src/"
