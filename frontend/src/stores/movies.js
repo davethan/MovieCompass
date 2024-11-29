@@ -53,7 +53,6 @@ const actions = {
       this.ATHINORAMA_URLS.forEach((athUrl) => {
         requests.push(this.getMovieAthinoramaInfoAction(athUrl));
       });
-      //all settled...
       await Promise.allSettled(requests);
       this.setLoadingAction(false);
       return true;
