@@ -43,7 +43,7 @@
           <a :href="athinoramaUrl" target="_blank" rel="noopener noreferrer">
             <img src="@/assets/images/athinorama.jpg" alt="Athinorama" width="30" height="30" class="cursor-pointer" />
           </a>
-          <a :href="state.imdbLink" target="_blank" rel="noopener noreferrer">
+          <a v-if="state.imdbLink" :href="state.imdbLink" target="_blank" rel="noopener noreferrer">
             <img src="@/assets/images/imdb.png" alt="IMDb" width="30" height="30" class="cursor-pointer" />
           </a>
         </div>

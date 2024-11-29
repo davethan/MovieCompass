@@ -6,20 +6,12 @@
       <i v-else class="bi bi-arrow-left fs-3 cursor-pointer" @click="router.back" />
       <h4 class="m-0 cursor-pointer text-secondary" @click="router.push({ name: 'home' })">Athens Cinemas</h4>
     </div>
-    <div class="ml-auto">{{ state.length }}/{{ moviesStore.MOVIES.length }}</div>
   </div>
-  <TheDrawer />
 </template>
 
 <script setup>
-import { inject } from 'vue'
-import TheDrawer from './TheDrawer.vue';
 import { useRouter, useRoute } from 'vue-router';
-import { useMoviesStore } from '@/stores/movies';
 
 const router = useRouter();
 const route = useRoute();
-
-const moviesStore = useMoviesStore();
-const state = inject("state");
 </script>
