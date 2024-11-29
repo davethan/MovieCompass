@@ -57,6 +57,16 @@ app.get("/athinoramaCurrentMovies", async (req, res) => {
     }
 });
 
+// Catch-all route to default to the Vue application
+app.get('*', (req, res) => {
+    try {
+        res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Server failure');
+    }
+});
+
 app.listen(5000, () => {
     console.log('server started @5000');
 });
