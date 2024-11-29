@@ -3,7 +3,9 @@
     <div class="offcanvas-header">
       <button type="button" class="mx-0 py-0 btn-close" data-bs-dismiss="offcanvas" aria-label="Close"
         @click="handleClose"></button>
-      <h5 class="ms-auto offcanvas-title" id="offcanvasExampleLabel"><b>Athens Cinemas</b></h5>
+      <div class="ms-auto offcanvas-title" id="offcanvasExampleLabel">
+        <b>{{ noOfFilteredFilms }}/{{ moviesStore.MOVIES.length }}</b>
+      </div>
     </div>
     <div class="offcanvas-body">
       <div class="row g-2">
@@ -57,11 +59,19 @@
 </template>
 
 <script setup>
-import { ref, inject, unref } from 'vue';
+import { ref } from 'vue';
 import { useMoviesStore } from '@/stores/movies';
 
 const moviesStore = useMoviesStore();
-const state = inject("state");
+
+defineProps({
+  noOfFilteredFilms: {
+    type: Number,
+    default: 0
+  }
+});
+
+const emit = defineEmits(['filter-changed']);
 
 const EVERY_DAY = 1, TODAY = 2, TOMORROW = 3, WEEKEND = 4;
 const ALL_CINEMAS = 1, SUMMER_CINEMAS = 2, WINTER_CINEMAS = 3;
@@ -77,94 +87,16 @@ const handleClose = () => {
 
 const handleSortChange = (value) => {
   sortedBy.value = value;
-  applyFiltersAndSort();
+  emit('filter-changed', { day: filteredByDay.value, cinemaType: filteredByCinema.value, sort: sortedBy.value });
 };
 const handleDayChange = (value) => {
   filteredByDay.value = value;
-  applyFiltersAndSort();
+  emit('filter-changed', { day: filteredByDay.value, cinemaType: filteredByCinema.value, sort: sortedBy.value });
+
 };
 const handleCinemaChange = (value) => {
   filteredByCinema.value = value;
-  applyFiltersAndSort();
-};
-
-const applyFiltersAndSort = () => {
-  let filteredMovies = [...unref(moviesStore).MOVIES];
-
-  if (filteredByDay.value === TODAY) {
-    const date = new Date();
-    const today = date.toLocaleDateString('en-US', { weekday: 'long' });
-    filteredMovies = filterByDays(filteredMovies, [today]);
-  } else if (filteredByDay.value === TOMORROW) {
-    const date = new Date();
-    date.setDate(date.getDate() + 1);
-    const tomorrow = date.toLocaleDateString('en-US', { weekday: 'long' });
-    filteredMovies = filterByDays(filteredMovies, [tomorrow]);
-  } else if (filteredByDay.value === WEEKEND) {
-    filteredMovies = filterByDays(filteredMovies, ['Saturday', 'Sunday']);
-  }
-
-  if (filteredByCinema.value === SUMMER_CINEMAS) {
-    filteredMovies = filterByCinemas(filteredMovies, true);
-  } else if (filteredByCinema.value === WINTER_CINEMAS) {
-    filteredMovies = filterByCinemas(filteredMovies, false);
-  }
-
-  if (sortedBy.value === POPULARITY) {
-    filteredMovies = sortByPopularity(filteredMovies);
-  } else if (sortedBy.value === RATING) {
-    filteredMovies = sortByRating(filteredMovies);
-  }
-  state.value = filteredMovies;
-};
-
-const sortByPopularity = (filteredMovies) => {
-  return filteredMovies.sort((a, b) => {
-    if (a.cinemas.length !== b.cinemas.length) {
-      return b.cinemas.length - a.cinemas.length;
-    }
-    if (a.imdbRating && b.imdbRating) {
-      return b.imdbRating - a.imdbRating;
-    }
-    if (!a.imdbRating && b.imdbRating) {
-      return 1;
-    }
-    if (a.imdbRating && !b.imdbRating) {
-      return -1;
-    }
-    return 0;
-  });
-};
-
-const sortByRating = (filteredMovies) => {
-  return filteredMovies.sort((a, b) => {
-    if (a.imdbRating && b.imdbRating) {
-      if (b.imdbRating !== a.imdbRating) {
-        return b.imdbRating - a.imdbRating;
-      }
-    }
-    if (!a.imdbRating && b.imdbRating) {
-      return 1;
-    }
-    if (a.imdbRating && !b.imdbRating) {
-      return -1;
-    }
-    return b.cinemas.length - a.cinemas.length;
-  });
-};
-
-const filterByDays = (filteredMovies, days) => {
-  return filteredMovies.filter((film) => {
-    return film.cinemas.some((cinema) => {
-      return days.some((day) => {
-        return cinema.cinemaSchedule[day] && cinema.cinemaSchedule[day].length > 0;
-      })
-    });
-  });
-};
-
-const filterByCinemas = (filteredMovies, isOutdoor) => {
-  return filteredMovies.filter((film) => film.cinemas.some((cinema) => cinema.isOutdoor === isOutdoor));
+  emit('filter-changed', { day: filteredByDay.value, cinemaType: filteredByCinema.value, sort: sortedBy.value });
 };
 
 /*
