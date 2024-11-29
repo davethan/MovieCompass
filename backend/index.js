@@ -1,5 +1,6 @@
 const express = require('express');
 const axios = require('axios');
+const path = require('path');
 const {
     extractImdbMovieCode,
     extractDataFromIMDB,
@@ -9,13 +10,15 @@ const {
 
 const app = express();
 app.use(express.json());
+app.use(express.static(path.join(__dirname, 'dist')));
 
+// Serves the vue application
 app.get("/", async (req, res) => {
     try {
-        res.status(200).send('server responding!');
+        res.sendFile(path.join(__dirname, 'dist', 'index.html'));
     } catch (error) {
         console.log(error)
-        res.status(500).send("Failed");
+        res.status(500).send("Server failure");
     }
 });
 
