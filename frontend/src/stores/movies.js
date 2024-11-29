@@ -78,7 +78,7 @@ const actions = {
     }
   },
   setAthinoramaUrlsAction(payload) {
-    this.ATHINORAMA_URLS = [...payload]//.slice(35, 45);
+    this.ATHINORAMA_URLS = [...payload]//.slice(35, 40);
   },
   setAthinoramaMovieDetailsAction(payload) {
     this.MOVIES.push(payload)
