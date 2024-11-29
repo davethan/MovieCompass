@@ -35,7 +35,11 @@ const router = createRouter({
       meta: {
         isProtected: true
       }
-    }
+    },
+    {
+      path: '/:pathMatch(.*)*',
+      redirect: '/',
+    },
   ],
   scrollBehavior (to, from, savedPosition) {
     if (to.name === 'IndividualMovie') {
