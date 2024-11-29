@@ -44,9 +44,7 @@
             <img src="@/assets/images/athinorama.jpg" alt="Athinorama" width="30" height="30" class="cursor-pointer" />
           </a>
           <a :href="state.imdbLink" target="_blank" rel="noopener noreferrer">
-            <svg class="cursor-pointer" width="40" height="40">
-              <use xlink:href="@/assets/images/imdbIcon.svg#imdbIcon" />
-            </svg>
+            <img src="@/assets/images/imdb.png" alt="IMDb" width="30" height="30" class="cursor-pointer" />
           </a>
         </div>
       </div>
