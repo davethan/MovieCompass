@@ -7,7 +7,12 @@ const state = () => ({
   MOVIES: [],
   selectedMovieId: '',
   loading: false,
-  loadingRating: false
+  loadingRating: false,
+  filters: {
+    sortedBy: 1,
+    filteredByDay: 1,
+    filteredByCinema: 1,
+  }
 });
 
 const actions = {
@@ -78,7 +83,7 @@ const actions = {
     }
   },
   setAthinoramaUrlsAction(payload) {
-    this.ATHINORAMA_URLS = [...payload]//.slice(35, 40);
+    this.ATHINORAMA_URLS = [...payload]//.slice(35, 45);
   },
   setAthinoramaMovieDetailsAction(payload) {
     this.MOVIES.push(payload)
@@ -99,6 +104,11 @@ const actions = {
   },
   setSelectedMovieAction(value) {
     this.selectedMovieId = value;
+  },
+  setFiltersAction(value) {
+    this.filters.sortedBy = value.sortedBy;
+    this.filters.filteredByDay = value.filteredByDay;
+    this.filters.filteredByCinema = value.filteredByCinema;
   }
 };
 
