@@ -1,6 +1,6 @@
 <template>
   <transition name="fade">
-    <div v-if="isScrollToTopButtonShown" class="scrollToTopButton rounded-5 px-2 py-1 cursor-pointer"
+    <div v-if="isScrollToTopButtonShown" class="scrollToTopButton rounded-5 px-4 py-3 cursor-pointer"
       @click="scrollToTop">
       <i class="bi bi-arrow-up fs-5 cursor-pointer" />
     </div>
