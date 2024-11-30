@@ -12,6 +12,7 @@ const state = () => ({
     sortedBy: 1,
     filteredByDay: 1,
     filteredByCinema: 1,
+    filteredByType: 1,
   }
 });
 
@@ -109,6 +110,7 @@ const actions = {
     this.filters.sortedBy = value.sortedBy;
     this.filters.filteredByDay = value.filteredByDay;
     this.filters.filteredByCinema = value.filteredByCinema;
+    this.filters.filteredByType = value.filteredByType;
   }
 };
 

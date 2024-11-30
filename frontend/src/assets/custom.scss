@@ -136,6 +136,15 @@ a,
   border-radius: 0.5rem;
 }
 
+.tag-square {
+  border: 1px solid $secondary; 
+  padding-left: 0.5rem; 
+  padding-right: 0.5rem;
+  border-radius: 0.5rem;
+  color: $black;
+  background-color: $secondary;
+}
+
 .is-outdoor {
   color: $yellow;
 }

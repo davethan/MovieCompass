@@ -3,13 +3,13 @@
     <div class="card border-0 mb-3 col-lg-6 mx-auto">
       <div class="card-header">
         <div class="d-flex justify-content-between gap-2">
-          <h2 class="text-primary">{{ state.greekTitle }}</h2>
+          <h2 class="text-primary m-0">{{ state.greekTitle }}</h2>
           <i class="bi bi-list fs-3 cursor-pointer" data-bs-toggle="offcanvas"
             data-bs-target="#individualMovieDrawer" />
         </div>
-        <div class="d-flex justify-content-between flex-wrap column-gap-3 row-gap-1">
-          <div>{{ state.originalTitle }} </div>
-          <div class="d-flex justify-content-end flex-wrap gap-1 align-items-center">
+        <div class="row g-2">
+          <div class="col-12">{{ state.originalTitle }} </div>
+          <div class="col-12 d-flex justify-content-start flex-wrap gap-1 align-items-center">
             <div class="tag-outlined">Σε {{ state.cinemas.length }} σινεμά</div>
             <div class="tag-outlined"> {{ formatDuration(state.duration) }} </div>
             <div class="tag-outlined">{{ state.year }} </div>
@@ -18,6 +18,9 @@
             </div>
             <div v-else class="rating-placeholder placeholder-glow"> <span class="placeholder rounded-3 col-12"></span>
             </div>
+          </div>
+          <div class="col-12 d-flex justify-content-start flex-wrap gap-1 align-items-center">
+            <div v-for="(tag, i) in state.tags" :key="i" class="tag-square">{{ tag }}</div>
           </div>
         </div>
       </div>
