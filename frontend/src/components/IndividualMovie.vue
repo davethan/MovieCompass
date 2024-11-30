@@ -32,7 +32,7 @@
         <div class="my-4">
           {{ state.summary }}
         </div>
-        <div class="d-flex gap-3">
+        <div class="d-flex gap-3 mb-1">
           <div v-if="state.actors.length">
             <b>Παίζουν: </b> <template v-for="(actor, index) in state.actors">
               {{ actor }}<span :key="index" v-if="index < state.actors.length - 1">, </span>
@@ -78,12 +78,14 @@
       </div>
     </div>
     <IndividualMovieDrawer @filter-changed="filterCinemas" :state="state" />
+    <ScrollToTopButton />
   </div>
 </template>
 
 <script setup>
 import { ref, defineProps, onBeforeMount, computed, unref } from 'vue';
 import { formatDuration } from '@/tools/tools';
+import ScrollToTopButton from '@/shared/ScrollToTopButton.vue';
 import IndividualMovieDrawer from './IndividualMovieDrawer.vue';
 import { useMoviesStore } from '@/stores/movies';
 

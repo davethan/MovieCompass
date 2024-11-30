@@ -15,10 +15,10 @@
     <div v-else class="col-lg-3" v-for="movie in filteredMovies" :key="movie.id">
       <div class="card film-item cursor-pointer" @click="goToMoviePage(movie.id)">
         <div class="card-header">
-          <h2 class="text-primary">{{ movie.greekTitle }}</h2>
-          <div class="d-flex justify-content-between flex-wrap column-gap-3 row-gap-1">
-            <div>{{ movie.originalTitle }} </div>
-            <div class="d-flex justify-content-end flex-wrap gap-1 align-items-center">
+          <h2 class="text-primary m-0">{{ movie.greekTitle }}</h2>
+          <div class="row g-2">
+            <div class="col-12">{{ movie.originalTitle }} </div>
+            <div class="col-12 d-flex justify-content-start flex-wrap gap-1 align-items-center">
               <div class="tag-outlined">Σε {{ movie.cinemas.length }} σινεμά
               </div>
               <div class="tag-outlined"> {{ formatDuration(movie.duration) }} </div>
@@ -55,6 +55,7 @@
     </div>
   </div>
   <TheDrawer :noOfFilteredFilms="filteredMovies.length" />
+  <ScrollToTopButton />
 </template>
 
 <script setup>
@@ -62,6 +63,7 @@ import { useRouter } from 'vue-router';
 import { computed, unref } from 'vue';
 import { formatDuration } from '@/tools/tools';
 import TheDrawer from '@/components/TheDrawer.vue';
+import ScrollToTopButton from '@/shared/ScrollToTopButton.vue';
 import { useMoviesStore } from '@/stores/movies';
 
 const moviesStore = useMoviesStore();

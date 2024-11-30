@@ -91,6 +91,44 @@ a,
   }
 }
 
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.fade-slide-enter-active,
+.fade-slide-leave-active {
+  transition: all 0.5s ease;
+  position: relative;
+}
+
+.fade-slide-enter-from {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.fade-slide-leave-to {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+
+.saying {
+  height: 150px
+}
+
+.loading-center {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
 .tag-outlined {
   border: 1px solid $secondary; 
   padding-left: 0.5rem; 
@@ -100,4 +138,13 @@ a,
 
 .is-outdoor {
   color: $yellow;
+}
+
+.scrollToTopButton {
+  z-index: 3;
+  position: fixed;
+  bottom: 50px;
+  right: 50%;
+  transform: translate(50%, 50%);
+  background-color: $primary-sat;
 }
