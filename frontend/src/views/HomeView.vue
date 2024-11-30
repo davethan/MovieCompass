@@ -30,6 +30,9 @@
                   class="placeholder rounded-3 col-12"></span>
               </div>
             </div>
+            <div class="col-12 d-flex justify-content-start flex-wrap gap-1 align-items-center">
+              <div v-for="(tag, i) in movie.tags" :key="i" class="tag-square">{{ tag }}</div>
+            </div>
           </div>
         </div>
         <div class="card-body">
@@ -43,12 +46,10 @@
           <div class="my-4">
             {{ movie.summary }}
           </div>
-          <div class="d-flex gap-3">
-            <div v-if="movie.actors.length">
-              <b>Παίζουν:</b> <template v-for="(actor, index) in movie.actors">
-                {{ actor }}<span :key="index" v-if="index < movie.actors.length - 1">, </span>
-              </template>
-            </div>
+          <div v-if="movie.actors.length">
+            <b>Παίζουν:</b> <template v-for="(actor, index) in movie.actors">
+              {{ actor }}<span :key="index" v-if="index < movie.actors.length - 1">, </span>
+            </template>
           </div>
         </div>
       </div>
@@ -72,6 +73,7 @@ const router = useRouter();
 const TODAY = 2, TOMORROW = 3, WEEKEND = 4;
 const SUMMER_CINEMAS = 2, WINTER_CINEMAS = 3;
 const POPULARITY = 1, RATING = 2;
+const REGULAR = 2, ANIMATION = 3;
 
 const filteredMovies = computed(() => {
   let filtered = [...unref(moviesStore).MOVIES];
@@ -92,6 +94,12 @@ const filteredMovies = computed(() => {
     filtered = filterByCinemas(filtered, true);
   } else if (moviesStore.filters.filteredByCinema === WINTER_CINEMAS) {
     filtered = filterByCinemas(filtered, false);
+  }
+
+  if (moviesStore.filters.filteredByType === REGULAR) {
+    filtered = filterByType(filtered, false);
+  } else if (moviesStore.filters.filteredByType === ANIMATION) {
+    filtered = filterByType(filtered, true);
   }
 
   if (moviesStore.filters.sortedBy === POPULARITY) {
@@ -149,6 +157,13 @@ const filterByDays = (filteredMovies, days) => {
 
 const filterByCinemas = (filteredMovies, isOutdoor) => {
   return filteredMovies.filter((film) => film.cinemas.some((cinema) => cinema.isOutdoor === isOutdoor));
+};
+
+const filterByType = (filteredMovies, isAnimation) => {
+  return filteredMovies.filter((film) => {
+    const hasAnimationTag = film.tags.some((tag) => tag === 'Animation');
+    return isAnimation ? hasAnimationTag : !hasAnimationTag;
+  });
 };
 
 const goToMoviePage = (id) => {

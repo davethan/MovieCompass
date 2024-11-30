@@ -41,6 +41,13 @@ const extractAthinoramaMovieDetails = (html_data) => {
     const originalTitle = $(header).find('span.original-title').text().trim() || '';
     const year = $(header).find('span.year').text().trim() || '';
     const duration = $(header).find('span.duration').text().trim().match(/\d+/g)?.join('') || '';
+
+    const reviewTags = $(header).find('ul.review-tags').find('a');
+    let tags = [];
+    reviewTags.each((i, tag) => {
+        tags.push($(tag).text().trim());
+    })
+
     const summary = $(header).find('div.summary').children().text().trim() || '';
     const imdbLink = $('div.review-links').find('a.imdb').attr('href') || '';
 
@@ -93,6 +100,7 @@ const extractAthinoramaMovieDetails = (html_data) => {
         originalTitle,
         year,
         duration,
+        tags,
         summary,
         directors: drcts,
         actors,

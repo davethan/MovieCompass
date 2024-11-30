@@ -64,6 +64,23 @@
             @click="handleFilterChange({ filteredByCinema: WINTER_CINEMAS })"><i
               class="bi bi-cloud-fill me-1" />Χειμερινοί</button>
         </div>
+        <div class="col-12 mb-2" />
+        <div class="col-12">
+          <button
+            :class="`btn w-100 ${moviesStore.filters.filteredByType === ALL ? 'btn-primary' : 'btn-outline-primary'}`"
+            @click="handleFilterChange({ filteredByType: ALL })"><i class="bi bi-film me-1" />Όλες</button>
+        </div>
+        <div class="col-6">
+          <button
+            :class="`btn w-100 ${moviesStore.filters.filteredByType === REGULAR ? 'btn-primary' : 'btn-outline-primary'}`"
+            @click="handleFilterChange({ filteredByType: REGULAR })">Live
+            action</button>
+        </div>
+        <div class="col-6">
+          <button
+            :class="`btn w-100 ${moviesStore.filters.filteredByType === ANIMATION ? 'btn-primary' : 'btn-outline-primary'}`"
+            @click="handleFilterChange({ filteredByType: ANIMATION })">Animation</button>
+        </div>
       </div>
     </div>
   </div>
@@ -86,6 +103,7 @@ defineProps({
 const EVERY_DAY = 1, TODAY = 2, TOMORROW = 3, WEEKEND = 4;
 const ALL_CINEMAS = 1, SUMMER_CINEMAS = 2, WINTER_CINEMAS = 3;
 const POPULARITY = 1, RATING = 2;
+const ALL = 1, REGULAR = 2, ANIMATION = 3;
 
 const handleFilterChange = (value) => {
   temporaryFilters = moviesStore.filters;
@@ -95,6 +113,7 @@ const handleFilterChange = (value) => {
     sortedBy: temporaryFilters.sortedBy,
     filteredByDay: temporaryFilters.filteredByDay,
     filteredByCinema: temporaryFilters.filteredByCinema,
+    filteredByType: temporaryFilters.filteredByType,
   })
   window.scrollTo(0, 0);
 };
