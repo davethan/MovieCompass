@@ -173,7 +173,7 @@ const parseSchedule = (schedule) => {
         };
         return weeklySchedule;
     } catch {
-        return [];
+        return schedule.join(' ');
     }
 }
 

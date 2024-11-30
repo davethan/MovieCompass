@@ -59,7 +59,10 @@
           </div>
         </div>
         <div class="card-body">
-          <template v-if="cinema.cinemaSchedule && Object.entries(cinema.cinemaSchedule).length">
+          <template v-if="typeof cinema.cinemaSchedule === 'string' || cinema.cinemaSchedule instanceof String">
+            {{ cinema.cinemaSchedule }}
+          </template>
+          <div v-else>
             <template v-for="[dayName, hours] in Object.entries(cinema.cinemaSchedule)">
               <div v-if="hours.length" class="row my-2" :key="dayName">
                 <div class="col-5 text-truncate">
@@ -70,9 +73,6 @@
                 </div>
               </div>
             </template>
-          </template>
-          <div v-else>
-            Δεν βρέθηκε το πρόγραμμα.
           </div>
         </div>
       </div>

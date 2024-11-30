@@ -43,14 +43,14 @@
         <div class="col-12">
           <button :class="`btn w-100 h-100 ${filteredByLocation === 'ALL' ? ' btn-primary' : 'btn-outline-primary'}`"
             @click="handleLocationChange('ALL')">
-            <i class="bi bi-geo-alt-fill me-1" />ΟΛΕΣ
+            <i class="bi bi-geo-alt-fill me-1" />Όλες
           </button>
         </div>
         <div class="col-6" v-for="(uniqueLocation, i) in uniqueCinemaLocations" :key="i">
           <button
             :class="`btn w-100 h-100 ${filteredByLocation === uniqueLocation ? ' btn-primary' : 'btn-outline-primary'}`"
             @click="handleLocationChange(uniqueLocation)">
-            {{ uniqueLocation }}
+            {{ toPascalCase(uniqueLocation) }}
           </button>
         </div>
       </div>
@@ -83,6 +83,12 @@ const filteredByLocation = ref('ALL');
 const handleClose = () => {
   window.scrollTo(0, 0);
 };
+
+const toPascalCase = (input) => {
+  return input
+    .toLowerCase()
+    .replace(/(?:^|[\s\-.])(\p{L})/gu, match => match.toUpperCase());
+}
 
 const handleDayChange = (value) => {
   filteredByDay.value = value;
