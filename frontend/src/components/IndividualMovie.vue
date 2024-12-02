@@ -18,6 +18,7 @@
             </div>
             <div v-else class="rating-placeholder placeholder-glow"> <span class="placeholder rounded-3 col-12"></span>
             </div>
+            <div v-if="state.rated" class="tag-outlined">{{ state.rated }}</div>
           </div>
           <div class="col-12 d-flex justify-content-start flex-wrap gap-1 align-items-center">
             <div v-for="(tag, i) in state.tags" :key="i" class="tag-square">{{ tag }}</div>
@@ -35,12 +36,13 @@
         <div class="my-4">
           {{ state.summary }}
         </div>
-        <div class="d-flex gap-3 mb-1">
-          <div v-if="state.actors.length">
-            <b>Παίζουν: </b> <template v-for="(actor, index) in state.actors">
-              {{ actor }}<span :key="index" v-if="index < state.actors.length - 1">, </span>
-            </template>
-          </div>
+        <div v-if="state.actors.length" class="mb-2">
+          <b>Παίζουν: </b> <template v-for="(actor, index) in state.actors">
+            {{ actor }}<span :key="index" v-if="index < state.actors.length - 1">, </span>
+          </template>
+        </div>
+        <div v-if="state.awards">
+          <b>Βραβεία: </b><span> {{ state.awards }}</span>
         </div>
         <div class="d-flex justify-content-end align-items-end gap-2">
           <a :href="athinoramaUrl" target="_blank" rel="noopener noreferrer">
