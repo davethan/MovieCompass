@@ -12,13 +12,13 @@
           <button
             :class="`btn w-100 ${moviesStore.filters.sortedBy === POPULARITY ? 'btn-primary' : 'btn-outline-primary'}`"
             @click="handleFilterChange({ sortedBy: POPULARITY })">
-            <i class="bi bi-fire me-1"></i>Δημοφιλία
+            <i class="bi bi-fire me-1" />Δημοφιλία
           </button>
         </div>
         <div class="col-6">
           <button v-if="!moviesStore.loadingRating"
             :class="`btn w-100 ${moviesStore.filters.sortedBy === RATING ? 'btn-primary' : 'btn-outline-primary'}`"
-            @click="handleFilterChange({ sortedBy: RATING })"><i class="bi bi-star-half me-1"></i>Βαθμολογία</button>
+            @click="handleFilterChange({ sortedBy: RATING })"><i class="bi bi-star-half me-1" />Βαθμολογία</button>
           <div v-else class="placeholder-glow h-100 w-100">
             <span class="placeholder h-100 rounded-2 col-12"></span>
           </div>
