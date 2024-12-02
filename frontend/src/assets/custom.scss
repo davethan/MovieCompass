@@ -1,3 +1,6 @@
+$gradient: linear-gradient(45deg, #BB86FC, #697dd6, #03DAC6);
+$gradient-sat: linear-gradient(45deg, #821fff, #3857e6, #00ffe6);
+
 *,
 *::before,
 *::after {
@@ -37,6 +40,12 @@ body {
   font-weight: normal;
 }
 
+.text-gradient {
+  background: $gradient;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
 .cursor-pointer {
   cursor: pointer;
 }
@@ -44,7 +53,7 @@ body {
 a,
 .green {
   text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
+  color: $secondary;
   transition: 0.4s;
 }
 
@@ -155,5 +164,5 @@ a,
   bottom: 50px;
   right: 50%;
   transform: translate(50%, 50%);
-  background-color: $primary-sat;
+  background: $gradient-sat;
 }

@@ -4,7 +4,8 @@
       <i v-if="route.name === 'home'" class="bi bi-list fs-3 cursor-pointer" data-bs-toggle="offcanvas"
         data-bs-target="#homeViewDrawer" />
       <i v-else class="bi bi-arrow-left fs-3 cursor-pointer" @click="router.back" />
-      <h4 class="m-0 cursor-pointer text-secondary" @click="router.push({ name: 'home' })">Athens Cinemas</h4>
+      <h4 class="m-0 cursor-pointer text-gradient" @click="router.push({ name: 'home' })">Athens Cinemas
+      </h4>
     </div>
   </div>
 </template>
