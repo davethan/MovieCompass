@@ -17,6 +17,7 @@ const state = () => ({
 });
 
 const actions = {
+  //get all current movies in theaters
   async getAthinoramaUrlsAction() {
     try {
       const response = await axios.get(`${VITE_BACKEND_URL}/athinoramaCurrentMovies`);
@@ -27,6 +28,7 @@ const actions = {
       return false;
     }
   },
+  //athinorama data scrapping
   async getMovieAthinoramaInfoAction(payload) {
     try {
       const response = await axios.post(`${VITE_BACKEND_URL}/athinoramaMovieDetails`, { url: payload.url });
@@ -37,35 +39,81 @@ const actions = {
       return false;
     }
   },
+  //imdb data scrapping
   async getMovieImdbDataAction(payload) {
     const { imdbLink, id } = payload;
     try {
-      if (!imdbLink) throw new Error(`No link found for ${imdbLink}`);
       const response = await axios.post(`${VITE_BACKEND_URL}/imdbMovieRating`, { imdbLink });
-      this.setAthinoramaMovieImdbDataAction(id, response.data);
-      return true;
+      this.setAthinoramaMovieImdbDataAction(id, imdbLink, response.data);
     }
     catch {
-      this.setAthinoramaMovieImdbDataAction(id, 'None');
-      return false;
+      throw (new Error);
     }
   },
-  async getMovieOmdbDataAction(payload) {
+  //omdb with id
+  async getMovieOmdbDataBasedOnLinkAction(payload) {
     const { imdbLink, id } = payload;
     try {
-      if (!imdbLink) throw new Error(`No link found for ${imdbLink}`);
       const imdbId = imdbLink.match(/\/title\/(tt\d+)\//);
       const response = await axios.get(`${VITE_OMDB_URL}/?apikey=${VITE_OMDB_API_KEY}&i=${imdbId[1]}`);
-      //if i found imdb rating from the omdb api, then set data, else try imdb.
-      if (response.data.imdbRating && response.data.imdbRating !== 'N/A') this.setAthinoramaMovieOmdbDataAction(id, response.data);
-      else await this.getMovieImdbDataAction(payload);
-      return true;
+      if (response.data.Response === "True" && response.data.imdbRating !== 'N/A') {
+        this.setAthinoramaMovieOmdbDataAction(id, response.data);
+        return true;
+      } else return false;
     }
     catch {
-      this.setAthinoramaMovieOmdbDataAction(id, 'None');
       return false;
     }
   },
+  //omdb with title & year
+  async getMovieOmdbDataBasedOnTitleAction(payload) {
+    const { originalTitle, greekTitle, year, id } = payload;
+    try {
+      let title = originalTitle ? originalTitle : greekTitle;
+      if (/[\u0370-\u03FF\u1F00-\u1FFF]/.test(title)) throw (new Error);
+      if (title.includes('/')) title = title.split('/')[1].trim();
+      title = title
+        .replace(/.*\/(.*)/, '$1')
+        .replace(/[^a-zA-Z0-9 ]+/g, '')
+        .replace(/ /g, '+');
+      const response = await axios.get(`${VITE_OMDB_URL}/?apikey=${VITE_OMDB_API_KEY}&t=${title}&y=${year}`);
+      if (response.data.Response === "True" && response.data.imdbRating !== 'N/A') {
+        const imdbLink = `http://www.imdb.com/title/${response.data.imdbID}/`;
+        this.setAthinoramaMovieOmdbDataAction(id, response.data, imdbLink);
+        return { success: true };
+      } else if (response.data.Response === "True" && response.data.imdbID && response.data.imdbID !== 'N/A') {
+        //i may retrieve the imdb id (but not the rating) from the omdb api. if so, data scrap.
+        return { success: false, imdbLink: `http://www.imdb.com/title/${response.data.imdbID}/` };
+      } else throw (new Error);
+    }
+    catch {
+      return { success: false };
+    }
+  },
+  //generic action to get the imdb data
+  async getMovieMdbDataAction(payload) {
+    const { imdbLink, id } = payload;
+    try {
+      if (!imdbLink) {
+        const omdbResult = await this.getMovieOmdbDataBasedOnTitleAction(payload);
+        if (!omdbResult.success && omdbResult.imdbLink) {
+          await this.getMovieImdbDataAction({ id, imdbLink: omdbResult.imdbLink });
+        } else if (!omdbResult.success) {
+          throw (new Error);
+        }
+      }
+      else {
+        const rating = await this.getMovieOmdbDataBasedOnLinkAction(payload);
+        if (!rating) await this.getMovieImdbDataAction(payload);
+      }
+      return true;
+    }
+    catch {
+      this.setAthinoramaMovieOmdbDataAction(id, {});
+      return false;
+    }
+  },
+  //gets athinorama info for all
   async getAllCurrentMoviesDetails() {
     try {
       this.setLoadingAction(true);
@@ -84,11 +132,12 @@ const actions = {
       return false;
     }
   },
+  //gets imdb data for all
   async getAllImdbRatings() {
     try {
       const requests = [];
       this.MOVIES.forEach((film) => {
-        requests.push(this.getMovieOmdbDataAction(film));
+        requests.push(this.getMovieMdbDataAction(film));
       });
       this.setLoadingRatingAction(true);
       await Promise.allSettled(requests);
@@ -100,26 +149,28 @@ const actions = {
     }
   },
   setAthinoramaUrlsAction(payload) {
-    this.ATHINORAMA_URLS = [...payload]//.slice(19, 34);
+    this.ATHINORAMA_URLS = [...payload]//.slice(17, 18);
   },
   setAthinoramaMovieDetailsAction(payload) {
     this.MOVIES.push(payload)
   },
-  setAthinoramaMovieImdbDataAction(id, payload) {
+  setAthinoramaMovieImdbDataAction(id, imdbLink, payload) {
     this.MOVIES.forEach((film) => {
       if (film.id === id) {
         film.imdbRating = payload.rating ? payload.rating : 'None';
         film.popularity = payload.popularity ? payload.popularity : 'None';
+        film.imdbLink = imdbLink ? imdbLink : '';
       };
     })
   },
-  setAthinoramaMovieOmdbDataAction(id, payload) {
+  setAthinoramaMovieOmdbDataAction(id, payload, imdbLink) {
     this.MOVIES.forEach((film) => {
       if (film.id === id) {
+        if (!film.imdbLink) film.imdbLink = imdbLink ? imdbLink : '';
         film.imdbRating = (payload.imdbRating && payload.imdbRating !== 'N/A') ? payload.imdbRating : 'None';
         film.popularity = (payload.imdbVotes && payload.imdbVotes !== 'N/A') ? payload.imdbVotes : 'None';
-        film.awards = payload.Awards !== 'N/A' ? payload.Awards : '';
-        film.rated = payload.Rated !== 'N/A' ? payload.Rated : '';
+        film.awards = (payload.Awards && payload.Awards !== 'N/A') ? payload.Awards : '';
+        film.rated = (payload.Rated && payload.Rated !== 'N/A') ? payload.Rated : '';
       };
     })
   },

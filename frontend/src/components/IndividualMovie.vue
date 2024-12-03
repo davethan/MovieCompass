@@ -73,8 +73,10 @@
                 <div class="col-5 text-truncate">
                   {{ mapDayName(dayName) }}
                 </div>
-                <div class="col-7">
-                  {{ `${hours.join(' ') || ''}` }}
+                <div class="col-7 d-flex flex-wrap column-gap-2">
+                  <span v-for="(hour, i) in hours" :key="i">
+                    {{ hour }}
+                  </span>
                 </div>
               </div>
             </template>

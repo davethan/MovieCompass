@@ -1,5 +1,5 @@
-$gradient: linear-gradient(45deg, #BB86FC, #697dd6, #03DAC6);
-$gradient-sat: linear-gradient(45deg, #821fff, #3857e6, #00ffe6);
+$gradient: linear-gradient(45deg, $primary, #697dd6, $secondary);
+$gradient-sat: linear-gradient(45deg, $primary-sat, #3857e6, $secondary);
 
 *,
 *::before,
