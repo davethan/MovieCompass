@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import axios from 'axios';
+import { convertToNumber } from '@/tools/tools';
 const { VITE_BACKEND_URL, VITE_OMDB_URL, VITE_OMDB_API_KEY } = import.meta.env;
 
 const state = () => ({
@@ -158,7 +159,7 @@ const actions = {
     this.MOVIES.forEach((film) => {
       if (film.id === id) {
         film.imdbRating = payload.rating ? payload.rating : 'None';
-        film.popularity = payload.popularity ? payload.popularity : 'None';
+        film.popularity = payload.popularity ? convertToNumber(payload.popularity) : 0;
         film.imdbLink = imdbLink ? imdbLink : '';
       };
     })
@@ -168,7 +169,7 @@ const actions = {
       if (film.id === id) {
         if (!film.imdbLink) film.imdbLink = imdbLink ? imdbLink : '';
         film.imdbRating = (payload.imdbRating && payload.imdbRating !== 'N/A') ? payload.imdbRating : 'None';
-        film.popularity = (payload.imdbVotes && payload.imdbVotes !== 'N/A') ? payload.imdbVotes : 'None';
+        film.popularity = (payload.imdbVotes && payload.imdbVotes !== 'N/A') ? convertToNumber(payload.imdbVotes) : 0;
         film.awards = (payload.Awards && payload.Awards !== 'N/A') ? payload.Awards : '';
         film.rated = (payload.Rated && payload.Rated !== 'N/A') ? payload.Rated : '';
       };

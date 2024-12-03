@@ -1,12 +1,9 @@
 <template>
-  <div class="offcanvas offcanvas-start" tabindex="-1" id="homeViewDrawer" aria-labelledby="offcanvasExampleLabel">
-    <div class="offcanvas-header">
-      <button type="button" class="mx-0 py-0 btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-      <div class="ms-auto offcanvas-title" id="offcanvasExampleLabel">
-        <b>{{ noOfFilteredFilms }}/{{ moviesStore.MOVIES.length }}</b>
-      </div>
-    </div>
-    <div class="offcanvas-body">
+  <drawer id="homeViewDrawer">
+    <template #drawerHeader>
+      <b>{{ noOfFilteredFilms }}/{{ moviesStore.MOVIES.length }}</b>
+    </template>
+    <template #drawerBody>
       <div class="row g-2">
         <div class="col-6">
           <button
@@ -82,13 +79,14 @@
             @click="handleFilterChange({ filteredByType: ANIMATION })">Animation</button>
         </div>
       </div>
-    </div>
-  </div>
+    </template>
+  </drawer>
 </template>
 
 <script setup>
 import { useMoviesStore } from '@/stores/movies';
 import { isEqual } from 'lodash';
+import Drawer from '@/shared/Drawer.vue';
 
 const moviesStore = useMoviesStore();
 let temporaryFilters = {};

@@ -10,3 +10,27 @@ export const formatDuration = (minutes) => {
     return `${hours}h ${restMinutes}'`;
   }
 };
+
+export const convertToNumber = (input) => {
+  if (typeof input !== 'string') {
+    return NaN;
+  }
+  input = input.replace(/,/g, '');
+
+  const suffixes = {
+      K: 1e3,
+      M: 1e6,
+      B: 1e9,
+      T: 1e12
+  };
+
+  const match = input.match(/^(\d+(\.\d+)?)([KMBT])?$/i);
+  if (!match) {
+      return parseFloat(input) || NaN;
+  }
+
+  const value = parseFloat(match[1]);
+  const suffix = match[3] ? match[3].toUpperCase() : null;
+
+  return suffix ? value * (suffixes[suffix] || 1) : value;
+}

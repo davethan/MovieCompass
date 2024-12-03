@@ -1,14 +1,9 @@
 <template>
-  <div class="offcanvas offcanvas-start" tabindex="-1" id="individualMovieDrawer"
-    aria-labelledby="offcanvasExampleLabel">
-    <div class="offcanvas-header">
-      <button type="button" class="mx-0 py-0 btn-close" data-bs-dismiss="offcanvas" aria-label="Close"
-        @click="handleClose"></button>
-      <h5 class="ms-auto offcanvas-title" id="offcanvasExampleLabel"><b>{{ moviesStore.getSelectedMovie.greekTitle
-          }}</b>
-      </h5>
-    </div>
-    <div class="offcanvas-body">
+  <drawer id="individualMovieDrawer">
+    <template #drawerHeader>
+      <h5><b>{{ moviesStore.getSelectedMovie.greekTitle }}</b></h5>
+    </template>
+    <template #drawerBody>
       <div class="row g-2">
         <div class="col-12">
           <button :class="`btn w-100 ${filteredByDay === EVERY_DAY ? 'btn-primary' : 'btn-outline-primary'}`"
@@ -54,12 +49,13 @@
           </button>
         </div>
       </div>
-    </div>
-  </div>
+    </template>
+  </drawer>
 </template>
 
 <script setup>
 import { ref, unref, computed } from 'vue';
+import Drawer from '@/shared/Drawer.vue';
 import { useMoviesStore } from '@/stores/movies';
 
 const moviesStore = useMoviesStore();
@@ -79,10 +75,6 @@ const ALL_CINEMAS = 1, SUMMER_CINEMAS = 2, WINTER_CINEMAS = 3;
 const filteredByDay = ref(EVERY_DAY);
 const filteredByCinema = ref(ALL_CINEMAS);
 const filteredByLocation = ref('ALL');
-
-const handleClose = () => {
-  window.scrollTo(0, 0);
-};
 
 const toPascalCase = (input) => {
   return input

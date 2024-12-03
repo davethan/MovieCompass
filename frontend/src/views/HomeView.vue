@@ -15,7 +15,7 @@
     <div v-else class="col-lg-3" v-for="movie in filteredMovies" :key="movie.id">
       <div class="card film-item cursor-pointer" @click="goToMoviePage(movie.id)">
         <div class="card-header">
-          <i v-if="movie.imdbRating >= 8 && moviesStore.filters.sortedBy === POPULARITY"
+          <i v-if="movie.imdbRating >= 8 && movie.popularity >= 2000 && moviesStore.filters.sortedBy === POPULARITY"
             class="bi bi-gem text-danger float-end" />
           <i v-if="movie.cinemas.length >= 10 && moviesStore.filters.sortedBy === RATING"
             class="bi bi-fire text-warning float-end" />
