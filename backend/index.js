@@ -114,7 +114,7 @@ const getImdbMovieRating = async (movieURL) => {
         const response = extractDataFromIMDB(imdbFindSpecificMovie.data);
         return response;
     } catch (error) {
-        console.error('Error fetching IMDB data', error);
+        console.error('Error fetching IMDB data', movieURL);
         return '';
     }
 };
