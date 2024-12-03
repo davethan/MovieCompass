@@ -55,9 +55,6 @@
               {{ actor }}<span :key="index" v-if="index < movie.actors.length - 1">, </span>
             </template>
           </div>
-          <div v-if="movie.awards">
-            <b>Βραβεία: </b><span> {{ movie.awards }}</span>
-          </div>
         </div>
       </div>
     </div>
