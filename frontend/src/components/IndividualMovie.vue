@@ -41,7 +41,7 @@
             {{ actor }}<span :key="index" v-if="index < state.actors.length - 1">, </span>
           </template>
         </div>
-        <div v-if="state.awards">
+        <div v-if="state.awards" class="mb-2">
           <b>Βραβεία: </b><span> {{ state.awards }}</span>
         </div>
         <div class="d-flex justify-content-end align-items-end gap-2">
