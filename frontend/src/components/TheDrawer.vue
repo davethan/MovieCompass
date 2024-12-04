@@ -78,14 +78,31 @@
             :class="`btn w-100 ${moviesStore.filters.filteredByType === ANIMATION ? 'btn-primary' : 'btn-outline-primary'}`"
             @click="handleFilterChange({ filteredByType: ANIMATION })">Animation</button>
         </div>
+        <div class="col-12 mb-2" />
+        <div class="col-12">
+          <button
+            :class="`btn w-100 h-100 ${moviesStore.filters.filteredByLocation === 'ALL' ? ' btn-primary' : 'btn-outline-primary'}`"
+            @click="handleFilterChange({ filteredByLocation: 'ALL' })">
+            <i class="bi bi-geo-alt-fill me-1" />Όλες
+          </button>
+        </div>
+        <div class="col-6" v-for="(uniqueLocation, i) in uniqueCinemaLocations" :key="i">
+          <button
+            :class="`btn w-100 h-100 ${moviesStore.filters.filteredByLocation === uniqueLocation ? ' btn-primary' : 'btn-outline-primary'}`"
+            @click="handleFilterChange({ filteredByLocation: uniqueLocation })">
+            {{ toPascalCase(uniqueLocation) }}
+          </button>
+        </div>
       </div>
     </template>
   </drawer>
 </template>
 
 <script setup>
+import { computed } from 'vue';
 import { useMoviesStore } from '@/stores/movies';
 import { isEqual } from 'lodash';
+import { toPascalCase } from '@/tools/tools';
 import Drawer from '@/shared/Drawer.vue';
 
 const moviesStore = useMoviesStore();
@@ -112,7 +129,15 @@ const handleFilterChange = (value) => {
     filteredByDay: temporaryFilters.filteredByDay,
     filteredByCinema: temporaryFilters.filteredByCinema,
     filteredByType: temporaryFilters.filteredByType,
+    filteredByLocation: temporaryFilters.filteredByLocation,
   })
   window.scrollTo(0, 0);
 };
+
+const uniqueCinemaLocations = computed(() => {
+  const cinemaLocations = moviesStore.MOVIES.flatMap((film) =>
+    film.cinemas.map((cinema) => cinema.cinemaLocation)
+  );
+  return [...new Set(cinemaLocations)];
+});
 </script>

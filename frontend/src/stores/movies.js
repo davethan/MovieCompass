@@ -14,6 +14,7 @@ const state = () => ({
     filteredByDay: 1,
     filteredByCinema: 1,
     filteredByType: 1,
+    filteredByLocation: 'ALL',
   }
 });
 
@@ -150,7 +151,7 @@ const actions = {
     }
   },
   setAthinoramaUrlsAction(payload) {
-    this.ATHINORAMA_URLS = [...payload]//.slice(17, 18);
+    this.ATHINORAMA_URLS = [...payload]//.slice(17, 28);
   },
   setAthinoramaMovieDetailsAction(payload) {
     this.MOVIES.push(payload)
@@ -185,10 +186,7 @@ const actions = {
     this.selectedMovieId = value;
   },
   setFiltersAction(value) {
-    this.filters.sortedBy = value.sortedBy;
-    this.filters.filteredByDay = value.filteredByDay;
-    this.filters.filteredByCinema = value.filteredByCinema;
-    this.filters.filteredByType = value.filteredByType;
+    this.filters = { ...this.filters, ...value };
   }
 };
 
