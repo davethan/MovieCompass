@@ -57,6 +57,7 @@
 import { ref, unref, computed } from 'vue';
 import Drawer from '@/shared/Drawer.vue';
 import { useMoviesStore } from '@/stores/movies';
+import { toPascalCase } from '@/tools/tools';
 
 const moviesStore = useMoviesStore();
 
@@ -75,12 +76,6 @@ const ALL_CINEMAS = 1, SUMMER_CINEMAS = 2, WINTER_CINEMAS = 3;
 const filteredByDay = ref(EVERY_DAY);
 const filteredByCinema = ref(ALL_CINEMAS);
 const filteredByLocation = ref('ALL');
-
-const toPascalCase = (input) => {
-  return input
-    .toLowerCase()
-    .replace(/(?:^|[\s\-.])(\p{L})/gu, match => match.toUpperCase());
-}
 
 const handleDayChange = (value) => {
   filteredByDay.value = value;

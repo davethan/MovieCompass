@@ -34,3 +34,9 @@ export const convertToNumber = (input) => {
 
   return suffix ? value * (suffixes[suffix] || 1) : value;
 }
+
+export const toPascalCase = (input) => {
+  return input
+    .toLowerCase()
+    .replace(/(?:^|[\s\-.])(\p{L})/gu, match => match.toUpperCase());
+}

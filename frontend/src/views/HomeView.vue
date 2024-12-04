@@ -106,6 +106,12 @@ const filteredMovies = computed(() => {
     filtered = filterByType(filtered, true);
   }
 
+  if (moviesStore.filters.filteredByLocation !== 'ALL') {
+    filtered = filtered.filter((film) =>
+      film.cinemas.some((cinema) => cinema.cinemaLocation === moviesStore.filters.filteredByLocation)
+    );
+  }
+
   if (moviesStore.filters.sortedBy === POPULARITY) {
     filtered = sortByPopularity(filtered);
   } else if (moviesStore.filters.sortedBy === RATING) {
