@@ -7,6 +7,7 @@ const state = () => ({
   ATHINORAMA_URLS: [],
   MOVIES: [],
   selectedMovieId: '',
+  selectedCinema: '',
   loading: false,
   loadingRating: false,
   filters: {
@@ -184,6 +185,9 @@ const actions = {
   },
   setSelectedMovieAction(value) {
     this.selectedMovieId = value;
+  },
+  setSelectedCinemaAction(value) {
+    this.selectedCinema = value;
   },
   setFiltersAction(value) {
     this.filters = { ...this.filters, ...value };

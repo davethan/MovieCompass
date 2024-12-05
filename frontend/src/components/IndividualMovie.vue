@@ -55,7 +55,8 @@
       </div>
     </div>
     <div class="d-flex flex-column justify-content-center flex-md-row gap-3 flex-wrap">
-      <div v-for="(cinema, i) in filteredCinemas" :key="i" class="card border-0 cinema-item">
+      <div v-for="(cinema, i) in filteredCinemas" :key="i" class="card border-0 cinema-item cursor-pointer"
+        @click="goToCinemaPage(cinema)">
         <div class="card-header">
           <h2>{{ cinema.cinema }}</h2>
           <div class="d-flex justify-content-between flex-wrap ">
@@ -94,6 +95,7 @@ import { ref, defineProps, onBeforeMount, computed, unref } from 'vue';
 import { formatDuration } from '@/tools/tools';
 import ScrollToTopButton from '@/shared/ScrollToTopButton.vue';
 import IndividualMovieDrawer from './IndividualMovieDrawer.vue';
+import { useRouter } from 'vue-router';
 import { useMoviesStore } from '@/stores/movies';
 
 const props = defineProps({
@@ -104,6 +106,8 @@ const props = defineProps({
 });
 
 const moviesStore = useMoviesStore();
+const router = useRouter();
+
 const state = ref('');
 const filteredCinemas = ref(state.value.cinemas);
 
@@ -158,6 +162,14 @@ const dayNameMapping = {
 const mapDayName = (dayName) => {
   return dayNameMapping[dayName] || dayName;
 };
+
+const goToCinemaPage = (cinema) => {
+  moviesStore.setSelectedCinemaAction(cinema.cinema);
+  router.push({
+    name: 'Cinema',
+    params: { cinema: cinema.cinema.match(/[\p{Script=Latin}\p{Script=Greek}0-9]/gu).join('') }
+  });
+}
 
 onBeforeMount(() => {
   state.value = moviesStore.getIndividualMovie(props.filmId);
