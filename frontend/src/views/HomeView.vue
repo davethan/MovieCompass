@@ -79,24 +79,40 @@ const REGULAR = 2, ANIMATION = 3;
 
 const filteredMovies = computed(() => {
   let filtered = [...unref(moviesStore).MOVIES];
-  if (moviesStore.filters.filteredByDay === TODAY) {
-    const date = new Date();
-    const today = date.toLocaleDateString('en-US', { weekday: 'long' });
-    filtered = filterByDays(filtered, [today]);
-  } else if (moviesStore.filters.filteredByDay === TOMORROW) {
-    const date = new Date();
-    date.setDate(date.getDate() + 1);
-    const tomorrow = date.toLocaleDateString('en-US', { weekday: 'long' });
-    filtered = filterByDays(filtered, [tomorrow]);
-  } else if (moviesStore.filters.filteredByDay === WEEKEND) {
-    filtered = filterByDays(filtered, ['Saturday', 'Sunday']);
-  }
 
-  if (moviesStore.filters.filteredByCinema === SUMMER_CINEMAS) {
-    filtered = filterByCinemas(filtered, true);
-  } else if (moviesStore.filters.filteredByCinema === WINTER_CINEMAS) {
-    filtered = filterByCinemas(filtered, false);
-  }
+  const filterDay = moviesStore.filters.filteredByDay;
+  const filterCinemaType = moviesStore.filters.filteredByCinema;
+  const filterLocation = moviesStore.filters.filteredByLocation;
+
+  filtered = filtered.filter((film) => {
+    const validCinemas = film.cinemas.filter((cinema) => {
+      const locationMatch = filterLocation === 'ALL' || cinema.cinemaLocation === filterLocation;
+      const typeMatch = filterCinemaType === SUMMER_CINEMAS
+        ? cinema.isOutdoor === true
+        : filterCinemaType === WINTER_CINEMAS
+          ? cinema.isOutdoor === false
+          : true;
+
+      const date = new Date();
+      let dayMatch = false;
+      if (filterDay === TODAY) {
+        const today = date.toLocaleDateString('en-US', { weekday: 'long' });
+        dayMatch = cinema.cinemaSchedule[today] && cinema.cinemaSchedule[today].length > 0;
+      } else if (filterDay === TOMORROW) {
+        date.setDate(date.getDate() + 1);
+        const tomorrow = date.toLocaleDateString('en-US', { weekday: 'long' });
+        dayMatch = cinema.cinemaSchedule[tomorrow] && cinema.cinemaSchedule[tomorrow].length > 0;
+      } else if (filterDay === WEEKEND) {
+        dayMatch =
+          (cinema.cinemaSchedule['Saturday'] && cinema.cinemaSchedule['Saturday'].length > 0) ||
+          (cinema.cinemaSchedule['Sunday'] && cinema.cinemaSchedule['Sunday'].length > 0);
+      } else {
+        dayMatch = true;
+      }
+      return locationMatch && typeMatch && dayMatch;
+    });
+    return validCinemas.length > 0;
+  });
 
   if (moviesStore.filters.filteredByType === REGULAR) {
     filtered = filterByType(filtered, false);
@@ -104,19 +120,14 @@ const filteredMovies = computed(() => {
     filtered = filterByType(filtered, true);
   }
 
-  if (moviesStore.filters.filteredByLocation !== 'ALL') {
-    filtered = filtered.filter((film) =>
-      film.cinemas.some((cinema) => cinema.cinemaLocation === moviesStore.filters.filteredByLocation)
-    );
-  }
-
   if (moviesStore.filters.sortedBy === POPULARITY) {
     filtered = sortByPopularity(filtered);
   } else if (moviesStore.filters.sortedBy === RATING) {
     filtered = sortByRating(filtered);
   }
+
   return filtered;
-})
+});
 
 const sortByPopularity = (filteredMovies) => {
   return filteredMovies.sort((a, b) => {
@@ -151,20 +162,6 @@ const sortByRating = (filteredMovies) => {
     }
     return b.cinemas.length - a.cinemas.length;
   });
-};
-
-const filterByDays = (filteredMovies, days) => {
-  return filteredMovies.filter((film) => {
-    return film.cinemas.some((cinema) => {
-      return days.some((day) => {
-        return cinema.cinemaSchedule[day] && cinema.cinemaSchedule[day].length > 0;
-      })
-    });
-  });
-};
-
-const filterByCinemas = (filteredMovies, isOutdoor) => {
-  return filteredMovies.filter((film) => film.cinemas.some((cinema) => cinema.isOutdoor === isOutdoor));
 };
 
 const filterByType = (filteredMovies, isAnimation) => {
