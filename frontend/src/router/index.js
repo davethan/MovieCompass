@@ -37,6 +37,15 @@ const router = createRouter({
       }
     },
     {
+      path: '/cinema/:cinema',
+      name: 'Cinema',
+      component: () => import('@/components/Cinema.vue'),
+      props: true,
+      meta: {
+        isProtected: true
+      }
+    },
+    {
       path: '/:pathMatch(.*)*',
       redirect: '/',
     },
