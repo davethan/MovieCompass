@@ -15,10 +15,8 @@
     <div v-else class="col-lg-3" v-for="movie in filteredMovies" :key="movie.id">
       <div class="card film-item cursor-pointer" @click="goToMoviePage(movie.id)">
         <div class="card-header">
-          <i v-if="movie.imdbRating >= 8 && movie.popularity >= 2000 && moviesStore.filters.sortedBy === POPULARITY"
-            class="bi bi-gem text-danger float-end" />
-          <i v-if="movie.cinemas.length >= 10 && moviesStore.filters.sortedBy === RATING"
-            class="bi bi-fire text-warning float-end" />
+          <i v-if="isGem(movie)" class="bi bi-gem text-danger float-end" />
+          <i v-if="isFlame(movie)" class="bi bi-fire text-warning float-end" />
           <h2 class="text-primary m-0">{{ movie.greekTitle }}</h2>
           <div class="row g-2">
             <div class="col-12">{{ movie.originalTitle }} </div>
@@ -175,6 +173,20 @@ const filterByType = (filteredMovies, isAnimation) => {
     return isAnimation ? hasAnimationTag : !hasAnimationTag;
   });
 };
+
+const isGem = (film) => {
+  if (moviesStore.filters.sortedBy !== POPULARITY) return false
+  if (film.year >= 1965) {
+    return film.imdbRating >= 7.9 &&
+      film.popularity >= 2000 &&
+      (!film.tags.includes('Animation') && !film.tags.includes('Μιούζικαλ'))
+  } else {
+    return film.imdbRating >= 8.5 &&
+      film.popularity >= 6000
+  }
+}
+
+const isFlame = (film) => moviesStore.filters.sortedBy === RATING && film.cinemas.length >= 10
 
 const goToMoviePage = (id) => {
   moviesStore.setSelectedMovieAction(id);
