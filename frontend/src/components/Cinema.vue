@@ -2,7 +2,7 @@
   <div class="card border-0 mb-3 cinema-details">
     <div class="card-body">
       <div class="d-flex justify-content-between">
-        <h2 class="text-primary m-0">{{ moviesStore.selectedCinema }}</h2>
+        <h2 class="text-secondary m-0">{{ moviesStore.selectedCinema }}</h2>
         <div v-if="isCinemaOutdoor"><i class="bi bi-brightness-high-fill ms-3 is-outdoor" /></div>
       </div>
       <div class="row g-2">
@@ -16,7 +16,7 @@
       </div>
     </div>
   </div>
-  <div class="d-flex flex-column justify-content-center flex-md-row gap-3 flex-wrap">
+  <div class="d-flex flex-column justify-content-center flex-md-row gap-3 flex-md-wrap">
     <div v-for="film in filmsThisCinemaShows" :key="film.id" class="card border-0 cinema-item cursor-pointer"
       @click="goToMoviePage(film.id)">
       <div class="card-header">

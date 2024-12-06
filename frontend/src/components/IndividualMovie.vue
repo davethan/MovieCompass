@@ -54,11 +54,11 @@
         </div>
       </div>
     </div>
-    <div class="d-flex flex-column justify-content-center flex-md-row gap-3 flex-wrap">
+    <div class="d-flex flex-column justify-content-center flex-md-row gap-3 flex-md-wrap">
       <div v-for="(cinema, i) in filteredCinemas" :key="i" class="card border-0 cinema-item cursor-pointer"
         @click="goToCinemaPage(cinema)">
         <div class="card-header">
-          <h2>{{ cinema.cinema }}</h2>
+          <h2 class="text-secondary">{{ cinema.cinema }}</h2>
           <div class="d-flex justify-content-between flex-wrap ">
             <div>{{ cinema.cinemaLocation }}</div>
             <div v-if="cinema.isOutdoor"><i class="bi bi-brightness-high-fill is-outdoor" /></div>
