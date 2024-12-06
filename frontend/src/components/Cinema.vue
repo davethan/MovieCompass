@@ -3,7 +3,7 @@
     <div class="card-body">
       <div class="d-flex justify-content-between">
         <h2 class="text-primary m-0">{{ moviesStore.selectedCinema }}</h2>
-        <div v-if="!isCinemaOutdoor"><i class="bi bi-brightness-high-fill ms-3 is-outdoor" /></div>
+        <div v-if="isCinemaOutdoor"><i class="bi bi-brightness-high-fill ms-3 is-outdoor" /></div>
       </div>
       <div class="row g-2">
         <div class="col-12">{{ cinemaLocation }} </div>
