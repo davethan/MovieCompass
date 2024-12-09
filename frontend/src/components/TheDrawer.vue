@@ -1,7 +1,8 @@
 <template>
-  <drawer id="homeViewDrawer">
+  <drawer id="homeViewDrawer" :modelValue="modelValue" @update:modelValue="closeDrawer">
     <template #drawerHeader>
-      <b>{{ noOfFilteredFilms }}/{{ moviesStore.MOVIES.length }}</b>
+      <!-- <b>{{ noOfFilteredFilms }}/{{ moviesStore.MOVIES.length }}</b> -->
+      <h5 class="m-0"><b>Athens Cinemas</b></h5>
     </template>
     <template #drawerBody>
       <div class="row g-2">
@@ -108,10 +109,16 @@ import Drawer from '@/shared/Drawer.vue';
 const moviesStore = useMoviesStore();
 let temporaryFilters = {};
 
+const emit = defineEmits(['update:modelValue'])
+
 defineProps({
   noOfFilteredFilms: {
     type: Number,
     default: 0
+  },
+  modelValue: {
+    type: Boolean,
+    default: false
   }
 });
 
@@ -132,6 +139,10 @@ const handleFilterChange = (value) => {
     filteredByLocation: temporaryFilters.filteredByLocation,
   })
   window.scrollTo(0, 0);
+};
+
+const closeDrawer = () => {
+  emit('update:modelValue', false);
 };
 
 const uniqueCinemaLocations = computed(() => {

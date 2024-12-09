@@ -176,3 +176,39 @@ a,
   max-width: fit-content;
   margin: auto;
 }
+
+// .list-group {
+//   width: fit-content;
+//   z-index: 2;
+//   position: absolute;
+//   overflow-y: auto;
+//   background-color: $black;
+//   max-height: 70%;
+// }
+
+.list-header {
+  &:hover h5 {
+    color: $primary;
+  }
+}
+
+.search-input {
+  border: none;
+  border-radius: 7px;
+  width: 100%;
+  padding: 8px 18px;
+}
+
+.search-input:focus {
+  outline: none;
+}
+
+.search-container {
+  width: fit-content;
+  margin: 5px;
+}
+
+.search-container-100 {
+  width: 100%;
+  margin-bottom: 5px;
+}
