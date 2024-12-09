@@ -57,15 +57,13 @@
       </div>
     </div>
   </div>
-  <TheDrawer :noOfFilteredFilms="filteredMovies.length" />
-  <ScrollToTopButton />
+  <scroll-to-top-button />
 </template>
 
 <script setup>
 import { useRouter } from 'vue-router';
 import { computed, unref } from 'vue';
 import { formatDuration } from '@/tools/tools';
-import TheDrawer from '@/components/TheDrawer.vue';
 import ScrollToTopButton from '@/shared/ScrollToTopButton.vue';
 import { useMoviesStore } from '@/stores/movies';
 

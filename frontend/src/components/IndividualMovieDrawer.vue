@@ -1,7 +1,7 @@
 <template>
-  <drawer id="individualMovieDrawer">
+  <drawer id="individualMovieDrawer" :modelValue="modelValue" @update:modelValue="closeDrawer">
     <template #drawerHeader>
-      <h5><b>{{ moviesStore.getSelectedMovie.greekTitle }}</b></h5>
+      <h5 class="m-0"><b>{{ moviesStore.getSelectedMovie.greekTitle }}</b></h5>
     </template>
     <template #drawerBody>
       <div class="row g-2">
@@ -65,10 +65,14 @@ const props = defineProps({
   state: {
     type: Object,
     default: (() => { })
+  },
+  modelValue: {
+    type: Boolean,
+    default: false
   }
 });
 
-const emit = defineEmits(['filter-changed']);
+const emit = defineEmits(['filter-changed', 'update:modelValue']);
 
 const EVERY_DAY = 1, TODAY = 2, TOMORROW = 3, WEEKEND = 4;
 const ALL_CINEMAS = 1, SUMMER_CINEMAS = 2, WINTER_CINEMAS = 3;
@@ -94,4 +98,8 @@ const uniqueCinemaLocations = computed(() => {
   const cinemaLocations = unref(props).state.cinemas.map((cinema) => cinema.cinemaLocation);
   return [...new Set(cinemaLocations)];
 });
+
+const closeDrawer = () => {
+  emit('update:modelValue', false);
+};
 </script>

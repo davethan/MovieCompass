@@ -4,8 +4,7 @@
       <div class="card-header">
         <div class="d-flex justify-content-between gap-2">
           <h2 class="text-primary m-0">{{ state.greekTitle }}</h2>
-          <i class="bi bi-list fs-3 cursor-pointer" data-bs-toggle="offcanvas"
-            data-bs-target="#individualMovieDrawer" />
+          <i class="bi bi-list fs-3 cursor-pointer" @click="openMovieDrawer" />
         </div>
         <div class="row g-2">
           <div class="col-12">{{ state.originalTitle }} </div>
@@ -85,13 +84,13 @@
         </div>
       </div>
     </div>
-    <IndividualMovieDrawer @filter-changed="filterCinemas" :state="state" />
+    <IndividualMovieDrawer v-model="isMovieDrawerOpen" @filter-changed="filterCinemas" :state="state" />
     <ScrollToTopButton />
   </div>
 </template>
 
 <script setup>
-import { ref, defineProps, onBeforeMount, computed, unref } from 'vue';
+import { ref, defineProps, onBeforeMount, computed, unref, watch } from 'vue';
 import { formatDuration } from '@/tools/tools';
 import ScrollToTopButton from '@/shared/ScrollToTopButton.vue';
 import IndividualMovieDrawer from './IndividualMovieDrawer.vue';
@@ -109,6 +108,7 @@ const moviesStore = useMoviesStore();
 const router = useRouter();
 
 const state = ref('');
+const isMovieDrawerOpen = ref(false);
 const filteredCinemas = ref(state.value.cinemas);
 
 const TODAY = 2, TOMORROW = 3, WEEKEND = 4;
@@ -171,8 +171,20 @@ const goToCinemaPage = (cinema) => {
   });
 }
 
+const openMovieDrawer = () => {
+  isMovieDrawerOpen.value = true;
+}
+
+const loadMovieData = (id) => {
+  state.value = moviesStore.getIndividualMovie(id);
+  filteredCinemas.value = [...state.value.cinemas];
+};
+
+watch(() => props.filmId, (newFilmId) => {
+  loadMovieData(newFilmId);
+});
+
 onBeforeMount(() => {
-  state.value = moviesStore.getIndividualMovie(props.filmId);
-  filteredCinemas.value = [...unref(state).cinemas];
+  loadMovieData(props.filmId);
 });
 </script>
