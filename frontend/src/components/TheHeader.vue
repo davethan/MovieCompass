@@ -13,10 +13,11 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { defineAsyncComponent, ref } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import SearchDrawer from './SearchDrawer.vue';
 import TheDrawer from './TheDrawer.vue';
+
+const SearchDrawer = defineAsyncComponent(() => import('./SearchDrawer.vue'))
 
 const router = useRouter();
 const route = useRoute();

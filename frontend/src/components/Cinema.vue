@@ -50,6 +50,7 @@
 import { useRouter } from 'vue-router';
 import { useMoviesStore } from '@/stores/movies';
 import { computed } from 'vue';
+import { mapDayName } from '@/tools/tools';
 
 const router = useRouter();
 const moviesStore = useMoviesStore();
@@ -71,20 +72,6 @@ const isCinemaOutdoor = computed(() => filmsThisCinemaShows.value[0].cinemas.fin
 const filmSchedule = (film) => {
   return film.cinemas.find((cinema) => cinema.cinema === moviesStore.selectedCinema).cinemaSchedule
 }
-
-const dayNameMapping = {
-  Monday: 'Δευτέρα',
-  Tuesday: 'Τρίτη',
-  Wednesday: 'Τετάρτη',
-  Thursday: 'Πέμπτη',
-  Friday: 'Παρασκευή',
-  Saturday: 'Σάββατο',
-  Sunday: 'Κυριακή'
-};
-
-const mapDayName = (dayName) => {
-  return dayNameMapping[dayName] || dayName;
-};
 
 const goToMoviePage = (id) => {
   moviesStore.setSelectedMovieAction(id);

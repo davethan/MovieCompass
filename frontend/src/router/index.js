@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import HomeView from '../views/HomeView.vue';
-import IndividualMovie from '@/components/IndividualMovie.vue';
 
 const routeGuard = (to, from) => {
   const { isProtected = false } = to.meta;
@@ -30,7 +29,7 @@ const router = createRouter({
     {
       path: '/film/:filmId',
       name: 'IndividualMovie',
-      component: IndividualMovie,
+      component: () => import('@/components/IndividualMovie.vue'),
       props: true,
       meta: {
         isProtected: true
@@ -40,7 +39,6 @@ const router = createRouter({
       path: '/cinema/:cinema',
       name: 'Cinema',
       component: () => import('@/components/Cinema.vue'),
-      props: true,
       meta: {
         isProtected: true
       }

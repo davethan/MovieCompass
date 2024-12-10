@@ -90,10 +90,9 @@
 </template>
 
 <script setup>
-import { ref, defineProps, onBeforeMount, computed, unref, watch } from 'vue';
-import { formatDuration } from '@/tools/tools';
+import { ref, defineProps, onBeforeMount, computed, unref, watch, defineAsyncComponent } from 'vue';
+import { formatDuration, mapDayName } from '@/tools/tools';
 import ScrollToTopButton from '@/shared/ScrollToTopButton.vue';
-import IndividualMovieDrawer from './IndividualMovieDrawer.vue';
 import { useRouter } from 'vue-router';
 import { useMoviesStore } from '@/stores/movies';
 
@@ -104,6 +103,7 @@ const props = defineProps({
   }
 });
 
+const IndividualMovieDrawer = defineAsyncComponent(() => import('./IndividualMovieDrawer.vue'))
 const moviesStore = useMoviesStore();
 const router = useRouter();
 
@@ -148,20 +148,6 @@ const filterCinemas = ({ day, cinemaType, location }) => {
 
   if (location !== 'ALL') filteredCinemas.value = filteredCinemas.value.filter((cinema) => cinema.cinemaLocation === location);
 }
-
-const dayNameMapping = {
-  Monday: 'Δευτέρα',
-  Tuesday: 'Τρίτη',
-  Wednesday: 'Τετάρτη',
-  Thursday: 'Πέμπτη',
-  Friday: 'Παρασκευή',
-  Saturday: 'Σάββατο',
-  Sunday: 'Κυριακή'
-};
-
-const mapDayName = (dayName) => {
-  return dayNameMapping[dayName] || dayName;
-};
 
 const goToCinemaPage = (cinema) => {
   moviesStore.setSelectedCinemaAction(cinema.cinema);
