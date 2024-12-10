@@ -15,7 +15,9 @@
 
 <script setup>
 import { watch, computed } from 'vue';
+import { useRoute } from 'vue-router';
 
+const route = useRoute();
 const emit = defineEmits(['update:modelValue']);
 
 const props = defineProps({
@@ -43,7 +45,10 @@ watch(() => props.modelValue, (newValue) => {
   }
 });
 
-const close = () => {
-  emit('update:modelValue', false);
-};
+watch(() => route.path, (newPath, oldPath) => {
+  if (newPath === oldPath) return
+  close();
+});
+
+const close = () => emit('update:modelValue', false);
 </script>

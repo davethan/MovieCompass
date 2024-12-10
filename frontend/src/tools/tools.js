@@ -40,3 +40,17 @@ export const toPascalCase = (input) => {
     .toLowerCase()
     .replace(/(?:^|[\s\-.])(\p{L})/gu, match => match.toUpperCase());
 }
+
+const dayNameMapping = {
+  Monday: 'Δευτέρα',
+  Tuesday: 'Τρίτη',
+  Wednesday: 'Τετάρτη',
+  Thursday: 'Πέμπτη',
+  Friday: 'Παρασκευή',
+  Saturday: 'Σάββατο',
+  Sunday: 'Κυριακή'
+};
+
+export const mapDayName = (dayName) => {
+  return dayNameMapping[dayName] || dayName;
+};
