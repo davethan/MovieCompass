@@ -6,7 +6,7 @@
       <h4 class="m-0 cursor-pointer text-gradient" @click="router.push({ name: 'home' })">Athens Cinemas
       </h4>
     </div>
-    <i class="bi bi-search cursor-pointer" @click="openSearchDrawer" />
+    <i class="bi bi-search fs-6 cursor-pointer" @click="openSearchDrawer" />
   </div>
   <search-drawer v-model="isSearchDrawerOpen" />
   <the-drawer v-model="isTheDrawerOpen" />
