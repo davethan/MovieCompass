@@ -152,9 +152,10 @@ const actions = {
     }
   },
   setAthinoramaUrlsAction(payload) {
-    this.ATHINORAMA_URLS = [...payload]//.slice(17, 28);
+    this.ATHINORAMA_URLS = [...payload]//.slice(48, 52);
   },
   setAthinoramaMovieDetailsAction(payload) {
+    if (payload.imdbLink) payload.imdbLink = payload.imdbLink.replace(/ /g, '');
     this.MOVIES.push(payload)
   },
   setAthinoramaMovieImdbDataAction(id, imdbLink, payload) {

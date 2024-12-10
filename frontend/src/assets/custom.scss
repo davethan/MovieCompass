@@ -50,6 +50,10 @@ body {
   cursor: pointer;
 }
 
+.fit-content {
+  width: fit-content;
+}
+
 a,
 .green {
   text-decoration: none;
@@ -211,4 +215,10 @@ a,
 .search-container-100 {
   width: 100%;
   margin-bottom: 5px;
+}
+
+.btn-reset-search {
+  position: absolute;
+  right: 7px;
+  top: 8px
 }
