@@ -38,11 +38,8 @@ const classDirection = computed(() => props.position === 'left' ? 'offcanvas-sta
 watch(() => props.modelValue, (newValue) => {
   const drawerElement = document.getElementById(props.id);
   if (drawerElement) {
-    if (newValue) {
-      drawerElement.classList.add('show');
-    } else {
-      drawerElement.classList.remove('show');
-    }
+    if (newValue) drawerElement.classList.add('show');
+    else drawerElement.classList.remove('show');
   }
 });
 
