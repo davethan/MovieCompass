@@ -14,6 +14,9 @@
           <div>{{ film.originalTitle }}</div>
         </div>
       </div>
+      <div v-else-if="movieNotFound" class="mx-auto fit-content">
+        Δεν βρέθηκε κάποια ταινία...
+      </div>
     </template>
   </drawer>
 </template>
@@ -42,6 +45,7 @@ defineProps({
 const emit = defineEmits(['update:modelValue']);
 
 const searchedFilms = ref([]);
+const movieNotFound = ref(false)
 const resetSearch = ref(false);
 
 const goToMoviePage = (id) => {
@@ -50,7 +54,15 @@ const goToMoviePage = (id) => {
   closeDrawer();
 };
 
-const updateSearchedFilms = (films) => searchedFilms.value = films;
+const updateSearchedFilms = (payload) => {
+  if (payload) {
+    movieNotFound.value = false
+    searchedFilms.value = payload
+  } else {
+    movieNotFound.value = true
+    searchedFilms.value = []
+  }
+};
 
 const handleResetChange = () => {
   resetSearch.value = false

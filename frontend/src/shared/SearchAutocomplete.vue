@@ -1,7 +1,10 @@
 <template>
   <div :class="cssClass" ref="container">
-    <input class="search-input" v-model="searchTerm" @keyup="searchDebounced" @focus="showDropdown"
-      placeholder="Αναζήτηση ταινίας..." />
+    <div class="position-relative">
+      <input class="search-input" v-model="searchTerm" @keyup="searchDebounced" @focus="showDropdown"
+        placeholder="Αναζήτηση ταινίας..." />
+      <button type="button" class="btn-close btn-reset-search" aria-label="Close" @click="resetState" />
+    </div>
     <ul v-if="showInside && showList && filteredFilms.length" class="list-group">
       <li v-for="film in filteredFilms" :key="film.id" class="list-group-item cursor-pointer" aria-current="true"
         @click="handleMovieSelection(film.id)">
@@ -59,7 +62,7 @@ const editString = (text) => {
 
 const search = () => {
   const term = editString(searchTerm.value);
-  if (term.length < 3) {
+  if (term.length < 2) {
     filteredFilms.value = [];
     if (!props.showInside) emit('search-results-updated', filteredFilms.value)
     return;
@@ -69,7 +72,10 @@ const search = () => {
     const originalTitle = editString(film.originalTitle);
     return greekTitle.includes(term) || originalTitle.includes(term);
   });
-  if (!props.showInside) emit('search-results-updated', filteredFilms.value)
+  if (!props.showInside) {
+    if (filteredFilms.value.length) emit('search-results-updated', filteredFilms.value)
+    else emit('search-results-updated', false)
+  }
 };
 
 const searchDebounced = debounce(search, 500);
@@ -87,6 +93,7 @@ const handleClickOutside = (event) => {
 const resetState = () => {
   searchTerm.value = '';
   filteredFilms.value = [];
+  if (!props.showInside) emit('search-results-updated', filteredFilms.value)
 }
 
 const handleMovieSelection = (id) => {
