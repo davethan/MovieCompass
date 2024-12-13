@@ -22,5 +22,6 @@ const moviesStore = useMoviesStore();
 onMounted(async () => {
   await moviesStore.getAllCurrentMoviesDetails();
   moviesStore.getAllImdbRatings();
+  moviesStore.getSpecialsAthinoramaAction();
 })
 </script>
