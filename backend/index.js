@@ -6,6 +6,7 @@ const {
     extractDataFromIMDB,
     parseAthinoramaMovies,
     extractAthinoramaMovieDetails,
+    parseAthinoramaSpecials,
 } = require('./transformations');
 
 const app = express();
@@ -54,6 +55,16 @@ app.get("/athinoramaCurrentMovies", async (req, res) => {
         res.status(200).send(athinoramaCurrentMovieURLs);
     } catch {
         res.status(500).send("Failed fething athinorama movies");
+    }
+});
+
+// Fetches all films that are currently on cinemas
+app.get("/athinoramaSpecials", async (req, res) => {
+    try {
+        const specialData = await getAthinoramaSpecials();
+        res.status(200).send(specialData);
+    } catch (error) {
+        res.status(500).send(error);
     }
 });
 
@@ -136,5 +147,15 @@ const getAthinoramaCurrentMovies = async () => {
     } catch (error) {
         console.error("Error fetching athinorama data");
         throw false;
+    }
+};
+
+const getAthinoramaSpecials = async () => {
+    try {
+        const response = await axios("https://www.athinorama.gr/cinema/eidikes-provoles");
+        return parseAthinoramaSpecials(response.data);
+    } catch (error) {
+        console.error("Error fetching athinorama special data");
+        throw error;
     }
 };

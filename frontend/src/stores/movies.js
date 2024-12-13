@@ -6,10 +6,12 @@ const { VITE_BACKEND_URL, VITE_OMDB_URL, VITE_OMDB_API_KEY } = import.meta.env;
 const state = () => ({
   ATHINORAMA_URLS: [],
   MOVIES: [],
+  SPECIALS: [],
   selectedMovieId: '',
   selectedCinema: '',
   loading: false,
   loadingRating: false,
+  loadingSpecials: false,
   filters: {
     sortedBy: 1,
     filteredByDay: 1,
@@ -40,6 +42,18 @@ const actions = {
     }
     catch {
       return false;
+    }
+  },
+  async getSpecialsAthinoramaAction() {
+    try {
+      this.setLoadingSpecialsAction(true)
+      const response = await axios.get(`${VITE_BACKEND_URL}/athinoramaSpecials`);
+      this.setSpecialsAction(response.data);
+      return true
+    } catch {
+      return false
+    } finally {
+      this.setLoadingSpecialsAction(false)
     }
   },
   //imdb data scrapping
@@ -152,7 +166,10 @@ const actions = {
     }
   },
   setAthinoramaUrlsAction(payload) {
-    this.ATHINORAMA_URLS = [...payload]//.slice(48, 52);
+    this.ATHINORAMA_URLS = [...payload]//.slice(48, 50);
+  },
+  setSpecialsAction(payload) {
+    this.SPECIALS = [...payload];
   },
   setAthinoramaMovieDetailsAction(payload) {
     if (payload.imdbLink) payload.imdbLink = payload.imdbLink.replace(/ /g, '');
@@ -183,6 +200,9 @@ const actions = {
   },
   setLoadingRatingAction(value) {
     this.loadingRating = value;
+  },
+  setLoadingSpecialsAction(value) {
+    this.loadingSpecials = value;
   },
   setSelectedMovieAction(value) {
     this.selectedMovieId = value;

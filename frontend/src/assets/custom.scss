@@ -75,6 +75,15 @@ a,
   height: 97%;
 }
 
+.specials-placeholder {
+  height: 1.7rem;
+  width: 25px;
+}
+
+.specials-placeholder > * {
+  height: 97%;
+}
+
 .offcanvas {
   background-color: $black;
   color: $color-text-dark-light;
@@ -201,6 +210,7 @@ a,
   border-radius: 7px;
   width: 100%;
   padding: 8px 18px;
+  background-color: $black-soft;
 }
 
 .search-input:focus {

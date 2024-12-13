@@ -44,6 +44,14 @@ const router = createRouter({
       }
     },
     {
+      path: '/specials',
+      name: 'Specials',
+      component: () => import('@/components/Specials.vue'),
+      meta: {
+        isProtected: true
+      }
+    },
+    {
       path: '/:pathMatch(.*)*',
       redirect: '/',
     },

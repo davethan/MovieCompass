@@ -2,7 +2,7 @@
   <drawer id="homeViewDrawer" :modelValue="modelValue" @update:modelValue="closeDrawer">
     <template #drawerHeader>
       <!-- <b>{{ noOfFilteredFilms }}/{{ moviesStore.MOVIES.length }}</b> -->
-      <h5 class="m-0"><b>Athens Cinemas</b></h5>
+      <h5 class="text-secondary m-0"><b>Athens Cinemas</b></h5>
     </template>
     <template #drawerBody>
       <div class="row g-2">

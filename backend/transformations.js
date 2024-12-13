@@ -185,9 +185,31 @@ const parseSchedule = (schedule) => {
     }
 }
 
+const parseAthinoramaSpecials = (html_data) => {
+    const $ = cheerio.load(html_data);
+
+    const container = $('div.guide-list.movies-list');
+    const items = [];
+
+    container.children('div.item').each((_, item) => {
+        const title = $(item).find('h2.item-title').text().trim();
+        let cinema = $(item).find('div.item-description').find('h4').text().trim();
+        if (!cinema) {
+            cinema = $(item).find('div.title-infos').children('p').first().text().trim();
+            cinema = cinema.startsWith(',') ? '' : cinema.split(',')[0].trim();
+        }
+        
+        if (!title && !cinema) return false;
+        items.push({title, cinema})
+    })
+
+    return items
+}
+
 module.exports = {
     extractImdbMovieCode,
     extractDataFromIMDB,
     parseAthinoramaMovies,
     extractAthinoramaMovieDetails,
+    parseAthinoramaSpecials,
 };
