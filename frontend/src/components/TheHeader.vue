@@ -7,7 +7,7 @@
       </h4>
     </div>
     <div class="d-flex gap-3">
-      <i v-if="!movieStore.loadingSpecials" class="bi bi-megaphone fs-6 cursor-pointer" @click="goToSpecialsPage" />
+      <i v-if="!movieStore.loadingRating" class="bi bi-megaphone fs-6 cursor-pointer" @click="goToSpecialsPage" />
       <div v-else class="specials-placeholder placeholder-glow"> <span class="placeholder rounded-3 col-12"></span>
       </div>
       <i class="bi bi-search fs-6 cursor-pointer" @click="openSearchDrawer" />
@@ -41,5 +41,8 @@ const openTheDrawer = () => {
   isTheDrawerOpen.value = true;
 }
 
-const goToSpecialsPage = () => router.push({ name: 'Specials' });
+const goToSpecialsPage = () => {
+  const response = movieStore.getSpecialsAthinoramaAction();
+  if (response) router.push({ name: 'Specials' });
+}
 </script>

@@ -192,15 +192,19 @@ const parseAthinoramaSpecials = (html_data) => {
     const items = [];
 
     container.children('div.item').each((_, item) => {
-        const title = $(item).find('h2.item-title').text().trim();
-        let cinema = $(item).find('div.item-description').find('h4').text().trim();
-        if (!cinema) {
-            cinema = $(item).find('div.title-infos').children('p').first().text().trim();
-            cinema = cinema.startsWith(',') ? '' : cinema.split(',')[0].trim();
+        try {
+            const title = $(item).find('h2.item-title').text().trim();
+            let cinema = $(item).find('div.item-description').find('h4').text().trim();
+            if (!cinema) {
+                cinema = $(item).find('div.title-infos').children('p').first().text().trim();
+                cinema = cinema.startsWith(',') ? '' : cinema.split(',')[0].trim();
+            }
+
+            if (!title && !cinema) return false;
+            items.push({title, cinema})
+        } catch {
+            console.log('parseAthinoramaSpecials: failed at an item');
         }
-        
-        if (!title && !cinema) return false;
-        items.push({title, cinema})
     })
 
     return items
