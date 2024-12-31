@@ -7,6 +7,8 @@ const {
     parseAthinoramaMovies,
     extractAthinoramaMovieDetails,
     parseAthinoramaSpecials,
+    parseUpcomingLinks,
+    parseUpcomingFilmDetails,
 } = require('./transformations');
 
 const app = express();
@@ -63,6 +65,26 @@ app.get("/athinoramaSpecials", async (req, res) => {
     try {
         const specialData = await getAthinoramaSpecials();
         res.status(200).send(specialData);
+    } catch (error) {
+        res.status(500).send(error);
+    }
+});
+
+// Fetches all upcoming film links
+app.get("/flixUpcomingLinks", async (req, res) => {
+    try {
+        const upcomingLinks = await getUpcomingLinks();
+        res.status(200).send(upcomingLinks);
+    } catch (error) {
+        res.status(500).send(error);
+    }
+});
+
+// Fetches upcoming film details
+app.post("/flixUpcomingFilmDetails", async (req, res) => {
+    try {
+        const upcomingDetails = await getUpcomingFilmDetails(req.body.url);
+        res.status(200).send(upcomingDetails);
     } catch (error) {
         res.status(500).send(error);
     }
@@ -156,6 +178,26 @@ const getAthinoramaSpecials = async () => {
         return parseAthinoramaSpecials(response.data);
     } catch (error) {
         console.error("Error fetching athinorama special data");
+        throw error;
+    }
+};
+
+const getUpcomingLinks = async () => {
+    try {
+        const response = await axios("https://flix.gr/cinema");
+        return parseUpcomingLinks(response.data);
+    } catch (error) {
+        console.error("Error fetching flix's upcoming data");
+        throw error;
+    }
+};
+
+const getUpcomingFilmDetails = async (url) => {
+    try {
+        const response = await axios(url);
+        return parseUpcomingFilmDetails(response.data);
+    } catch (error) {
+        console.error("Error fetching flix's upcoming film details")
         throw error;
     }
 };

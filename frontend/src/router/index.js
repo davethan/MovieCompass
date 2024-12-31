@@ -52,6 +52,14 @@ const router = createRouter({
       }
     },
     {
+      path: '/upcoming',
+      name: 'Upcoming',
+      component: () => import('@/components/Upcoming.vue'),
+      meta: {
+        isProtected: true
+      }
+    },
+    {
       path: '/:pathMatch(.*)*',
       redirect: '/',
     },

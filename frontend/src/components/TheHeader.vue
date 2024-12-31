@@ -6,9 +6,18 @@
       <h4 class="m-0 cursor-pointer text-gradient" @click="router.push({ name: 'home' })">Athens Cinemas
       </h4>
     </div>
-    <div class="d-flex gap-3">
-      <i v-if="!movieStore.loadingRating" class="bi bi-megaphone fs-6 cursor-pointer" @click="goToSpecialsPage" />
-      <div v-else class="specials-placeholder placeholder-glow"> <span class="placeholder rounded-3 col-12"></span>
+    <div class="d-flex gap-3 align-items-center">
+      <div class="d-none d-sm-block">
+        <button :disabled="specialsStore.loadingSpecials" class="btn w-100 btn-outline-secondary"
+          @click="router.push({ name: 'Specials' })">
+          Specials
+        </button>
+      </div>
+      <div class="d-none d-sm-block">
+        <button :disabled="upcomingStore.loadingUpcoming" class="btn w-100 btn-outline-secondary"
+          @click="router.push({ name: 'Upcoming' })">
+          Upcoming
+        </button>
       </div>
       <i class="bi bi-search fs-6 cursor-pointer" @click="openSearchDrawer" />
     </div>
@@ -21,14 +30,16 @@
 import { defineAsyncComponent, ref } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import TheDrawer from './TheDrawer.vue';
-import { useMoviesStore } from '@/stores/movies';
+import { useSpecialsStore } from '@/stores/specials';
+import { useUpcomingStore } from '@/stores/upcoming';
 
 const SearchDrawer = defineAsyncComponent(() => import('./SearchDrawer.vue'))
 
 const router = useRouter();
 const route = useRoute();
 
-const movieStore = useMoviesStore();
+const specialsStore = useSpecialsStore();
+const upcomingStore = useUpcomingStore();
 
 const isSearchDrawerOpen = ref(false);
 const isTheDrawerOpen = ref(false);
@@ -39,10 +50,5 @@ const openSearchDrawer = () => {
 
 const openTheDrawer = () => {
   isTheDrawerOpen.value = true;
-}
-
-const goToSpecialsPage = () => {
-  const response = movieStore.getSpecialsAthinoramaAction();
-  if (response) router.push({ name: 'Specials' });
 }
 </script>
