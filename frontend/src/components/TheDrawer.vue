@@ -94,18 +94,31 @@
             {{ toPascalCase(uniqueLocation) }}
           </button>
         </div>
+        <div class="col-12 mb-2 d-sm-none" />
+        <div class="col-12 d-sm-none">
+          <button class="btn w-100 btn-outline-secondary" @click="router.push({ name: 'Specials' })">
+            Specials <i class="bi-arrow-right ms-1" />
+          </button>
+        </div>
+        <div class="col-12 d-sm-none">
+          <button class="btn w-100 btn-outline-secondary" @click="router.push({ name: 'Upcoming' })">
+            Upcoming <i class="bi-arrow-right ms-1" />
+          </button>
+        </div>
       </div>
     </template>
   </drawer>
 </template>
 
 <script setup>
+import { useRouter } from 'vue-router';
 import { computed } from 'vue';
 import { useMoviesStore } from '@/stores/movies';
 import { isEqual } from 'lodash';
 import { toPascalCase } from '@/tools/tools';
 import Drawer from '@/shared/Drawer.vue';
 
+const router = useRouter();
 const moviesStore = useMoviesStore();
 let temporaryFilters = {};
 

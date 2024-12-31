@@ -210,10 +210,62 @@ const parseAthinoramaSpecials = (html_data) => {
     return items
 }
 
+const parseUpcomingLinks = (html_data) => {
+    const $ = cheerio.load(html_data);
+    try {
+        const container = $('div._main');
+        const upcomingSections = container.find('section').slice(-2);
+        const movies = upcomingSections.find('article')
+        const movieUrls = [];
+        movies.each((i, movie) => {
+            const link = $(movie).find('a').attr('href');
+            if (link) movieUrls.push('https://flix.gr'+link);
+        });
+        return movieUrls;
+    } catch {
+        console.log('Error @parseUpcomingLinks')
+        return [];
+    }
+}
+
+const parseUpcomingFilmDetails = (html_data) => {
+    const $ = cheerio.load(html_data);
+    try {
+        const container = $('div._main');
+
+        const h1 = container.find('header').children().first().find('h1');
+        const greekTitle = h1.text();
+        let originalTitle = h1.next().text();
+        if (originalTitle.startsWith('του') || originalTitle.startsWith('των') || originalTitle.startsWith('της')) originalTitle = '';
+
+        const summary = container.children('main').children('figure').next().find('p').text()
+        const moreDetails = container.children('main').children('aside').children('ul');
+        const duration = moreDetails.find('li').filter((i, el) => {
+            return $(el).find('strong').text().includes('Διάρκεια');
+        }).text().replace('Διάρκεια:', '').replace('λεπτά', '').trim();
+        const directors = moreDetails.find('li').filter((i, el) => {
+            return $(el).find('strong').text().includes('Σκηνοθεσία');
+        }).text().replace('Σκηνοθεσία:', '').trim();
+
+        return {
+            greekTitle,
+            originalTitle,
+            summary,
+            duration,
+            directors
+        }
+    } catch {
+        console.log('Error @parseUpcomingFilmDetails')
+        return ;
+    }
+}
+
 module.exports = {
     extractImdbMovieCode,
     extractDataFromIMDB,
     parseAthinoramaMovies,
     extractAthinoramaMovieDetails,
     parseAthinoramaSpecials,
+    parseUpcomingLinks,
+    parseUpcomingFilmDetails,
 };
