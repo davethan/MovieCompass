@@ -191,6 +191,7 @@ a,
 
 .list-group-inside {
   width: fit-content;
+  max-height: 70vh;
   z-index: 2;
   position: absolute;
   overflow-y: auto;
