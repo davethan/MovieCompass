@@ -189,14 +189,19 @@ a,
   margin: auto;
 }
 
-// .list-group {
-//   width: fit-content;
-//   z-index: 2;
-//   position: absolute;
-//   overflow-y: auto;
-//   background-color: $black;
-//   max-height: 70%;
-// }
+.list-group-inside {
+  width: fit-content;
+  z-index: 2;
+  position: absolute;
+  overflow-y: auto;
+  background-color: #202020;
+  right: 10px;
+  padding: 1rem;
+  border-radius: 0.25rem;
+  border-style: solid;
+  border-width: 1px;
+  border-color: rgb(80, 80, 80);
+}
 
 .list-header {
   &:hover h5 {
@@ -209,7 +214,7 @@ a,
   border-radius: 7px;
   width: 100%;
   padding: 8px 18px;
-  background-color: $black-soft;
+  background-color: $black-highlight;
 }
 
 .search-input:focus {

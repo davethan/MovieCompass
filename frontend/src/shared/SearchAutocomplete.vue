@@ -5,8 +5,9 @@
         placeholder="Αναζήτηση ταινίας..." />
       <button type="button" class="btn-close btn-reset-search" aria-label="Close" @click="resetState" />
     </div>
-    <ul v-if="showInside && showList && filteredFilms.length" class="list-group">
-      <li v-for="film in filteredFilms" :key="film.id" class="list-group-item cursor-pointer" aria-current="true"
+    <ul v-if="showInside && showList && filteredFilms.length" :class="showInside ? 'list-group-inside' : 'list-group'">
+      <li v-for="film in filteredFilms" :key="film.id"
+        class="list-group-item cursor-pointer border-bottom p-2 list-header" aria-current="true"
         @click="handleMovieSelection(film.id)">
         <h5 class="list-header">{{ film.greekTitle }}</h5>
         <div>{{ film.originalTitle }}</div>

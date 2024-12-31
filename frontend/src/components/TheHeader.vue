@@ -19,7 +19,9 @@
           Upcoming
         </button>
       </div>
-      <i class="bi bi-search fs-6 cursor-pointer" @click="openSearchDrawer" />
+      <i class="d-md-none bi bi-search fs-6 cursor-pointer" @click="openSearchDrawer" />
+      <search-autocomplete :dataset="moviesStore.MOVIES" :showInside="true" cssClass="d-none d-md-block"
+        :reset-search="resetSearch" @reset-value-changed="resetSearch = false" @film-selected="handleMovieSelection" />
     </div>
   </div>
   <search-drawer v-model="isSearchDrawerOpen" />
@@ -30,19 +32,23 @@
 import { defineAsyncComponent, ref } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import TheDrawer from './TheDrawer.vue';
+import { useMoviesStore } from '@/stores/movies';
 import { useSpecialsStore } from '@/stores/specials';
 import { useUpcomingStore } from '@/stores/upcoming';
 
+const SearchAutocomplete = defineAsyncComponent(() => import('@/shared/SearchAutocomplete.vue'))
 const SearchDrawer = defineAsyncComponent(() => import('./SearchDrawer.vue'))
 
 const router = useRouter();
 const route = useRoute();
 
+const moviesStore = useMoviesStore();
 const specialsStore = useSpecialsStore();
 const upcomingStore = useUpcomingStore();
 
 const isSearchDrawerOpen = ref(false);
 const isTheDrawerOpen = ref(false);
+const resetSearch = ref(false);
 
 const openSearchDrawer = () => {
   isSearchDrawerOpen.value = true;
@@ -51,4 +57,10 @@ const openSearchDrawer = () => {
 const openTheDrawer = () => {
   isTheDrawerOpen.value = true;
 }
+
+const handleMovieSelection = (id) => {
+  moviesStore.setSelectedMovieAction(id);
+  router.push({ name: 'IndividualMovie', params: { filmId: id } });
+  resetSearch.value = true
+};
 </script>
