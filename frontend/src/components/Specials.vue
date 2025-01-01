@@ -45,7 +45,7 @@ import { useSpecialsStore } from '@/stores/specials';
 
 const specialsStore = useSpecialsStore();
 
-onMounted(async () => {
-  await specialsStore.getSpecialsAthinoramaAction();
+onMounted(() => {
+  if (!specialsStore.SPECIALS.length) specialsStore.getSpecialsAthinoramaAction();
 })
 </script>
