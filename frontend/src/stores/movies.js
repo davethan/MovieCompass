@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
-import axios from 'axios';
+import request from '@/http/request';
 import { convertToNumber } from '@/tools/tools';
-const { VITE_BACKEND_URL, VITE_OMDB_URL, VITE_OMDB_API_KEY } = import.meta.env;
+const { VITE_OMDB_URL, VITE_OMDB_API_KEY } = import.meta.env;
 
 const state = () => ({
   ATHINORAMA_URLS: [],
@@ -23,7 +23,7 @@ const actions = {
   //get all current movies in theaters
   async getAthinoramaUrlsAction() {
     try {
-      const response = await axios.get(`${VITE_BACKEND_URL}/athinoramaCurrentMovies`);
+      const response = await request.get(`/athinoramaCurrentMovies`);
       this.setAthinoramaUrlsAction(response.data);
       return true;
     }
@@ -34,7 +34,7 @@ const actions = {
   //athinorama data scrapping
   async getMovieAthinoramaInfoAction(payload) {
     try {
-      const response = await axios.post(`${VITE_BACKEND_URL}/athinoramaMovieDetails`, { url: payload.url });
+      const response = await request.post(`/athinoramaMovieDetails`, { url: payload.url });
       this.setAthinoramaMovieDetailsAction({ ...response.data, id: payload.id });
       return true;
     }
@@ -46,7 +46,7 @@ const actions = {
   async getMovieImdbDataAction(payload) {
     const { imdbLink, id } = payload;
     try {
-      const response = await axios.post(`${VITE_BACKEND_URL}/imdbMovieRating`, { imdbLink });
+      const response = await request.post(`/imdbMovieRating`, { imdbLink });
       this.setAthinoramaMovieImdbDataAction(id, imdbLink, response.data);
     }
     catch {
@@ -58,7 +58,7 @@ const actions = {
     const { imdbLink, id } = payload;
     try {
       const imdbId = imdbLink.match(/\/title\/(tt\d+)\//);
-      const response = await axios.get(`${VITE_OMDB_URL}/?apikey=${VITE_OMDB_API_KEY}&i=${imdbId[1]}`);
+      const response = await request.get(`${VITE_OMDB_URL}/?apikey=${VITE_OMDB_API_KEY}&i=${imdbId[1]}`);
       if (response.data.Response === "True" && response.data.imdbRating !== 'N/A') {
         this.setAthinoramaMovieOmdbDataAction(id, response.data);
         return true;
@@ -79,7 +79,7 @@ const actions = {
         .replace(/.*\/(.*)/, '$1')
         .replace(/[^a-zA-Z0-9 ]+/g, '')
         .replace(/ /g, '+');
-      const response = await axios.get(`${VITE_OMDB_URL}/?apikey=${VITE_OMDB_API_KEY}&t=${title}&y=${year}`);
+      const response = await request.get(`${VITE_OMDB_URL}/?apikey=${VITE_OMDB_API_KEY}&t=${title}&y=${year}`);
       if (response.data.Response === "True" && response.data.imdbRating !== 'N/A') {
         const imdbLink = `http://www.imdb.com/title/${response.data.imdbID}/`;
         this.setAthinoramaMovieOmdbDataAction(id, response.data, imdbLink);

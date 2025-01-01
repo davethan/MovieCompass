@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia';
-import axios from 'axios';
-const { VITE_BACKEND_URL } = import.meta.env;
+import request from '@/http/request';
 
 const state = () => ({
   SPECIALS: [],
@@ -11,7 +10,7 @@ const actions = {
   async getSpecialsAthinoramaAction() {
     try {
       this.setLoadingSpecialsAction(true)
-      const response = await axios.get(`${VITE_BACKEND_URL}/athinoramaSpecials`);
+      const response = await request.get(`/athinoramaSpecials`);
       this.setSpecialsAction(response.data);
       return true
     } catch {

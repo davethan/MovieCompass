@@ -58,7 +58,7 @@ import { formatDuration } from '@/tools/tools';
 
 const upcomingStore = useUpcomingStore();
 
-onMounted(async () => {
-  await upcomingStore.getAllUpcomingFilmDetailsAction();
+onMounted(() => {
+  if (!upcomingStore.UPCOMING.length) upcomingStore.getAllUpcomingFilmDetailsAction();
 })
 </script>

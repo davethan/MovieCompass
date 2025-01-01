@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia';
-import axios from 'axios';
-const { VITE_BACKEND_URL } = import.meta.env;
+import request from '@/http/request';
 
 const state = () => ({
   UPCOMING_LINKS: [],
@@ -11,7 +10,7 @@ const state = () => ({
 const actions = {
   async getUpcomingLinksAction() {
     try {
-      const response = await axios.get(`${VITE_BACKEND_URL}/flixUpcomingLinks`);
+      const response = await request.get(`/flixUpcomingLinks`);
       this.setUpcomingLinksAction(response.data);
       return true
     } catch {
@@ -20,7 +19,7 @@ const actions = {
   },
   async getUpcomingFilmDetailsAction(payload) {
     try {
-      const response = await axios.post(`${VITE_BACKEND_URL}/flixUpcomingFilmDetails`, { url: payload });
+      const response = await request.post(`/flixUpcomingFilmDetails`, { url: payload });
       this.setUpcomingAction(response.data);
       return true;
     }
