@@ -96,6 +96,11 @@ a,
   background-color: $black-medium;
 }
 
+.card-footer {
+  background-color: $secondary-background;
+  border: 0px;
+}
+
 .cinema-item {
   flex: 0 1 24%;
   overflow: hidden;
