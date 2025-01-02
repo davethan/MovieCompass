@@ -8,15 +8,17 @@
     </div>
     <div class="d-flex gap-3 align-items-center">
       <div class="d-none d-sm-block">
-        <button :disabled="specialsStore.loadingSpecials" class="btn w-100 btn-outline-secondary"
+        <button :disabled="specialsStore.loadingSpecials"
+          :class="`btn w-100 ${route.name === 'Specials' ? 'btn-secondary' : 'btn-outline-secondary'}`"
           @click="router.push({ name: 'Specials' })">
           Specials
         </button>
       </div>
       <div class="d-none d-sm-block">
-        <button :disabled="upcomingStore.loadingUpcoming" class="btn w-100 btn-outline-secondary"
+        <button :disabled="upcomingStore.loadingUpcoming"
+          :class="`btn w-100 ${route.name === 'Upcoming' ? 'btn-secondary' : 'btn-outline-secondary'}`"
           @click="router.push({ name: 'Upcoming' })">
-          Upcoming
+          Προσεχώς
         </button>
       </div>
       <i class="d-md-none bi bi-search fs-6 cursor-pointer" @click="openSearchDrawer" />
@@ -29,6 +31,7 @@
 </template>
 
 <script setup>
+//:class="`btn w-100 h-100 ${moviesStore.filters.filteredByLocation === 'ALL' ? ' btn-primary' : 'btn-outline-primary'}`"
 import { defineAsyncComponent, ref } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import TheDrawer from './TheDrawer.vue';

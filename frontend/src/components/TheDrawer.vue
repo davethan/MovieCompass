@@ -102,7 +102,7 @@
         </div>
         <div class="col-12 d-sm-none">
           <button class="btn w-100 btn-outline-secondary" @click="router.push({ name: 'Upcoming' })">
-            Upcoming <i class="bi-arrow-right ms-1" />
+            Προσεχώς <i class="bi-arrow-right ms-1" />
           </button>
         </div>
       </div>

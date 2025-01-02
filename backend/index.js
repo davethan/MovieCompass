@@ -71,7 +71,7 @@ app.get("/athinoramaSpecials", async (req, res) => {
 });
 
 // Fetches all upcoming film links
-app.get("/flixUpcomingLinks", async (req, res) => {
+app.get("/filmyUpcomingLinks", async (req, res) => {
     try {
         const upcomingLinks = await getUpcomingLinks();
         res.status(200).send(upcomingLinks);
@@ -81,7 +81,7 @@ app.get("/flixUpcomingLinks", async (req, res) => {
 });
 
 // Fetches upcoming film details
-app.post("/flixUpcomingFilmDetails", async (req, res) => {
+app.post("/filmyUpcomingFilmDetails", async (req, res) => {
     try {
         const upcomingDetails = await getUpcomingFilmDetails(req.body.url);
         res.status(200).send(upcomingDetails);
@@ -184,7 +184,7 @@ const getAthinoramaSpecials = async () => {
 
 const getUpcomingLinks = async () => {
     try {
-        const response = await axios("https://flix.gr/cinema");
+        const response = await axios("https://www.filmy.gr/to-be-released-in-greece/");
         return parseUpcomingLinks(response.data);
     } catch (error) {
         console.error("Error fetching flix's upcoming data");

@@ -1,3 +1,5 @@
+import { compareAsc, parse } from "date-fns";
+
 export const formatDuration = (minutes) => {
   const hours = Math.floor(minutes / 60);
   const restMinutes = minutes % 60;
@@ -53,4 +55,16 @@ const dayNameMapping = {
 
 export const mapDayName = (dayName) => {
   return dayNameMapping[dayName] || dayName;
+};
+
+export const sortByDate = (date1, date2) => {
+  const format = 'dd-MM-yyyy';
+
+  if (!date1 && !date2) return 0;
+  if (!date1) return 1;
+  if (!date2) return -1;
+
+  const parsedDate1 = parse(date1, format, new Date());
+  const parsedDate2 = parse(date2, format, new Date());
+  return compareAsc(parsedDate1, parsedDate2);
 };

@@ -137,6 +137,38 @@ const getDaysInRange = (start, end) => {
     }
 };
 
+function convertGreekDate(inputDate) {
+    const greekMonths = {
+        'Ιανουαρίου': '01',
+        'Φεβρουαρίου': '02',
+        'Μαρτίου': '03',
+        'Απριλίου': '04',
+        'Μαΐου': '05',
+        'Ιουνίου': '06',
+        'Ιουλίου': '07',
+        'Αυγούστου': '08',
+        'Σεπτεμβρίου': '09',
+        'Οκτωβρίου': '10',
+        'Νοεμβρίου': '11',
+        'Δεκεμβρίου': '12'
+    };
+    const [day, monthGreek, year] = inputDate.split(' ');
+    const monthNumber = greekMonths[monthGreek];
+
+    if (!monthNumber) return '';
+    return `${day}-${monthNumber}-${year}`;
+};
+
+const parseDuration = (duration) => {
+    const match = duration.match(/(\d+)\s*ωρ\.\s*(\d+)\s*λεπ\./);
+    if (match) {
+        const hours = parseInt(match[1], 10);
+        const minutes = parseInt(match[2], 10);
+        return hours * 60 + minutes;
+    }
+    return null;
+};
+
 const parseSchedule = (schedule) => {
     const daysMap = {
         "Δευτ.": "Monday",
@@ -213,13 +245,12 @@ const parseAthinoramaSpecials = (html_data) => {
 const parseUpcomingLinks = (html_data) => {
     const $ = cheerio.load(html_data);
     try {
-        const container = $('div._main');
-        const upcomingSections = container.find('section').slice(-2);
-        const movies = upcomingSections.find('article')
+        const containers = $('div.amy-shortcode.amy-mv-grid.layout3');
+        const movies = containers.find('div.col-md-15.grid-item');
         const movieUrls = [];
         movies.each((i, movie) => {
-            const link = $(movie).find('a').attr('href');
-            if (link) movieUrls.push('https://flix.gr'+link);
+            const link = $(movie).find('h3.entry-title').find('a').attr('href');
+            if (link) movieUrls.push(link);
         });
         return movieUrls;
     } catch {
@@ -231,32 +262,39 @@ const parseUpcomingLinks = (html_data) => {
 const parseUpcomingFilmDetails = (html_data) => {
     const $ = cheerio.load(html_data);
     try {
-        const container = $('div._main');
+        const container = $('div.page-content')
+        let greekTitle = container.find('li:contains("Ελληνικός Τίτλος")').text().replace('Ελληνικός Τίτλος:', '').trim();
+        let originalTitle = container.find('li:contains("Αυθεντικός Τίτλος")').text().replace('Αυθεντικός Τίτλος:', '').trim();
+        if (!greekTitle) {
+            greekTitle = originalTitle;
+            originalTitle = '';
+        }
+        const year = container.find('li:contains("Χρονιά")').text().replace('Χρονιά:', '').trim();
+        const duration = container.find('span.duration').first().text().trim();
 
-        const h1 = container.find('header').children().first().find('h1');
-        const greekTitle = h1.text();
-        let originalTitle = h1.next().text();
-        if (originalTitle.startsWith('του') || originalTitle.startsWith('των') || originalTitle.startsWith('της')) originalTitle = '';
+        const reviewTags = container.find('li:contains("Είδος")').find('a');
+        let tags = [];
+        reviewTags.each((i, tag) => {
+            tags.push($(tag).text().trim());
+        })
 
-        const summary = container.children('main').children('figure').next().find('p').text()
-        const moreDetails = container.children('main').children('aside').children('ul');
-        const duration = moreDetails.find('li').filter((i, el) => {
-            return $(el).find('strong').text().includes('Διάρκεια');
-        }).text().replace('Διάρκεια:', '').replace('λεπτά', '').trim();
-        const directors = moreDetails.find('li').filter((i, el) => {
-            return $(el).find('strong').text().includes('Σκηνοθεσία');
-        }).text().replace('Σκηνοθεσία:', '').trim();
-
+        const summary = container.find('div.entry-content.e-content').find('div.vc_tta-panels-container').find('em').first().text().trim();
+        const directors = container.find('p:contains("Σκηνοθεσία")').next().text().trim();
+        const premiere = container.find('li:contains("Πρεμιέρα")').text().replace('Πρεμιέρα:', '').trim();
+        
         return {
             greekTitle,
             originalTitle,
+            year,
+            duration: parseDuration(duration),
+            tags,
             summary,
-            duration,
-            directors
+            directors,
+            premiere : convertGreekDate(premiere),
         }
     } catch {
         console.log('Error @parseUpcomingFilmDetails')
-        return ;
+        throw('Error @parseUpcomingFilmDetails') ;
     }
 }
 

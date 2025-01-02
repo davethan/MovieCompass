@@ -10,7 +10,7 @@ const state = () => ({
 const actions = {
   async getUpcomingLinksAction() {
     try {
-      const response = await request.get(`/flixUpcomingLinks`);
+      const response = await request.get(`/filmyUpcomingLinks`);
       this.setUpcomingLinksAction(response.data);
       return true
     } catch {
@@ -19,7 +19,7 @@ const actions = {
   },
   async getUpcomingFilmDetailsAction(payload) {
     try {
-      const response = await request.post(`/flixUpcomingFilmDetails`, { url: payload });
+      const response = await request.post(`/filmyUpcomingFilmDetails`, { url: payload });
       this.setUpcomingAction(response.data);
       return true;
     }
@@ -50,7 +50,7 @@ const actions = {
     this.UPCOMING.push(payload);
   },
   setUpcomingLinksAction(payload) {
-    this.UPCOMING_LINKS = [...payload];
+    this.UPCOMING_LINKS = [...payload]//.slice(0, 1);
   },
   setLoadingUpcomingAction(value) {
     this.loadingUpcoming = value;
