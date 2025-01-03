@@ -76,7 +76,7 @@ a,
 }
 
 .placeholder-upcomingMovie {
-  height: 400px;
+  min-height: 400px;
 }
 
 .placeholder-specialEvent {
@@ -119,6 +119,12 @@ a,
   .cinema-item:hover .card-body {
     background-color: $black-highlight;
   }
+}
+
+.film-item-no-hover {
+  overflow: hidden;
+  height: 100%;
+  border: 0px;
 }
 
 .fade-enter-active,
@@ -186,7 +192,6 @@ a,
   right: 50%;
   transform: translate(50%, 50%);
   background: $gradient-sat;
-  box-shadow: 0px 2px 15px 2px $black;
 }
 
 .cinema-details {

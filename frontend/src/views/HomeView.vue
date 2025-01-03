@@ -1,7 +1,7 @@
 <template>
   <div class="row g-3">
     <div v-if="!filteredMovies.length" class="col-lg-12 text-center">
-      <div class="card border-0 film-item">
+      <div class="card border-0 film-item-no-hover">
         <div class="card-header">
           <h2>Ουψ!</h2>
         </div>

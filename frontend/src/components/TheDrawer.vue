@@ -2,7 +2,21 @@
   <drawer id="homeViewDrawer" :modelValue="modelValue" @update:modelValue="closeDrawer">
     <template #drawerHeader>
       <!-- <b>{{ noOfFilteredFilms }}/{{ moviesStore.MOVIES.length }}</b> -->
-      <h5 class="text-secondary m-0"><b>Athens Cinemas</b></h5>
+      <h5 class="text-secondary m-0 d-none d-sm-block"><b>Athens Cinemas</b></h5>
+      <div class="d-flex gap-1 d-sm-none">
+        <button class="btn w-100 btn-outline-secondary" @click="router.push({ name: 'Specials' })">
+          <div class="d-flex gap-1">
+            <div>Specials</div>
+            <i class="bi-arrow-right-short" />
+          </div>
+        </button>
+        <button class="btn w-100 btn-outline-secondary" @click="router.push({ name: 'Upcoming' })">
+          <div class="d-flex gap-1">
+            <div>Προσεχώς</div>
+            <i class="bi-arrow-right-short" />
+          </div>
+        </button>
+      </div>
     </template>
     <template #drawerBody>
       <div class="row g-2">
@@ -92,17 +106,6 @@
             :class="`btn w-100 h-100 ${moviesStore.filters.filteredByLocation === uniqueLocation ? ' btn-primary' : 'btn-outline-primary'}`"
             @click="handleFilterChange({ filteredByLocation: uniqueLocation })">
             {{ toPascalCase(uniqueLocation) }}
-          </button>
-        </div>
-        <div class="col-12 mb-2 d-sm-none" />
-        <div class="col-12 d-sm-none">
-          <button class="btn w-100 btn-outline-secondary" @click="router.push({ name: 'Specials' })">
-            Specials <i class="bi-arrow-right ms-1" />
-          </button>
-        </div>
-        <div class="col-12 d-sm-none">
-          <button class="btn w-100 btn-outline-secondary" @click="router.push({ name: 'Upcoming' })">
-            Προσεχώς <i class="bi-arrow-right ms-1" />
           </button>
         </div>
       </div>

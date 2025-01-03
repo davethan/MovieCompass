@@ -1,12 +1,18 @@
 <template>
   <div class="navbar sticky-top navbar-dark bg-dark px-3">
     <div class="d-flex gap-3 justify-content-between align-items-center">
-      <i v-if="route.name === 'home'" class="bi bi-list fs-3 cursor-pointer" @click="openTheDrawer" />
+      <i v-if="route.name === 'Home'" class="bi bi-list fs-3 cursor-pointer" @click="openTheDrawer" />
       <i v-else class="bi bi-arrow-left fs-3 cursor-pointer" @click="router.back" />
-      <h4 class="m-0 cursor-pointer text-gradient" @click="router.push({ name: 'home' })">Athens Cinemas
+      <h4 class="m-0 cursor-pointer text-gradient" @click="router.push({ name: 'Home' })">Athens Cinemas
       </h4>
     </div>
     <div class="d-flex gap-3 align-items-center">
+      <div class="d-none d-sm-block">
+        <button :class="`btn w-100 ${route.name === 'Home' ? 'btn-secondary' : 'btn-outline-secondary'}`"
+          @click="router.push({ name: 'Home' })">
+          Home
+        </button>
+      </div>
       <div class="d-none d-sm-block">
         <button :disabled="specialsStore.loadingSpecials"
           :class="`btn w-100 ${route.name === 'Specials' ? 'btn-secondary' : 'btn-outline-secondary'}`"
@@ -15,7 +21,7 @@
         </button>
       </div>
       <div class="d-none d-sm-block">
-        <button :disabled="upcomingStore.loadingUpcoming"
+        <button :disabled="upcomingStore.loadingUpcoming && !upcomingStore.UPCOMING.length"
           :class="`btn w-100 ${route.name === 'Upcoming' ? 'btn-secondary' : 'btn-outline-secondary'}`"
           @click="router.push({ name: 'Upcoming' })">
           Προσεχώς

@@ -275,7 +275,7 @@ const parseUpcomingFilmDetails = (html_data) => {
         const reviewTags = container.find('li:contains("Είδος")').find('a');
         let tags = [];
         reviewTags.each((i, tag) => {
-            tags.push($(tag).text().trim());
+            if (tags.length < 4) tags.push($(tag).text().trim());
         })
 
         const summary = container.find('div.entry-content.e-content').find('div.vc_tta-panels-container').find('em').first().text().trim();
