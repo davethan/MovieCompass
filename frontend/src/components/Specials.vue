@@ -1,7 +1,7 @@
 <template>
   <div class="row g-3">
     <div class="col-lg-12">
-      <div class="card film-item">
+      <div class="card film-item-no-hover">
         <div class="card-body">
           <h4 class="text-center text-secondary m-0"> Οι ειδικές προβολές της εβδομάδας </h4>
         </div>
@@ -10,7 +10,7 @@
     <template v-if="!specialsStore.loadingSpecials">
       <template v-if="specialsStore.SPECIALS.length">
         <div class="col-lg-3" v-for="(event, i) in specialsStore.SPECIALS" :key="i">
-          <div class="card film-item">
+          <div class="card film-item-no-hover">
             <div class="card-body">
               <div class="text-primary"> {{ event.title }} </div>
               <div> {{ event.cinema }} </div>
@@ -20,7 +20,7 @@
       </template>
       <template v-else>
         <div class="col-lg-3">
-          <div class="card film-item">
+          <div class="card film-item-no-hover">
             <div class="card-body">
               <div class="text-primary"> Δεν βρέθηκαν ειδικές προβολές </div>
               <div> Δοκιμάστε να ξαναφορτώσετε τη σελίδα! </div>
