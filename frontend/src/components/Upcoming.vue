@@ -3,7 +3,16 @@
     <div class="col-lg-12">
       <div class="card film-item-no-hover">
         <div class="card-body">
-          <h4 class="text-center text-secondary m-0"> Προσεχώς στις αίθουσες!</h4>
+          <h4 v-if="upcomingStore.loadingUpcoming"
+            class="d-flex gap-2 justify-content-center text-center text-secondary m-0">
+            <div> Προσεχώς </div>
+            <div class="upcoming-no-placeholder placeholder-glow">
+              <span class="placeholder rounded-3 col-12"></span>
+            </div>
+            <div> ταινίες στις αίθουσες! </div>
+          </h4>
+          <h4 v-else class="text-center text-secondary m-0"> Προσεχώς {{ upcomingStore.UPCOMING.length }} ταινίες στις
+            αίθουσες!</h4>
         </div>
       </div>
     </div>
