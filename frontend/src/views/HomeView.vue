@@ -1,14 +1,12 @@
 <template>
   <div class="row g-3">
-    <div v-if="!filteredMovies.length" class="col-sm-6 col-md-6 col-lg-3 text-center">
-      <div class="card border-0 film-item-no-hover">
+    <div v-if="!filteredMovies.length" class="col-sm-6 col-md-6 col-lg-3">
+      <div class="card film-item-no-hover">
         <div class="card-header">
-          <h2>Ουψ!</h2>
+          <h2 class="text-primary m-0">Δεν βρέθηκαν ταινίες</h2>
         </div>
         <div class="card-body">
-          <div class="my-2">
-            Δεν βρέθηκε κάποια ταινία με αυτά τα κριτήρια. Δοκιμάστε να αφαιρέσετε κάποια απ' αυτά.
-          </div>
+          Δοκιμάστε να ξαναφορτώσετε τη σελίδα!
         </div>
       </div>
     </div>
