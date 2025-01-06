@@ -1,6 +1,6 @@
 <template>
   <div class="row g-3">
-    <div v-if="!filteredMovies.length" class="col-lg-12 text-center">
+    <div v-if="!filteredMovies.length" class="col-sm-6 col-md-6 col-lg-3 text-center">
       <div class="card border-0 film-item-no-hover">
         <div class="card-header">
           <h2>Ουψ!</h2>
@@ -12,7 +12,7 @@
         </div>
       </div>
     </div>
-    <div v-else class="col-lg-3" v-for="movie in filteredMovies" :key="movie.id">
+    <div v-else class="col-sm-6 col-md-6 col-lg-3" v-for="movie in filteredMovies" :key="movie.id">
       <div class="card film-item cursor-pointer" @click="goToMoviePage(movie.id)">
         <div class="card-header">
           <i v-if="isGem(movie)" class="bi bi-gem text-danger float-end" />
