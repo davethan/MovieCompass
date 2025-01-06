@@ -10,8 +10,9 @@ const state = () => ({
 const actions = {
   async getUpcomingLinksAction() {
     try {
-      const response = await request.get(`/filmyUpcomingLinks`);
-      this.setUpcomingLinksAction(response.data);
+      const response = await request.get(`/filmyUpcomingLinksAndBriefFilms`);
+      this.setUpcomingLinksAction(response.data.links);
+      for (let i in response.data.briefMovies) this.setUpcomingAction(response.data.briefMovies[i]);
       return true
     } catch {
       return false
