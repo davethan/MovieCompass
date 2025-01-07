@@ -37,7 +37,6 @@
 </template>
 
 <script setup>
-//:class="`btn w-100 h-100 ${moviesStore.filters.filteredByLocation === 'ALL' ? ' btn-primary' : 'btn-outline-primary'}`"
 import { defineAsyncComponent, ref } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import TheDrawer from './TheDrawer.vue';

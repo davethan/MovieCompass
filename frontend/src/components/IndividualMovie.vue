@@ -84,15 +84,14 @@
         </div>
       </div>
     </div>
-    <IndividualMovieDrawer v-model="isMovieDrawerOpen" @filter-changed="filterCinemas" :state="state" />
-    <ScrollToTopButton />
+    <individual-movie-drawer v-model="isMovieDrawerOpen" @filter-changed="filterCinemas" :state="state" />
+    <scroll-to-top-button />
   </div>
 </template>
 
 <script setup>
 import { ref, defineProps, onBeforeMount, computed, unref, watch, defineAsyncComponent } from 'vue';
 import { formatDuration, mapDayName } from '@/tools/tools';
-import ScrollToTopButton from '@/shared/ScrollToTopButton.vue';
 import { useRouter } from 'vue-router';
 import { useMoviesStore } from '@/stores/movies';
 

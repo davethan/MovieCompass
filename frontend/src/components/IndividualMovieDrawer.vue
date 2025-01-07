@@ -55,7 +55,6 @@
 
 <script setup>
 import { ref, unref, computed } from 'vue';
-import Drawer from '@/shared/Drawer.vue';
 import { useMoviesStore } from '@/stores/movies';
 import { toPascalCase } from '@/tools/tools';
 
