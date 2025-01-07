@@ -24,7 +24,6 @@
 <script setup>
 import { ref, defineAsyncComponent } from 'vue';
 import { useMoviesStore } from '@/stores/movies';
-import Drawer from '@/shared/Drawer.vue';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();

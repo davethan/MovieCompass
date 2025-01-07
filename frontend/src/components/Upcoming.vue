@@ -99,13 +99,12 @@
       </div>
     </template>
   </div>
-  <ScrollToTopButton />
+  <scroll-to-top-button />
 </template>
 
 <script setup>
 import { onMounted, computed } from 'vue';
 import { useUpcomingStore } from '@/stores/upcoming';
-import ScrollToTopButton from '@/shared/ScrollToTopButton.vue';
 import { formatDuration, sortByDate } from '@/tools/tools';
 import { cloneDeep } from 'lodash'
 

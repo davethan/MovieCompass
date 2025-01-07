@@ -14,7 +14,7 @@
           <h2 class="text-primary m-0">Δεν βρέθηκαν ταινίες</h2>
         </div>
         <div class="card-body">
-          Δοκιμάστε να ξαναφορτώσετε τη σελίδα!
+          Δοκιμάστε να αφαιρέσετε κάποια φίλτρα ή να ξαναφορτώσετε τη σελίδα!
         </div>
       </div>
     </div>
@@ -70,7 +70,6 @@
 import { useRouter } from 'vue-router';
 import { computed, unref } from 'vue';
 import { formatDuration } from '@/tools/tools';
-import ScrollToTopButton from '@/shared/ScrollToTopButton.vue';
 import { useMoviesStore } from '@/stores/movies';
 
 const moviesStore = useMoviesStore();

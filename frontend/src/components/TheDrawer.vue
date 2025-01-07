@@ -119,7 +119,6 @@ import { computed } from 'vue';
 import { useMoviesStore } from '@/stores/movies';
 import { isEqual } from 'lodash';
 import { toPascalCase } from '@/tools/tools';
-import Drawer from '@/shared/Drawer.vue';
 
 const router = useRouter();
 const moviesStore = useMoviesStore();
