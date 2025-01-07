@@ -1,5 +1,13 @@
 <template>
   <div class="row g-3">
+    <div class="col-lg-12">
+      <div class="card film-item-no-hover">
+        <div class="card-body">
+          <h4 class="text-center text-secondary m-0"> Δείχνουμε {{ filteredMovies.length }} ταινίες απ' τις {{
+            moviesStore.MOVIES.length }} που παίζονται αυτές τις μέρες! </h4>
+        </div>
+      </div>
+    </div>
     <div v-if="!filteredMovies.length" class="col-sm-6 col-md-6 col-lg-3">
       <div class="card film-item-no-hover">
         <div class="card-header">

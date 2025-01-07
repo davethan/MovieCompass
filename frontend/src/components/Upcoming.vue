@@ -4,7 +4,7 @@
       <div class="card film-item-no-hover">
         <div class="card-body">
           <h4 v-if="upcomingStore.loadingUpcoming"
-            class="d-flex gap-2 justify-content-center text-center text-secondary m-0">
+            class="d-flex column-gap-2 justify-content-center flex-wrap text-center text-secondary m-0">
             <div> Προσεχώς </div>
             <div class="upcoming-no-placeholder placeholder-glow">
               <span class="placeholder rounded-3 col-12"></span>
