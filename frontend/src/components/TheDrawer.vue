@@ -4,13 +4,13 @@
       <!-- <b>{{ noOfFilteredFilms }}/{{ moviesStore.MOVIES.length }}</b> -->
       <h5 class="text-secondary m-0 d-none d-sm-block"><b>Athens Cinemas</b></h5>
       <div class="d-flex gap-1 d-sm-none">
-        <button class="btn w-100 btn-outline-secondary" @click="router.push({ name: 'Specials' })">
+        <button class="btn w-100 btn-outline-secondary" @click="goToSpecials">
           <div class="d-flex gap-1">
             <div>Specials</div>
             <i class="bi-arrow-right-short" />
           </div>
         </button>
-        <button class="btn w-100 btn-outline-secondary" @click="router.push({ name: 'Upcoming' })">
+        <button class="btn w-100 btn-outline-secondary" @click="goToUpcoming">
           <div class="d-flex gap-1">
             <div>Προσεχώς</div>
             <i class="bi-arrow-right-short" />
@@ -159,6 +159,16 @@ const handleFilterChange = (value) => {
 const closeDrawer = () => {
   emit('update:modelValue', false);
 };
+
+const goToSpecials = () => {
+  router.push({ name: 'Specials' });
+  closeDrawer();
+}
+
+const goToUpcoming = () => {
+  router.push({ name: 'Upcoming' });
+  closeDrawer();
+}
 
 const uniqueCinemaLocations = computed(() => {
   const cinemaLocations = moviesStore.MOVIES.flatMap((film) =>
