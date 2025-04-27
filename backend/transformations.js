@@ -16,10 +16,9 @@ const extractImdbMovieCode = (html) => {
 
 const extractDataFromIMDB = (html) => {
     const $ = cheerio.load(html);
-    
-    const container = $('.sc-9a2a0028-3.bwWOiy');
-    const rating = container.find('div[data-testid="hero-rating-bar__aggregate-rating"] span.sc-d541859f-1').text().trim();
-    const popularity = container.find('div[data-testid="hero-rating-bar__aggregate-rating"] div.sc-d541859f-3.dwhNqC').text().trim();
+    const container = $('.sc-d541859f-0.hNIoIx');
+    const rating = container.find('span.sc-d541859f-1.imUuxf').first().text().trim();
+    const popularity = container.find('div.sc-d541859f-3.dwhNqC').first().text().trim();
 
     return {rating, popularity};
 };
