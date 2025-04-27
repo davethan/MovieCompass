@@ -26,6 +26,11 @@
     </template>
 
     <template v-if="upcomingStore.UPCOMING.length">
+      <div v-if="upcomingStore.loadingUpcoming" class="col-sm-6 col-md-6 col-lg-3 placeholder-upcomingMovie">
+        <div class="placeholder-glow h-100 w-100">
+          <span class="placeholder h-100 rounded-2 col-12"></span>
+        </div>
+      </div>
       <div class="col-sm-6 col-md-6 col-lg-3" v-for="(upcomingMovie, i) in sortedUpcomingMovies" :key="i">
         <template v-if="upcomingMovie.isBrief">
           <div class="card film-item-no-hover">
@@ -78,11 +83,6 @@
             </div>
           </div>
         </template>
-      </div>
-      <div v-if="upcomingStore.loadingUpcoming" class="col-sm-6 col-md-6 col-lg-3 placeholder-upcomingMovie">
-        <div class="placeholder-glow h-100 w-100">
-          <span class="placeholder h-100 rounded-2 col-12"></span>
-        </div>
       </div>
     </template>
 
