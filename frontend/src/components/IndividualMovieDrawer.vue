@@ -1,7 +1,7 @@
 <template>
   <drawer id="individualMovieDrawer" :modelValue="modelValue" @update:modelValue="closeDrawer">
     <template #drawerHeader>
-      <h5 class="m-0"><b>{{ moviesStore.getSelectedMovie.greekTitle }}</b></h5>
+      <h5 class="m-0 text-secondary"><b>{{ moviesStore.getSelectedMovie.greekTitle }}</b></h5>
     </template>
     <template #drawerBody>
       <div class="row g-2">
@@ -36,14 +36,14 @@
         </div>
         <div class="col-12 mb-2" />
         <div class="col-12">
-          <button :class="`btn w-100 h-100 ${filteredByLocation === 'ALL' ? ' btn-primary' : 'btn-outline-primary'}`"
-            @click="handleLocationChange('ALL')">
+          <button :class="`btn w-100 h-100 ${!filteredByLocations.length ? ' btn-primary' : 'btn-outline-primary'}`"
+            @click="handleLocationChange(false)">
             <i class="bi bi-geo-alt-fill me-1" />Όλες
           </button>
         </div>
         <div class="col-6" v-for="(uniqueLocation, i) in uniqueCinemaLocations" :key="i">
           <button
-            :class="`btn w-100 h-100 ${filteredByLocation === uniqueLocation ? ' btn-primary' : 'btn-outline-primary'}`"
+            :class="`btn w-100 h-100 ${filteredByLocations.includes(uniqueLocation) ? ' btn-primary' : 'btn-outline-primary'}`"
             @click="handleLocationChange(uniqueLocation)">
             {{ toPascalCase(uniqueLocation) }}
           </button>
@@ -78,19 +78,20 @@ const ALL_CINEMAS = 1, SUMMER_CINEMAS = 2, WINTER_CINEMAS = 3;
 
 const filteredByDay = ref(EVERY_DAY);
 const filteredByCinema = ref(ALL_CINEMAS);
-const filteredByLocation = ref('ALL');
+const filteredByLocations = ref([]);
 
 const handleDayChange = (value) => {
   filteredByDay.value = value;
-  emit('filter-changed', { day: filteredByDay.value, cinemaType: filteredByCinema.value, location: filteredByLocation.value });
+  emit('filter-changed', { day: filteredByDay.value, cinemaType: filteredByCinema.value, locations: filteredByLocations.value });
 };
 const handleCinemaChange = (value) => {
   filteredByCinema.value = value;
-  emit('filter-changed', { day: filteredByDay.value, cinemaType: filteredByCinema.value, location: filteredByLocation.value });
+  emit('filter-changed', { day: filteredByDay.value, cinemaType: filteredByCinema.value, locations: filteredByLocations.value });
 };
 const handleLocationChange = (value) => {
-  filteredByLocation.value = value;
-  emit('filter-changed', { day: filteredByDay.value, cinemaType: filteredByCinema.value, location: filteredByLocation.value });
+  if (value) filteredByLocations.value.includes(value) ? filteredByLocations.value = filteredByLocations.value.filter(item => item !== value) : filteredByLocations.value.push(value);
+  else filteredByLocations.value = []
+  emit('filter-changed', { day: filteredByDay.value, cinemaType: filteredByCinema.value, locations: filteredByLocations.value });
 };
 
 const uniqueCinemaLocations = computed(() => {

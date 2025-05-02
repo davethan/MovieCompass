@@ -89,7 +89,7 @@ const filteredMovies = computed(() => {
 
   filtered = filtered.filter((film) => {
     const validCinemas = film.cinemas.filter((cinema) => {
-      const locationMatch = filterLocation === 'ALL' || cinema.cinemaLocation === filterLocation;
+      const locationMatch = !filterLocation.length || filterLocation.includes(cinema.cinemaLocation);
       const typeMatch = filterCinemaType === SUMMER_CINEMAS
         ? cinema.isOutdoor === true
         : filterCinemaType === WINTER_CINEMAS

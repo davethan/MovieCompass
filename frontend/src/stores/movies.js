@@ -15,7 +15,7 @@ const state = () => ({
     filteredByDay: 1,
     filteredByCinema: 1,
     filteredByType: 1,
-    filteredByLocation: 'ALL',
+    filteredByLocation: [],
   }
 });
 
@@ -152,7 +152,7 @@ const actions = {
     }
   },
   setAthinoramaUrlsAction(payload) {
-    this.ATHINORAMA_URLS = [...payload]//.slice(48, 49);
+    this.ATHINORAMA_URLS = [...payload]//.slice(40, 50);
   },
   setAthinoramaMovieDetailsAction(payload) {
     if (payload.imdbLink) payload.imdbLink = payload.imdbLink.replace(/ /g, '');
