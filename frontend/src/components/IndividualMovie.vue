@@ -119,7 +119,7 @@ const athinoramaUrl = computed(() => {
   return url;
 })
 
-const filterCinemas = ({ day, cinemaType, location }) => {
+const filterCinemas = ({ day, cinemaType, locations }) => {
   filteredCinemas.value = [...unref(state).cinemas];
 
   if (day === TODAY) {
@@ -144,8 +144,7 @@ const filterCinemas = ({ day, cinemaType, location }) => {
 
   if (cinemaType === SUMMER_CINEMAS) filteredCinemas.value = filteredCinemas.value.filter((cinema) => cinema.isOutdoor);
   else if (cinemaType === WINTER_CINEMAS) filteredCinemas.value = filteredCinemas.value.filter((cinema) => !cinema.isOutdoor);
-
-  if (location !== 'ALL') filteredCinemas.value = filteredCinemas.value.filter((cinema) => cinema.cinemaLocation === location);
+  if (unref(locations).length) filteredCinemas.value = filteredCinemas.value.filter((cinema) => unref(locations).includes(cinema.cinemaLocation));
 }
 
 const goToCinemaPage = (cinema) => {

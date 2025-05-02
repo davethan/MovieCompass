@@ -20,6 +20,7 @@
     </template>
     <template #drawerBody>
       <div class="row g-2">
+        <div class="col-12">Ταξινόμηση</div>
         <div class="col-6">
           <button
             :class="`btn w-100 ${moviesStore.filters.sortedBy === POPULARITY ? 'btn-primary' : 'btn-outline-primary'}`"
@@ -35,7 +36,7 @@
             <span class="placeholder h-100 rounded-2 col-12"></span>
           </div>
         </div>
-        <div class="col-12 mb-2" />
+        <div class="col-12 mt-4">Φιλτράρισμα</div>
         <div class="col-12">
           <button
             :class="`btn w-100 ${moviesStore.filters.filteredByDay === EVERY_DAY ? 'btn-primary' : 'btn-outline-primary'}`"
@@ -96,15 +97,15 @@
         <div class="col-12 mb-2" />
         <div class="col-12">
           <button
-            :class="`btn w-100 h-100 ${moviesStore.filters.filteredByLocation === 'ALL' ? ' btn-primary' : 'btn-outline-primary'}`"
-            @click="handleFilterChange({ filteredByLocation: 'ALL' })">
+            :class="`btn w-100 h-100 ${!moviesStore.filters.filteredByLocation.length ? ' btn-primary' : 'btn-outline-primary'}`"
+            @click="handleLocationFilterChange(false)">
             <i class="bi bi-geo-alt-fill me-1" />Όλες
           </button>
         </div>
         <div class="col-6" v-for="(uniqueLocation, i) in uniqueCinemaLocations" :key="i">
           <button
-            :class="`btn w-100 h-100 ${moviesStore.filters.filteredByLocation === uniqueLocation ? ' btn-primary' : 'btn-outline-primary'}`"
-            @click="handleFilterChange({ filteredByLocation: uniqueLocation })">
+            :class="`btn w-100 h-100 ${moviesStore.filters.filteredByLocation.includes(uniqueLocation) ? ' btn-primary' : 'btn-outline-primary'}`"
+            @click="handleLocationFilterChange(uniqueLocation)">
             {{ toPascalCase(uniqueLocation) }}
           </button>
         </div>
@@ -115,7 +116,7 @@
 
 <script setup>
 import { useRouter } from 'vue-router';
-import { computed } from 'vue';
+import { computed, unref } from 'vue';
 import { useMoviesStore } from '@/stores/movies';
 import { isEqual } from 'lodash';
 import { toPascalCase } from '@/tools/tools';
@@ -151,10 +152,19 @@ const handleFilterChange = (value) => {
     filteredByDay: temporaryFilters.filteredByDay,
     filteredByCinema: temporaryFilters.filteredByCinema,
     filteredByType: temporaryFilters.filteredByType,
-    filteredByLocation: temporaryFilters.filteredByLocation,
   })
   window.scrollTo(0, 0);
 };
+
+const handleLocationFilterChange = (value) => {
+  let updatedLocations = []
+  if (value) {
+    const existingLocations = [...moviesStore.filters.filteredByLocation];
+    updatedLocations = existingLocations.includes(value) ? existingLocations.filter(item => item !== value) : [...existingLocations, value]
+  }
+  moviesStore.setFiltersAction({ filteredByLocation: updatedLocations })
+  window.scrollTo(0, 0);
+}
 
 const closeDrawer = () => {
   emit('update:modelValue', false);
