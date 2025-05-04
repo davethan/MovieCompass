@@ -15,6 +15,8 @@ const state = () => ({
     filteredByDay: 1,
     filteredByCinema: 1,
     filteredByType: 1,
+    filteredByDuration: 3,
+    filteredByReleaseYear: 1,
     filteredByLocation: [],
   }
 });
@@ -197,6 +199,7 @@ const actions = {
 
 const getters = {
   getIndividualMovie: (state) => (movieId) => state.MOVIES.find((film) => film.id === movieId),
+  getMinReleaseDate: (state) =>  Math.min(...state.MOVIES.map(film => film.year)),
   getSelectedMovie: (state) => state.MOVIES.find((film) => film.id === state.selectedMovieId) || ''
 };
 

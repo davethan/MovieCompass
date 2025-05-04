@@ -86,6 +86,8 @@ const filteredMovies = computed(() => {
   const filterDay = moviesStore.filters.filteredByDay;
   const filterCinemaType = moviesStore.filters.filteredByCinema;
   const filterLocation = moviesStore.filters.filteredByLocation;
+  const filterDuration = moviesStore.filters.filteredByDuration;
+  const filterReleaseYear = moviesStore.filters.filteredByReleaseYear;
 
   filtered = filtered.filter((film) => {
     const validCinemas = film.cinemas.filter((cinema) => {
@@ -122,6 +124,9 @@ const filteredMovies = computed(() => {
   } else if (moviesStore.filters.filteredByType === ANIMATION) {
     filtered = filterByType(filtered, true);
   }
+
+  filtered = filterByDuration(filtered, filterDuration);
+  filtered = filterByRelease(filtered, filterReleaseYear);
 
   if (moviesStore.filters.sortedBy === POPULARITY) {
     filtered = sortByPopularity(filtered);
@@ -167,6 +172,16 @@ const sortByRating = (filteredMovies) => {
   });
 };
 
+const filterByDuration = (filteredMovies, duration) => {
+  if (Number(duration) === 3) return filteredMovies
+  else return filteredMovies.filter(film => Number(film.duration) <= Number(duration) * 60)
+}
+
+const filterByRelease = (filteredMovies, releaseYear) => {
+  if (Number(releaseYear) === moviesStore.getMinReleaseDate) return filteredMovies
+  else return filteredMovies.filter(film => Number(film.year) >= Number(releaseYear))
+}
+
 const filterByType = (filteredMovies, isAnimation) => {
   return filteredMovies.filter((film) => {
     const hasAnimationTag = film.tags.some((tag) => tag === 'Animation');
@@ -180,10 +195,8 @@ const isGem = (film) => {
     return film.imdbRating >= 7.9 &&
       film.popularity >= 2000 &&
       (!film.tags.includes('Animation') && !film.tags.includes('Μιούζικαλ'))
-  } else {
-    return film.imdbRating >= 8.5 &&
-      film.popularity >= 6000
   }
+  return film.imdbRating >= 8.5 && film.popularity >= 6000
 }
 
 const isFlame = (film) => moviesStore.filters.sortedBy === RATING && film.cinemas.length >= 10
