@@ -7,6 +7,7 @@ import App from './App.vue'
 import router from './router'
 import ScrollToTopButton from '@/shared/ScrollToTopButton.vue';
 import Drawer from '@/shared/Drawer.vue';
+import Range from '@/shared/Range.vue';
 
 const app = createApp(App)
 
@@ -15,5 +16,6 @@ app
   .use(router)
   .component('ScrollToTopButton', ScrollToTopButton)
   .component('Drawer', Drawer)
+  .component('Range', Range)
 
 app.mount('#app')

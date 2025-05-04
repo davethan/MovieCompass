@@ -20,7 +20,7 @@
     </template>
     <template #drawerBody>
       <div class="row g-2">
-        <div class="col-12">Ταξινόμηση</div>
+        <div class="col-12"><strong>Ταξινόμηση</strong></div>
         <div class="col-6">
           <button
             :class="`btn w-100 ${moviesStore.filters.sortedBy === POPULARITY ? 'btn-primary' : 'btn-outline-primary'}`"
@@ -36,7 +36,7 @@
             <span class="placeholder h-100 rounded-2 col-12"></span>
           </div>
         </div>
-        <div class="col-12 mt-4">Φιλτράρισμα</div>
+        <div class="col-12 mt-4"><strong>Φίλτρα</strong></div>
         <div class="col-12">
           <button
             :class="`btn w-100 ${moviesStore.filters.filteredByDay === EVERY_DAY ? 'btn-primary' : 'btn-outline-primary'}`"
@@ -109,6 +109,31 @@
             {{ toPascalCase(uniqueLocation) }}
           </button>
         </div>
+        <div class="col-12 mb-1" />
+        <div class="col-12">
+          <div class="mb-0">Διάρκεια</div>
+          <range :min="1" :max="3" :step="0.5" :modelValue="duration" @changed="handleDurationChange" />
+          <div class="d-flex justify-content-between mb-2">
+            <span>{{ `1h` }}</span>
+            <span>{{ `1.5h` }}</span>
+            <span>{{ `2h` }}</span>
+            <span>{{ `2.5h` }}</span>
+            <span>{{ `3h+` }}</span>
+          </div>
+        </div>
+        <div class="col-12 mb-1" />
+        <div class="col-12">
+          <div class="mb-0">Χρονολογία</div>
+          <range :left-to-right="false" :min="moviesStore.getMinReleaseDate" :max="currentYear" :step="yearsApart"
+            :modelValue="releaseYear" @changed="handleReleaseYearChange" />
+          <div class="d-flex justify-content-between mb-2">
+            <span> {{ moviesStore.getMinReleaseDate }} </span>
+            <span v-for="i in [2, 3, 4, 5]" :key="i">
+              {{ moviesStore.getMinReleaseDate + (i - 1) * yearsApartRounded }}
+            </span>
+            <span>Φέτος</span>
+          </div>
+        </div>
       </div>
     </template>
   </drawer>
@@ -116,7 +141,7 @@
 
 <script setup>
 import { useRouter } from 'vue-router';
-import { computed, unref } from 'vue';
+import { computed, ref } from 'vue';
 import { useMoviesStore } from '@/stores/movies';
 import { isEqual } from 'lodash';
 import { toPascalCase } from '@/tools/tools';
@@ -142,6 +167,11 @@ const EVERY_DAY = 1, TODAY = 2, TOMORROW = 3, WEEKEND = 4;
 const ALL_CINEMAS = 1, SUMMER_CINEMAS = 2, WINTER_CINEMAS = 3;
 const POPULARITY = 1, RATING = 2;
 const ALL = 1, REGULAR = 2, ANIMATION = 3;
+const currentYear = new Date().getFullYear();
+const yearsApart = (currentYear - moviesStore.getMinReleaseDate) / 5;
+const yearsApartRounded = Math.round((currentYear - moviesStore.getMinReleaseDate) / 5);
+const duration = ref(3)
+const releaseYear = ref(moviesStore.getMinReleaseDate)
 
 const handleFilterChange = (value) => {
   temporaryFilters = moviesStore.filters;
@@ -152,6 +182,8 @@ const handleFilterChange = (value) => {
     filteredByDay: temporaryFilters.filteredByDay,
     filteredByCinema: temporaryFilters.filteredByCinema,
     filteredByType: temporaryFilters.filteredByType,
+    filteredByDuration: temporaryFilters.filteredByDuration,
+    filteredByReleaseYear: temporaryFilters.filteredByReleaseYear,
   })
   window.scrollTo(0, 0);
 };
@@ -164,6 +196,16 @@ const handleLocationFilterChange = (value) => {
   }
   moviesStore.setFiltersAction({ filteredByLocation: updatedLocations })
   window.scrollTo(0, 0);
+}
+
+const handleDurationChange = (e) => {
+  duration.value = e
+  handleFilterChange({ filteredByDuration: duration.value })
+}
+
+const handleReleaseYearChange = (e) => {
+  releaseYear.value = e
+  handleFilterChange({ filteredByReleaseYear: releaseYear.value })
 }
 
 const closeDrawer = () => {

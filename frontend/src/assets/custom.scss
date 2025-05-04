@@ -54,6 +54,21 @@ body {
   width: fit-content;
 }
 
+.form-range {
+  height: 0.2rem;
+}
+
+.coloredRail {
+  position: absolute;
+  top: 50%;
+  margin: 0;
+  padding: 0;
+  height: 0.5rem;
+  background-color: $primary;
+  border-radius: 1rem;
+  pointer-events: none;
+}
+
 a,
 .green {
   text-decoration: none;
