@@ -41,12 +41,14 @@
             <i class="bi bi-geo-alt-fill me-1" />Όλες
           </button>
         </div>
-        <div class="col-6" v-for="(uniqueLocation, i) in uniqueCinemaLocations" :key="i">
-          <button
-            :class="`btn w-100 h-100 ${filteredByLocations.includes(uniqueLocation) ? ' btn-primary' : 'btn-outline-primary'}`"
-            @click="handleLocationChange(uniqueLocation)">
-            {{ toPascalCase(uniqueLocation) }}
-          </button>
+        <div class="col-12 primary-text-hover" v-for="(uniqueLocation, i) in uniqueCinemaLocations" :key="i">
+          <div class="form-check">
+            <input type="checkbox" class="form-check-input" :id="'location-checkbox-' + i"
+              :checked="filteredByLocations.includes(uniqueLocation)" @change="handleLocationChange(uniqueLocation)">
+            <label class="form-check-label w-100 cursor-pointer" :for="'location-checkbox-' + i">
+              {{ toPascalCase(uniqueLocation) }}
+            </label>
+          </div>
         </div>
       </div>
     </template>

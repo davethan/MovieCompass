@@ -58,6 +58,10 @@ body {
   height: 0.2rem;
 }
 
+.primary-text-hover:hover {
+  color: $primary;
+}
+
 .coloredRail {
   position: absolute;
   top: 50%;
