@@ -1,6 +1,6 @@
 <template>
   <div class="position-relative">
-    <input type="range" :value="modelValue" @change="handleChange" class="form-range mt-0" :min="min" :max="max"
+    <input type="range" :value="modelValue" @input="handleInput" class="form-range mt-0" :min="min" :max="max"
       :step="step">
     <div :class="`d-flex ${leftToRight ? 'justify-content-start' : 'justify-content-end'}`">
       <div class="coloredRail" :style="{ width: `${widthPercentage * 100}%` }" />
@@ -41,8 +41,6 @@ const props = defineProps({
   },
 });
 
-const handleChange = (e) => {
-  emit('changed', Number(e.target.value))
-}
+const handleInput = (e) => emit('changed', Number(e.target.value))
 
 </script>
