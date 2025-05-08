@@ -73,6 +73,17 @@ body {
   pointer-events: none;
 }
 
+.rangeStep {
+  position: absolute;
+  top: -20px;
+  margin: 0;
+  padding: 0px 3px;
+  pointer-events: none;
+  background-color: $black-medium;
+  border-radius: 20%;
+  z-index: 9;
+}
+
 a,
 .green {
   text-decoration: none;
