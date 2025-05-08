@@ -127,8 +127,8 @@
         <div class="col-12 mb-1" />
         <div class="col-12">
           <div class="mb-0">Χρονολογία</div>
-          <range :left-to-right="false" :min="moviesStore.getMinReleaseDate" :max="currentYear" :step="yearsApart"
-            :modelValue="releaseYear" @changed="handleReleaseYearChange" />
+          <range :left-to-right="false" :min="moviesStore.getMinReleaseDate" :max="currentYear" :step="1"
+            :show-step="true" :modelValue="releaseYear" @changed="handleReleaseYearChange" />
           <div class="d-flex justify-content-between mb-2">
             <span> {{ moviesStore.getMinReleaseDate }} </span>
             <span v-for="i in [2, 3, 4, 5]" :key="i">
@@ -171,7 +171,6 @@ const ALL_CINEMAS = 1, SUMMER_CINEMAS = 2, WINTER_CINEMAS = 3;
 const POPULARITY = 1, RATING = 2;
 const ALL = 1, REGULAR = 2, ANIMATION = 3;
 const currentYear = new Date().getFullYear();
-const yearsApart = (currentYear - moviesStore.getMinReleaseDate) / 5;
 const yearsApartRounded = Math.round((currentYear - moviesStore.getMinReleaseDate) / 5);
 const duration = ref(3)
 const releaseYear = ref(moviesStore.getMinReleaseDate)
