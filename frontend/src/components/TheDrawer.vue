@@ -36,7 +36,12 @@
             <span class="placeholder h-100 rounded-2 col-12"></span>
           </div>
         </div>
-        <div class="col-12 mt-4"><strong>Φίλτρα</strong></div>
+        <div class="col-6 mt-4"><strong>Φίλτρα</strong></div>
+        <div class="col-6 mt-4">
+          <div @click="resetFilters" class="text-secondary cursor-pointer float-end">
+            <i class="bi bi-arrow-clockwise" style="font-size:large" />
+          </div>
+        </div>
         <div class="col-12">
           <button
             :class="`btn w-100 ${moviesStore.filters.filteredByDay === EVERY_DAY ? 'btn-primary' : 'btn-outline-primary'}`"
@@ -115,7 +120,8 @@
         <div class="col-12 mb-1" />
         <div class="col-12">
           <div class="mb-0">Διάρκεια</div>
-          <range :min="1" :max="3" :step="0.5" :modelValue="duration" @changed="handleDurationChange" />
+          <range :min="1" :max="3" :step="0.25" :modelValue="duration" @changed="handleDurationChange" :show-step="true"
+            :editStepString="floatToHour" />
           <div class="d-flex justify-content-between mb-2">
             <span>{{ `1h` }}</span>
             <span>{{ `1.5h` }}</span>
@@ -148,6 +154,7 @@ import { computed, ref } from 'vue';
 import { useMoviesStore } from '@/stores/movies';
 import { isEqual } from 'lodash';
 import { toPascalCase } from '@/tools/tools';
+import { formatDuration } from '@/tools/tools';
 
 const router = useRouter();
 const moviesStore = useMoviesStore();
@@ -175,6 +182,7 @@ const yearsApartRounded = Math.round((currentYear - moviesStore.getMinReleaseDat
 const duration = ref(3)
 const releaseYear = ref(moviesStore.getMinReleaseDate)
 
+const floatToHour = (v) => formatDuration(Number(v) * 60);
 const handleFilterChange = (value) => {
   temporaryFilters = moviesStore.filters;
   temporaryFilters = { ...temporaryFilters, ...value }
@@ -189,6 +197,18 @@ const handleFilterChange = (value) => {
   })
   window.scrollTo(0, 0);
 };
+const resetFilters = () => {
+  moviesStore.setFiltersAction({
+    filteredByDay: 1,
+    filteredByCinema: 1,
+    filteredByType: 1,
+    filteredByDuration: 3,
+    filteredByReleaseYear: moviesStore.getMinReleaseDate,
+    filteredByLocation: [],
+  })
+  duration.value = 3;
+  releaseYear.value = moviesStore.getMinReleaseDate;
+}
 
 const handleLocationFilterChange = (value) => {
   let updatedLocations = []

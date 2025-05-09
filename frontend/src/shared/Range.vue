@@ -8,7 +8,7 @@
         [leftToRight ? 'left' : 'right']: `${widthPercentage * 100}%`,
         transform: leftToRight ? 'translateX(-50%)' : 'translateX(50%)'
       }">
-        {{ modelValue }} </div>
+        {{ editStepString(modelValue) }} </div>
     </div>
   </div>
 </template>
@@ -49,7 +49,11 @@ const props = defineProps({
   showStep: {
     type: Boolean,
     default: false
-  }
+  },
+  editStepString: {
+    type: Function,
+    default: (step) => step
+  },
 });
 
 const handleInput = (e) => {
