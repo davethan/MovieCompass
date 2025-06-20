@@ -48,7 +48,7 @@
               </div>
             </div>
             <div class="card-footer">
-              Έρχεται στις {{ upcomingMovie.premiere }}
+              Η πρεμιέρα δεν έχει ανακοινωθεί ακόμα.
             </div>
           </div>
         </template>

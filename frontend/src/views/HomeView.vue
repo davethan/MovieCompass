@@ -8,7 +8,7 @@
         </div>
       </div>
     </div>
-    <div v-if="!filteredMovies.length" class="col-sm-6 col-md-6 col-lg-3">
+    <div v-if="!filteredMovies.length" class="col-sm-6 col-md-6 col-lg-4">
       <div class="card film-item-no-hover">
         <div class="card-header">
           <h2 class="text-primary m-0">Δεν βρέθηκαν ταινίες</h2>
@@ -18,28 +18,33 @@
         </div>
       </div>
     </div>
-    <div v-else class="col-sm-6 col-md-6 col-lg-3" v-for="movie in filteredMovies" :key="movie.id">
+    <div v-else class="col-sm-6 col-md-6 col-lg-4" v-for="movie in filteredMovies" :key="movie.id">
       <div class="card film-item cursor-pointer" @click="goToMoviePage(movie.id)">
         <div class="card-header">
-          <i v-if="isGem(movie)" class="bi bi-gem text-danger float-end" />
-          <i v-if="isFlame(movie)" class="bi bi-fire text-warning float-end" />
-          <h2 class="text-primary m-0">{{ movie.greekTitle }}</h2>
           <div class="row g-2">
-            <div class="col-12">{{ movie.originalTitle }} </div>
-            <div class="col-12 d-flex justify-content-start flex-wrap gap-1 align-items-center">
-              <div class="tag-outlined">Σε {{ movie.cinemas.length }} σινεμά
-              </div>
-              <div class="tag-outlined"> {{ formatDuration(movie.duration) }} </div>
-              <div class="tag-outlined">{{ movie.year }} </div>
-              <div class="tag-outlined" v-if="movie.imdbRating">
-                {{ movie.imdbRating === "None" ? '?/10' : `${movie.imdbRating}/10` }}
-              </div>
-              <div v-else class="rating-placeholder placeholder-glow"> <span
-                  class="placeholder rounded-3 col-12"></span>
-              </div>
+            <div class="col-3">
+              <img :src="movie.imageUrl" :alt="movie.greekTitle" class="img-fluid">
             </div>
-            <div class="col-12 d-flex justify-content-start flex-wrap gap-1 align-items-center">
-              <div v-for="(tag, i) in movie.tags" :key="i" class="tag-square">{{ tag }}</div>
+            <div class="col-9">
+              <i v-if="isGem(movie)" class="bi bi-gem text-danger float-end" />
+              <i v-if="isFlame(movie)" class="bi bi-fire text-warning float-end" />
+              <h2 class="text-primary m-0">{{ movie.greekTitle }}</h2>
+              <div>{{ movie.originalTitle }} </div>
+            </div>
+            <div class="row g-2">
+              <div class="col-12 d-flex justify-content-start flex-wrap gap-1 align-items-center">
+                <div class="tag-outlined">Σε {{ movie.cinemas.length }} σινεμά
+                </div>
+                <div class="tag-outlined"> {{ formatDuration(movie.duration) }} </div>
+                <div class="tag-outlined">{{ movie.year }} </div>
+                <div class="tag-outlined" v-if="movie.imdbRating">
+                  {{ movie.imdbRating === "None" ? '?/10' : `${movie.imdbRating}/10` }}
+                </div>
+                <div v-else class="rating-placeholder placeholder-glow"> <span
+                    class="placeholder rounded-3 col-12"></span>
+                </div>
+                <div v-for="(tag, i) in movie.tags" :key="i" class="tag-square">{{ tag }}</div>
+              </div>
             </div>
           </div>
         </div>

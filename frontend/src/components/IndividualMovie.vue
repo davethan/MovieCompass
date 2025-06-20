@@ -2,27 +2,65 @@
   <div>
     <div class="card border-0 mb-3 col-lg-6 mx-auto">
       <div class="card-header">
-        <div class="d-flex justify-content-between gap-2">
-          <h2 class="text-primary m-0">{{ state.greekTitle }}</h2>
-          <i class="bi bi-list fs-3 cursor-pointer" @click="openMovieDrawer" />
-        </div>
-        <div class="row g-2">
-          <div class="col-12">{{ state.originalTitle }} </div>
-          <div class="col-12 d-flex justify-content-start flex-wrap gap-1 align-items-center">
-            <div class="tag-outlined">Σε {{ state.cinemas.length }} σινεμά</div>
-            <div class="tag-outlined"> {{ formatDuration(state.duration) }} </div>
-            <div class="tag-outlined">{{ state.year }} </div>
-            <div class="tag-outlined" v-if="state.imdbRating">
-              {{ state.imdbRating === "None" ? '?/10' : `${state.imdbRating}/10` }}
+
+        <!-- bigger than small -->
+        <div class="d-none d-sm-block">
+          <div class="d-flex justify-content-between gap-2">
+            <img :src="state.imageUrl" :alt="state.greekTitle" class="img-fluid">
+            <div class="d-flex flex-grow-1 flex-column">
+              <h2 class="text-primary m-0">{{ state.greekTitle }}</h2>
+              <div class="col-12 mb-2">{{ state.originalTitle }} </div>
+              <div class="row g-2">
+                <div class="col-12 d-flex justify-content-start flex-wrap gap-1 align-items-center">
+                  <div class="tag-outlined">Σε {{ state.cinemas.length }} σινεμά</div>
+                  <div class="tag-outlined"> {{ formatDuration(state.duration) }} </div>
+                  <div class="tag-outlined">{{ state.year }} </div>
+                  <div class="tag-outlined" v-if="state.imdbRating">
+                    {{ state.imdbRating === "None" ? '?/10' : `${state.imdbRating}/10` }}
+                  </div>
+                  <div v-else class="rating-placeholder placeholder-glow"> <span
+                      class="placeholder rounded-3 col-12"></span>
+                  </div>
+                  <div v-if="state.rated" class="tag-outlined">{{ state.rated }}</div>
+                </div>
+                <div class="col-12 d-flex justify-content-start flex-wrap gap-1 align-items-center">
+                  <div v-for="(tag, i) in state.tags" :key="i" class="tag-square">{{ tag }}</div>
+                </div>
+              </div>
             </div>
-            <div v-else class="rating-placeholder placeholder-glow"> <span class="placeholder rounded-3 col-12"></span>
-            </div>
-            <div v-if="state.rated" class="tag-outlined">{{ state.rated }}</div>
-          </div>
-          <div class="col-12 d-flex justify-content-start flex-wrap gap-1 align-items-center">
-            <div v-for="(tag, i) in state.tags" :key="i" class="tag-square">{{ tag }}</div>
+            <i class="bi bi-list fs-3 cursor-pointer" @click="openMovieDrawer" />
           </div>
         </div>
+
+        <!-- small -->
+        <div class="d-block d-sm-none">
+          <div class="row g-2 mb-2">
+            <img :src="state.imageUrl" :alt="state.greekTitle" class="col-3 img-fluid">
+            <div class="col-8 d-flex flex-column">
+              <h2 class="text-primary m-0">{{ state.greekTitle }}</h2>
+              <div class="col-12">{{ state.originalTitle }} </div>
+            </div>
+            <i class="col-1 bi bi-list fs-3 cursor-pointer" @click="openMovieDrawer" />
+          </div>
+          <div class="row g-2">
+            <div class="col-12 d-flex justify-content-start flex-wrap gap-1 align-items-center">
+              <div class="tag-outlined">Σε {{ state.cinemas.length }} σινεμά</div>
+              <div class="tag-outlined"> {{ formatDuration(state.duration) }} </div>
+              <div class="tag-outlined">{{ state.year }} </div>
+              <div class="tag-outlined" v-if="state.imdbRating">
+                {{ state.imdbRating === "None" ? '?/10' : `${state.imdbRating}/10` }}
+              </div>
+              <div v-else class="rating-placeholder placeholder-glow"> <span
+                  class="placeholder rounded-3 col-12"></span>
+              </div>
+              <div v-if="state.rated" class="tag-outlined">{{ state.rated }}</div>
+            </div>
+            <div class="col-12 d-flex justify-content-start flex-wrap gap-1 align-items-center">
+              <div v-for="(tag, i) in state.tags" :key="i" class="tag-square">{{ tag }}</div>
+            </div>
+          </div>
+        </div>
+
       </div>
       <div class="card-body">
         <div class="d-flex gap-3">
