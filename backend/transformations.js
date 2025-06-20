@@ -54,6 +54,8 @@ const extractAthinoramaMovieDetails = (html_data) => {
         tags.push($(tag).text().trim());
     })
 
+    const imageUrl = $('div.review-cover img').attr('src').replace(/&amp;/g, '&');
+
     const summary = $(header).find('div.summary').children().text().trim() || '';
     const imdbLink = $('div.review-links').find('a.imdb').attr('href') || '';
 
@@ -111,6 +113,7 @@ const extractAthinoramaMovieDetails = (html_data) => {
         directors: drcts,
         actors,
         imdbLink,
+        imageUrl,
         cinemas: theaters,
     };
 };
@@ -164,20 +167,26 @@ const parseUpcomingMovies = (html_data) => {
         const tableRows = table.find('tbody').find('tr');
         const summaryMovies = [];
         tableRows.each((i, row) => {
-            const premiere = $(row).children('td:eq(0)').text().trim();
-            let originalTitle = $(row).children('td:eq(1)').text().replace('*', '').replace('(κ.σ.)', '').trim();
-            let greekTitle = $(row).children('td:eq(2)').text().replace('*', '').replace('(κ.σ.)', '').trim();
+            const premiere = $(row).children('td:eq(3)').text().trim();
+            let title = $(row).children('td:eq(1)').text()
+                .replace('*', '')
+                .replace('(κ.σ.)', '')
+                .replace('|►', '')
+                .trim();
+            let titleParts = title.split('|').map(part => part.trim());
+            let greekTitle = titleParts[0];
+            let originalTitle = titleParts.length > 1 ? titleParts[1] : '';
+
             if (!greekTitle || greekTitle === '-') {
                 greekTitle = originalTitle;
                 originalTitle = '';
             }
             if (greekTitle === originalTitle) originalTitle = '';
-            const directors = $(row).children('td:eq(3)').text().trim();
+            const directors = $(row).children('td:eq(2)').text().trim();
             if (premiere) summaryMovies.push({
                 greekTitle, 
                 originalTitle, 
-                directors, 
-                premiere: uniformDate(premiere), 
+                directors,
                 isBrief: true
             });
         });
