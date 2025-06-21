@@ -5,14 +5,7 @@ const {
     convertGreekDate,
     parseDuration,
     parseSchedule,
-    uniformDate,
-} = require('./tools');
-
-const extractImdbMovieCode = (html) => {
-    const regex = /<ul class="ipc-metadata-list[^"]*--dividers-after[^"]*".*?<li.*?<a[^>]*href="([^"]+)"/s;
-    const match = regex.exec(html);
-    return match ? match[1] : null;
-};
+} = require('../tools');
 
 const extractDataFromIMDB = (html) => {
     const $ = cheerio.load(html);
@@ -238,7 +231,6 @@ const parseUpcomingFilmDetails = (html_data) => {
 }
 
 module.exports = {
-    extractImdbMovieCode,
     extractDataFromIMDB,
     parseAthinoramaMovies,
     extractAthinoramaMovieDetails,
