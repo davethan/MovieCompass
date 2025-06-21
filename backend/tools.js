@@ -106,23 +106,9 @@ const parseSchedule = (schedule) => {
     }
 }
 
-const uniformDate = (date) => {
-    const [day, month] = date.split('/').map(Number);
-    const currentYear = new Date().getFullYear();
-    const currentMonth = new Date().getMonth() + 1;
-
-    const year = (currentMonth > month) ? currentYear + 1 : currentYear;
-
-    const formattedDay = String(day).padStart(2, '0');
-    const formattedMonth = String(month).padStart(2, '0');
-
-    return `${formattedDay}-${formattedMonth}-${year}`;
-};
-
 module.exports = {
     splitByHours,
     convertGreekDate,
     parseDuration,
     parseSchedule,
-    uniformDate,
 };
