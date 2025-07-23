@@ -9,9 +9,10 @@ const {
 
 const extractDataFromIMDB = (html) => {
     const $ = cheerio.load(html);
-    const container = $('.sc-d541859f-0.hNIoIx');
-    const rating = container.find('span.sc-d541859f-1.imUuxf').first().text().trim();
-    const popularity = container.find('div.sc-d541859f-3.dwhNqC').first().text().trim();
+    const container = $('[data-testid="hero-rating-bar__aggregate-rating"]');
+    const ratingDiv = container.find('[data-testid="hero-rating-bar__aggregate-rating__score"]').first()
+    const rating = ratingDiv.text().trim().split('/')[0];
+    const popularity = ratingDiv.next().next().text().trim();
 
     return {rating, popularity};
 };
