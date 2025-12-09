@@ -17,11 +17,18 @@
     </div>
   </div>
   <div class="d-flex flex-column justify-content-center flex-md-row gap-3 flex-md-wrap">
-    <div v-for="film in filmsThisCinemaShows" :key="film.id" class="card border-0 cinema-item cursor-pointer"
-      @click="goToMoviePage(film.id)">
+    <expanding-circle-background v-for="film in filmsThisCinemaShows" :key="film.id"
+      cssClass="card border-0 cinema-item cursor-pointer" @clicked="goToMoviePage(film.id)">
       <div class="card-header">
-        <h2 class="text-primary m-0">{{ film.greekTitle }}</h2>
-        <div>{{ film.originalTitle }}</div>
+        <div class="row g-2">
+          <div class="col-3">
+            <img :src="film.imageUrl" :alt="film.greekTitle" class="img-fluid">
+          </div>
+          <div class="col-9">
+            <h2 class="text-primary m-0">{{ film.greekTitle }}</h2>
+            <div>{{ film.originalTitle }}</div>
+          </div>
+        </div>
       </div>
       <div class="card-body">
         <template v-if="typeof filmSchedule(film) === 'string' || filmSchedule(film) instanceof String">
@@ -42,7 +49,7 @@
           </template>
         </div>
       </div>
-    </div>
+    </expanding-circle-background>
   </div>
 </template>
 
