@@ -45,7 +45,7 @@ const clicked = () => emit('clicked')
     top: v-bind('circleY + "px"');
     left: v-bind('circleX + "px"');
     transform: translate(-50%, -50%);
-    transition: width 0.4s ease, height 0.4s ease, opacity 0.4s ease;
+    transition: width 0.5s ease, height 0.5s ease, opacity 0.5s ease;
     z-index: 0;
   }
 

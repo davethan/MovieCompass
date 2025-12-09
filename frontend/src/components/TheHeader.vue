@@ -7,28 +7,22 @@
       </h4>
     </div>
     <div class="d-flex gap-3 align-items-center">
-      <div class="d-none d-sm-block">
-        <button :class="`btn w-100 ${route.name === 'Home' ? 'btn-secondary' : 'btn-outline-secondary'}`"
-          @click="router.push({ name: 'Home' })">
-          Home
-        </button>
+      <div class="d-none d-md-block">
+        <icon-button :cssClass="`btn w-100 ${route.name === 'Home' ? 'btn-secondary' : 'btn-outline-secondary'}`"
+          title="Home" @click="router.push({ name: 'Home' })" icon="bi bi-house-door-fill" />
       </div>
-      <div class="d-none d-sm-block">
-        <button :disabled="specialsStore.loadingSpecials"
-          :class="`btn w-100 ${route.name === 'Specials' ? 'btn-secondary' : 'btn-outline-secondary'}`"
-          @click="router.push({ name: 'Specials' })">
-          Specials
-        </button>
+      <div class="d-none d-md-block">
+        <icon-button :disabled="specialsStore.loadingSpecials"
+          :cssClass="`btn w-100 ${route.name === 'Specials' ? 'btn-secondary' : 'btn-outline-secondary'}`"
+          @click="router.push({ name: 'Specials' })" title="Specials" icon="bi bi-gift-fill" />
       </div>
-      <div class="d-none d-sm-block">
-        <button :disabled="upcomingStore.loadingUpcoming && !upcomingStore.UPCOMING.length"
-          :class="`btn w-100 ${route.name === 'Upcoming' ? 'btn-secondary' : 'btn-outline-secondary'}`"
-          @click="router.push({ name: 'Upcoming' })">
-          Προσεχώς
-        </button>
+      <div class="d-none d-md-block">
+        <icon-button :disabled="upcomingStore.loadingUpcoming && !upcomingStore.UPCOMING.length"
+          :cssClass="`btn w-100 ${route.name === 'Upcoming' ? 'btn-secondary' : 'btn-outline-secondary'}`"
+          @click="router.push({ name: 'Upcoming' })" title="Προσεχώς" icon="bi bi-fast-forward-fill" />
       </div>
-      <i class="d-md-none bi bi-search fs-6 cursor-pointer" @click="openSearchDrawer" />
-      <search-autocomplete :dataset="moviesStore.MOVIES" :showInside="true" cssClass="d-none d-md-block"
+      <i class="d-lg-none bi bi-search fs-6 cursor-pointer" @click="openSearchDrawer" />
+      <search-autocomplete :dataset="moviesStore.MOVIES" :showInside="true" cssClass="d-none d-lg-block"
         :reset-search="resetSearch" @reset-value-changed="resetSearch = false" @film-selected="handleMovieSelection" />
     </div>
   </div>
@@ -46,6 +40,7 @@ import { useUpcomingStore } from '@/stores/upcoming';
 
 const SearchAutocomplete = defineAsyncComponent(() => import('@/shared/SearchAutocomplete.vue'))
 const SearchDrawer = defineAsyncComponent(() => import('./SearchDrawer.vue'))
+const IconButton = defineAsyncComponent(() => import('@/shared/IconButton.vue'))
 
 const router = useRouter();
 const route = useRoute();

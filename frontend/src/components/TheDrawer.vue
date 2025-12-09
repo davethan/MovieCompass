@@ -2,8 +2,8 @@
   <drawer id="homeViewDrawer" :modelValue="modelValue" @update:modelValue="closeDrawer">
     <template #drawerHeader>
       <!-- <b>{{ noOfFilteredFilms }}/{{ moviesStore.MOVIES.length }}</b> -->
-      <h5 class="text-secondary m-0 d-none d-sm-block"><b>Athens Cinemas</b></h5>
-      <div class="d-flex gap-1 d-sm-none">
+      <h5 class="text-secondary m-0 d-none d-md-block"><b>Athens Cinemas</b></h5>
+      <div class="d-flex gap-1 d-md-none">
         <button class="btn w-100 btn-outline-secondary" @click="goToSpecials">
           <div class="d-flex gap-1">
             <div>Specials</div>

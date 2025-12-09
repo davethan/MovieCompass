@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import request from '@/http/request';
 import { convertToNumber } from '@/tools/tools';
-const { VITE_OMDB_URL, VITE_OMDB_API_KEY } = import.meta.env;
+const { VITE_OMDB_URL, VITE_OMDB_API_KEY, VITE_ENV } = import.meta.env;
 
 const state = () => ({
   ATHINORAMA_URLS: [],
@@ -154,7 +154,8 @@ const actions = {
     }
   },
   setAthinoramaUrlsAction(payload) {
-    this.ATHINORAMA_URLS = [...payload]//.slice(40, 50);
+    const urlsToSet = VITE_ENV === 'UPLOAD' ? [...payload] : [...payload].slice(1,6)
+    this.ATHINORAMA_URLS = urlsToSet;
   },
   setAthinoramaMovieDetailsAction(payload) {
     if (payload.imdbLink) payload.imdbLink = payload.imdbLink.replace(/ /g, '');
