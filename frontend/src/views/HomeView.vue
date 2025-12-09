@@ -19,7 +19,7 @@
       </div>
     </div>
     <div v-else class="col-sm-6 col-md-6 col-lg-4" v-for="movie in filteredMovies" :key="movie.id">
-      <div class="card film-item cursor-pointer" @click="goToMoviePage(movie.id)">
+      <expanding-circle-background cssClass="card film-item-no-hover cursor-pointer" @clicked="goToMoviePage(movie.id)">
         <div class="card-header">
           <div class="row g-2">
             <div class="col-3">
@@ -65,7 +65,7 @@
             </template>
           </div>
         </div>
-      </div>
+      </expanding-circle-background>
     </div>
   </div>
   <scroll-to-top-button />

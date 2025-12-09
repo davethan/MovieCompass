@@ -92,8 +92,8 @@
       </div>
     </div>
     <div class="d-flex flex-column justify-content-center flex-md-row gap-3 flex-md-wrap">
-      <div v-for="(cinema, i) in filteredCinemas" :key="i" class="card border-0 cinema-item cursor-pointer"
-        @click="goToCinemaPage(cinema)">
+      <expanding-circle-background v-for="(cinema, i) in filteredCinemas" :key="i"
+        cssClass="card border-0 cinema-item cursor-pointer" @clicked="goToCinemaPage(cinema)">
         <div class="card-header">
           <h2 class="text-secondary">{{ cinema.cinema }}</h2>
           <div class="d-flex justify-content-between flex-wrap ">
@@ -120,7 +120,7 @@
             </template>
           </div>
         </div>
-      </div>
+      </expanding-circle-background>
     </div>
     <individual-movie-drawer v-model="isMovieDrawerOpen" @filter-changed="filterCinemas" :state="state" />
     <scroll-to-top-button />
