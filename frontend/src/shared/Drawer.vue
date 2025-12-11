@@ -3,7 +3,7 @@
     <div v-if="isOpen" :class="['offcanvas show', classDirection]" data-bs-scroll="true" data-bs-backdrop="false"
       tabindex="-1" :id="id" :aria-labelledby="id" ref="drawerElement">
       <div class="offcanvas-header">
-        <button type="button" class="mx-0 py-0 btn-close" aria-label="Close" @click="close"></button>
+        <button type="button" class="mx-0 py-0 btn-close btn-close-white" aria-label="Close" @click="close"></button>
         <div class="ms-auto offcanvas-title" :id="id">
           <slot name="drawerHeader"></slot>
         </div>

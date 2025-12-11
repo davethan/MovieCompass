@@ -3,7 +3,7 @@
     <div class="position-relative">
       <input class="search-input" v-model="searchTerm" @keyup="searchDebounced" @focus="showDropdown"
         placeholder="Ταινία στα σινεμά..." />
-      <button type="button" class="btn-close btn-reset-search" aria-label="Close" @click="resetState" />
+      <button type="button" class="btn-close btn-close-white btn-reset-search" aria-label="Close" @click="resetState" />
     </div>
     <ul v-if="showInside && showList && filteredFilms.length" :class="showInside ? 'list-group-inside' : 'list-group'">
       <li v-for="film in filteredFilms" :key="film.id"

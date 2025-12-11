@@ -1,5 +1,5 @@
 <template>
-  <div data-bs-theme="dark">
+  <div>
     <LoadingView v-if="moviesStore.loading" />
     <div v-else>
       <TheHeader />
