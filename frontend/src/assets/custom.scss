@@ -117,6 +117,7 @@ a,
 .offcanvas {
   background-color: $black;
   color: $color-text-dark-light;
+  box-shadow: rgba(0, 0, 0, 0.56) 0px 22px 70px 4px;
 }
 
 .offcanvas-header {
@@ -125,6 +126,7 @@ a,
 
 .card {
   background-color: $black-medium;
+  color: $color-text;
 }
 
 .card-header {
@@ -246,6 +248,7 @@ a,
   width: 100%;
   padding: 8px 18px;
   background-color: $black-highlight;
+  color: $color-text;
 }
 
 .search-input:focus {
@@ -265,5 +268,5 @@ a,
 .btn-reset-search {
   position: absolute;
   right: 7px;
-  top: 8px
+  top: 8px;
 }
