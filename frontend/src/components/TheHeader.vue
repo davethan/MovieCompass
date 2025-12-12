@@ -24,6 +24,9 @@
       <i class="d-lg-none bi bi-search fs-6 cursor-pointer" @click="openSearchDrawer" />
       <search-autocomplete :dataset="moviesStore.MOVIES" :showInside="true" cssClass="d-none d-lg-block"
         :reset-search="resetSearch" @reset-value-changed="resetSearch = false" @film-selected="handleMovieSelection" />
+      <button class="btn btn-sm btn-primary" @click="changeTheme">
+        <i :class="theme === 'dark' ? 'bi bi-sun' : 'bi bi-moon'" />
+      </button>
     </div>
   </div>
   <search-drawer v-model="isSearchDrawerOpen" />
@@ -31,7 +34,7 @@
 </template>
 
 <script setup>
-import { defineAsyncComponent, ref } from 'vue';
+import { defineAsyncComponent, ref, inject } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import TheDrawer from './TheDrawer.vue';
 import { useMoviesStore } from '@/stores/movies';
@@ -52,6 +55,16 @@ const upcomingStore = useUpcomingStore();
 const isSearchDrawerOpen = ref(false);
 const isTheDrawerOpen = ref(false);
 const resetSearch = ref(false);
+const theme = inject('theme');
+
+const changeTheme = () => {
+  const savedTheme = localStorage.getItem('theme');
+  const toggledTheme = savedTheme === 'dark' ? 'light' : 'dark'
+  localStorage.setItem('theme', toggledTheme);
+
+  theme.value = localStorage.getItem('theme');
+  document.body.setAttribute('data-bs-theme', localStorage.getItem('theme'));
+}
 
 const openSearchDrawer = () => {
   isSearchDrawerOpen.value = true;

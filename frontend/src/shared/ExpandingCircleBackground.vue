@@ -41,7 +41,7 @@ const clicked = () => emit('clicked')
     height: 0;
     opacity: 0;
     border-radius: 50%;
-    background-color: $black-highlight;
+    background-color: var(--color-highlight);
     top: v-bind('circleY + "px"');
     left: v-bind('circleX + "px"');
     transform: translate(-50%, -50%);

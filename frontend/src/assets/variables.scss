@@ -1,22 +1,45 @@
-$primary-background: #2F2142;
-$primary-sat: #8b2cff;
-$primary: #BB86FC;
-$primary-low-opacity: #BB86FC82;
+// Dark theme colors
+$dark-primary-background: #2F2142;
+$dark-primary-sat: #8b2cff;
+$dark-primary: #BB86FC;
 
-$secondary-background: #142f2c;
-$secondary-sat: #00685e;
-$secondary: #03DAC6;
-$secondary-low-opacity: #03DAC67D;
+$dark-secondary-background: #142f2c;
+$dark-secondary-sat: #00685e;
+$dark-secondary: #03DAC6;
 
 $black: #121212;
 $black-medium: #1F1F1F;
 $black-highlight: #242424;
 $black-soft: #313131;
 
-$color-text: rgba(240, 240, 240, 0.8);
+$color-text-dark: rgba(240, 240, 240, 0.8);
 $color-text-dark-light: rgba(240, 240, 240, 0.9);
 
-$yellow: #c4c400;
+$yellow-dark: #c4c400;
+$gray-dark: #4d4d4d;
 
-$gradient: linear-gradient(45deg, $primary, #697dd6, $secondary);
-$gradient-sat: linear-gradient(45deg, $primary-sat, #3857e6, $secondary);
+$gradient-dark: linear-gradient(45deg, $dark-primary, #697dd6, $dark-secondary);
+$gradient-dark-sat: linear-gradient(45deg, $dark-primary-sat, #3857e6, $dark-secondary);
+
+// Light theme colors
+$light-primary-background: #2F2142;
+$light-primary-sat: #3700b3;
+$light-primary: #a534da; //#c750ff;
+
+$light-secondary-background: #cff3ee;
+$light-secondary-sat: #018786;
+$light-secondary: #00b097;
+
+$white: #dbdbdb;
+$white-medium: #f3f3f3;
+$white-highlight: #ffffff;
+$white-soft: #fcfcfc;
+
+$color-text-light: rgba(0, 0, 0, 0.87);
+$color-text-light-light: rgba(0, 0, 0, 0.6);
+
+$yellow-light: #bb0;
+$gray-light: #b3b3b3;
+
+$gradient-light: linear-gradient(45deg, $light-primary, #3857e6, $light-secondary);
+$gradient-light-sat: linear-gradient(45deg, $light-primary-sat, #3857e6, $light-secondary-sat);

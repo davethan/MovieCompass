@@ -3,7 +3,8 @@
     <div class="position-relative">
       <input class="search-input" v-model="searchTerm" @keyup="searchDebounced" @focus="showDropdown"
         placeholder="Ταινία στα σινεμά..." />
-      <button type="button" class="btn-close btn-close-white btn-reset-search" aria-label="Close" @click="resetState" />
+      <button type="button" :class="['btn-close', 'btn-reset-search', { 'btn-close-white': theme === 'dark' }]"
+        aria-label="Close" @click="resetState" />
     </div>
     <ul v-if="showInside && showList && filteredFilms.length" :class="showInside ? 'list-group-inside' : 'list-group'">
       <li v-for="film in filteredFilms" :key="film.id"
@@ -17,7 +18,7 @@
 </template>
 
 <script setup>
-import { onBeforeUnmount, onMounted, ref, watch } from 'vue';
+import { onBeforeUnmount, onMounted, ref, watch, inject } from 'vue';
 import { debounce } from 'lodash';
 
 const props = defineProps({
@@ -41,6 +42,7 @@ const props = defineProps({
 
 const emit = defineEmits(['film-selected', 'search-results-updated', 'reset-value-changed']);
 
+const theme = inject('theme');
 const searchTerm = ref('');
 const showList = ref(false);
 const filteredFilms = ref([]);

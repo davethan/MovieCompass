@@ -3,7 +3,8 @@
     <div v-if="isOpen" :class="['offcanvas show', classDirection]" data-bs-scroll="true" data-bs-backdrop="false"
       tabindex="-1" :id="id" :aria-labelledby="id" ref="drawerElement">
       <div class="offcanvas-header">
-        <button type="button" class="mx-0 py-0 btn-close btn-close-white" aria-label="Close" @click="close"></button>
+        <button type="button" :class="['mx-0 py-0 btn-close', { 'btn-close-white': theme === 'dark' }]"
+          aria-label="Close" @click="close"></button>
         <div class="ms-auto offcanvas-title" :id="id">
           <slot name="drawerHeader"></slot>
         </div>
@@ -16,7 +17,7 @@
 </template>
 
 <script setup>
-import { onBeforeUnmount, onMounted, watch, computed, ref } from 'vue';
+import { onBeforeUnmount, onMounted, watch, computed, ref, inject } from 'vue';
 
 const emit = defineEmits(['update:modelValue']);
 
@@ -41,6 +42,7 @@ const drawerTransition = computed(() => props.position === 'left' ? 'drawer-fade
 const isOpen = ref(false);
 const isOpening = ref(false);
 const drawerElement = ref(null);
+const theme = inject('theme');
 
 const handleClickOutside = (event) => {
   if (drawerElement.value && !drawerElement.value.contains(event.target) && !isOpening.value) close();
