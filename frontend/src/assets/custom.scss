@@ -8,8 +8,8 @@
 
 body {
   min-height: 100vh;
-  color: $color-text;
-  background: $black;
+  color: var(--color);
+  background: var(--background);
   line-height: 1.6;
   font-family:
     Inter,
@@ -38,7 +38,7 @@ body {
 }
 
 .text-gradient {
-  background: $gradient;
+  background: var(--the-gradient);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -55,8 +55,39 @@ body {
   height: 0.2rem;
 }
 
+.form-range {
+  &::-webkit-slider-runnable-track {
+      background-color: var(--gray);
+  }
+  
+  &::-moz-range-track {
+      background-color: var(--gray);
+  }
+  
+  &::-webkit-slider-thumb {
+      background-color: var(--bs-primary);
+      &:active {
+          background-color: var(--bs-primary);
+      }
+  }
+  
+  &::-moz-range-thumb {
+      background-color: var(--bs-primary);
+      &:active {
+          background-color: var(--bs-primary);
+      }
+  }
+
+  &:focus::-moz-range-thumb {
+      box-shadow: none;
+  }
+  &:focus::-webkit-slider-thumb {
+      box-shadow: none;
+  }
+}
+
 .primary-text-hover:hover {
-  color: $primary;
+  color: var(--bs-primary);
 }
 
 .coloredRail {
@@ -65,7 +96,7 @@ body {
   margin: 0;
   padding: 0;
   height: 0.5rem;
-  background-color: $primary;
+  background-color: var(--bs-primary);
   border-radius: 1rem;
   pointer-events: none;
 }
@@ -76,7 +107,7 @@ body {
   margin: 0;
   padding: 0px 3px;
   pointer-events: none;
-  background-color: $black-medium;
+  background-color: var(--color-medium);
   border-radius: 20%;
   z-index: 9;
 }
@@ -84,13 +115,13 @@ body {
 a,
 .green {
   text-decoration: none;
-  color: $secondary;
+  color: var(--bs-secondary);
   transition: 0.4s;
 }
 
 .navbar {
-  background-color: $black-soft !important;
-  color: $color-text-dark-light !important;
+  background-color: var(--color-soft) !important;
+  color: var(--color-light) !important;
 }
 
 .rating-placeholder {
@@ -115,26 +146,27 @@ a,
 }
 
 .offcanvas {
-  background-color: $black;
-  color: $color-text-dark-light;
+  background-color: var(--background);
+  color: var(--color-light);
   box-shadow: rgba(0, 0, 0, 0.56) 0px 22px 70px 4px;
 }
 
 .offcanvas-header {
-  background-color: $black-medium;
+  background-color: var(--color-medium);
 }
 
 .card {
-  background-color: $black-medium;
-  color: $color-text;
+  background-color: var(--color-medium);
+  color: var(--color);
 }
 
 .card-header {
   background-color: transparent !important;
+  border-color: var(--gray);
 }
 
 .card-footer {
-  background-color: $secondary-background;
+  background-color: var(--secondary-background);
   border: 0px;
 }
 
@@ -188,23 +220,23 @@ a,
 }
 
 .tag-outlined {
-  border: 1px solid $secondary; 
+  border: 1px solid var(--bs-secondary); 
   padding-left: 0.5rem; 
   padding-right: 0.5rem;
   border-radius: 0.5rem;
 }
 
 .tag-square {
-  border: 1px solid $secondary; 
+  border: 1px solid var(--bs-secondary); 
   padding-left: 0.5rem; 
   padding-right: 0.5rem;
   border-radius: 0.5rem;
-  color: $black;
-  background-color: $secondary;
+  color: var(--background);
+  background-color: var(--bs-secondary);
 }
 
 .is-outdoor {
-  color: $yellow;
+  color: var(--yellow);
 }
 
 .scrollToTopButton {
@@ -213,7 +245,8 @@ a,
   bottom: 50px;
   right: 50%;
   transform: translate(50%, 50%);
-  background: $gradient-sat;
+  background: var(--the-gradient-sat);
+  color: $color-text-dark-light;
 }
 
 .cinema-details {
@@ -227,18 +260,18 @@ a,
   z-index: 2;
   position: absolute;
   overflow-y: auto;
-  background-color: #202020;
+  background-color: var(--color-medium);
   right: 10px;
   padding: 1rem;
   border-radius: 0.25rem;
   border-style: solid;
   border-width: 1px;
-  border-color: rgb(80, 80, 80);
+  border-color: var(--gray);
 }
 
 .list-header {
   &:hover h5 {
-    color: $primary;
+    color: var(--bs-primary);
   }
 }
 
@@ -247,8 +280,8 @@ a,
   border-radius: 7px;
   width: 100%;
   padding: 8px 18px;
-  background-color: $black-highlight;
-  color: $color-text;
+  background-color: var(--color-highlight);
+  color: var(--color);
 }
 
 .search-input:focus {
@@ -269,4 +302,44 @@ a,
   position: absolute;
   right: 7px;
   top: 8px;
+}
+
+.form-check-input:checked {
+  background-color: var(--bs-primary);
+  border-color: var(--bs-primary);
+}
+
+.form-check-input:focus {
+  border-color: var(--bs-primary);
+  box-shadow: none;
+}
+
+
+[data-bs-theme=light] {
+  .card {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .navbar {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+    background-color: var(--color-highlight) !important;
+  }
+
+  .search-input {
+    box-shadow: inset 0 0 0 1px var(--gray);
+  }
+
+  .list-group-inside {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .offcanvas-header {
+    border-bottom: 1px solid var(--gray);
+    background-color: var(--color-highlight);
+  }
+
+  .offcanvas-body {
+    background-color: var(--color-soft);
+  }
+
 }
