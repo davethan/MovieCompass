@@ -49,6 +49,7 @@ const extractAthinoramaMovieDetails = (html_data) => {
     })
 
     const imageUrl = $('div.review-cover img').attr('src').replace(/&amp;/g, '&');
+    const trailer = $('div.review-content').find('iframe').attr('src');
 
     const summary = $(header).find('div.summary').children().text().trim() || '';
     const imdbLink = $('div.review-links').find('a.imdb').attr('href') || '';
@@ -108,6 +109,7 @@ const extractAthinoramaMovieDetails = (html_data) => {
         actors,
         imdbLink,
         imageUrl,
+        trailer,
         cinemas: theaters,
     };
 };
