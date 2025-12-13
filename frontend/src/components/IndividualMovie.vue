@@ -1,5 +1,5 @@
 <template>
-  <div class="row g-2 mb-3">
+  <div class="row justify-content-center g-2 mb-3">
     <div class="col-lg-6">
       <div class="card border-0">
         <div class="card-header">
@@ -94,7 +94,7 @@
         </div>
       </div>
     </div>
-    <div class="col-lg-6">
+    <div v-if="state.trailer" class="col-lg-6">
       <div class="card film-item-no-hover">
         <div class="card-body" style="min-height: 350px">
           <iframe :src="state.trailer" style="width: 100%; height:100%" />
