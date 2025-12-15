@@ -10,6 +10,6 @@ const routes = require('./routes');
 app.use('/', routes);
 
 const { cronJob } = require('./scraping/cron.js');
-cronJob(1);
+cronJob();
 
 module.exports = app;

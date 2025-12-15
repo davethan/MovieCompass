@@ -31,12 +31,6 @@ const cronJob = async (slice) => {
   }
 }
 
-cron.schedule('*/2 * * * *', async () => {
-  const slice = Math.floor(Math.random() * 10);
-  cronJob(slice);
-});
-
-
 // Every Thursday at 08:00
 cron.schedule('0 8 * * 4', async () => {
   console.log('Running Thursday task at 08:00');
