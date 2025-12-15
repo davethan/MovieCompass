@@ -32,7 +32,7 @@ const parseAthinoramaMovies = (html_data) => {
     return athinoramaMovieURLs;
 };
 
-const extractAthinoramaMovieDetails = (html_data) => {
+const extractAthinoramaMovieDetails = (html_data, id, athinoramaLink) => {
     const $ = cheerio.load(html_data);
 
     const header = $('div.review-title');
@@ -99,6 +99,7 @@ const extractAthinoramaMovieDetails = (html_data) => {
     });
 
     return {
+        id,
         greekTitle,
         originalTitle,
         year,
@@ -108,6 +109,7 @@ const extractAthinoramaMovieDetails = (html_data) => {
         directors: drcts,
         actors,
         imdbLink,
+        athinoramaLink,
         imageUrl,
         trailer,
         cinemas: theaters,

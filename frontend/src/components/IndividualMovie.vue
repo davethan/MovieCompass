@@ -162,7 +162,7 @@ const TODAY = 2, TOMORROW = 3, WEEKEND = 4;
 const SUMMER_CINEMAS = 2, WINTER_CINEMAS = 3;
 
 const athinoramaUrl = computed(() => {
-  let url = moviesStore.ATHINORAMA_URLS.find((url) => url.id === state.value.id).url;
+  let url = state.value.athinoramaLink || '';
   url = `https://www.athinorama.gr${url}`;
   return url;
 })

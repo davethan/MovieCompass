@@ -9,4 +9,7 @@ app.use(express.static(path.join(__dirname, 'dist')));
 const routes = require('./routes');
 app.use('/', routes);
 
+const { cronJob } = require('./scraping/cron.js');
+cronJob(1);
+
 module.exports = app;

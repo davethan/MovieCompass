@@ -1,10 +1,9 @@
 import { defineStore } from 'pinia';
 import request from '@/http/request';
 import { convertToNumber } from '@/tools/tools';
-const { VITE_OMDB_URL, VITE_OMDB_API_KEY, VITE_ENV } = import.meta.env;
+const { VITE_OMDB_URL, VITE_OMDB_API_KEY } = import.meta.env;
 
 const state = () => ({
-  ATHINORAMA_URLS: [],
   MOVIES: [],
   selectedMovieId: '',
   selectedCinema: '',
@@ -23,25 +22,18 @@ const state = () => ({
 
 const actions = {
   //get all current movies in theaters
-  async getAthinoramaUrlsAction() {
+  async getAllCurrentMoviesDetails() {
+    this.setLoadingAction(true);
     try {
-      const response = await request.get(`/athinoramaCurrentMovies`);
-      this.setAthinoramaUrlsAction(response.data);
+      const response = await request.get(`/athinoramaMoviesDetails`);
+      this.setAthinoramaMoviesDetailsAction(response.data);
       return true;
     }
     catch {
       return false;
     }
-  },
-  //athinorama data scrapping
-  async getMovieAthinoramaInfoAction(payload) {
-    try {
-      const response = await request.post(`/athinoramaMovieDetails`, { url: payload.url });
-      this.setAthinoramaMovieDetailsAction({ ...response.data, id: payload.id });
-      return true;
-    }
-    catch {
-      return false;
+    finally {
+      this.setLoadingAction(false);
     }
   },
   //imdb data scrapping
@@ -118,25 +110,6 @@ const actions = {
       return false;
     }
   },
-  //gets athinorama info for all
-  async getAllCurrentMoviesDetails() {
-    try {
-      this.setLoadingAction(true);
-      let response = await this.getAthinoramaUrlsAction();
-      if (!response) throw(false)
-      const requests = [];
-      this.ATHINORAMA_URLS.forEach((athUrl) => {
-        requests.push(this.getMovieAthinoramaInfoAction(athUrl));
-      });
-      await Promise.allSettled(requests);
-      this.setLoadingAction(false);
-      return true;
-    } catch (error) {
-      this.setLoadingAction(false);
-      console.log(error);
-      return false;
-    }
-  },
   //gets imdb data for all
   async getAllImdbRatings() {
     try {
@@ -153,13 +126,9 @@ const actions = {
       return false;
     }
   },
-  setAthinoramaUrlsAction(payload) {
-    const urlsToSet = VITE_ENV === 'UPLOAD' ? [...payload] : [...payload].slice(1,6)
-    this.ATHINORAMA_URLS = urlsToSet;
-  },
-  setAthinoramaMovieDetailsAction(payload) {
+  setAthinoramaMoviesDetailsAction(payload) {
     if (payload.imdbLink) payload.imdbLink = payload.imdbLink.replace(/ /g, '');
-    this.MOVIES.push(payload)
+    this.MOVIES = payload
   },
   setAthinoramaMovieImdbDataAction(id, imdbLink, payload) {
     this.MOVIES.forEach((film) => {

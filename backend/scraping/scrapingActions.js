@@ -20,12 +20,12 @@ const getImdbMovieRating = async (movieURL) => {
     }
 };
 
-const getAthinoramaMovieDetails = async (movie) => {
+const getAthinoramaMovieDetails = async (url, id) => {
     try {
-        const response = await request(`https://www.athinorama.gr${movie}`);
-        return extractAthinoramaMovieDetails(response.data);
+        const response = await request(`https://www.athinorama.gr${url}`);
+        return extractAthinoramaMovieDetails(response.data, id, url);
     } catch (error) {
-        console.log(`Failed to fetch ${movie} details`);
+        console.log(`Failed to fetch ${url} details`);
         throw (error);
     }
 };
