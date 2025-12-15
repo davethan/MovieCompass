@@ -75,7 +75,6 @@ const openTheDrawer = () => {
 }
 
 const handleMovieSelection = (id) => {
-  moviesStore.setSelectedMovieAction(id);
   router.push({ name: 'IndividualMovie', params: { filmId: id } });
   resetSearch.value = true
 };

@@ -207,7 +207,6 @@ const isGem = (film) => {
 const isFlame = (film) => moviesStore.filters.sortedBy === RATING && film.cinemas.length >= 10
 
 const goToMoviePage = (id) => {
-  moviesStore.setSelectedMovieAction(id);
   router.push({ name: 'IndividualMovie', params: { filmId: id } });
 };
 </script>

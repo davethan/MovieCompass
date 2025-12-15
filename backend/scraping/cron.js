@@ -7,7 +7,9 @@ const {
 let movieDataFromCronJob = [];
 
 const cronJob = async (slice) => {
+  movieDataFromCronJob = [];
   let athinoramaCurrentMovieURLs = [];
+
   try {
     athinoramaCurrentMovieURLs = await getAthinoramaCurrentMovies();
     if (!athinoramaCurrentMovieURLs || athinoramaCurrentMovieURLs.length === 0) {
@@ -21,8 +23,8 @@ const cronJob = async (slice) => {
 
   try {
     const requests = [];
-    athinoramaCurrentMovieURLs.forEach(film => requests.push(getAthinoramaMovieDetails(film.url, film.id)))
-    const moviesDetails = await Promise.allSettled(requests.slice(0, slice));
+    athinoramaCurrentMovieURLs.slice(0, slice).forEach(film => requests.push(getAthinoramaMovieDetails(film.url, film.id)))
+    const moviesDetails = await Promise.allSettled(requests);
     movieDataFromCronJob = moviesDetails.map(film => film.value);
     console.log("Success fetching movies' details")
   } catch(error) {

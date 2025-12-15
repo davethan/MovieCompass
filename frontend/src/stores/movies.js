@@ -5,7 +5,6 @@ const { VITE_OMDB_URL, VITE_OMDB_API_KEY } = import.meta.env;
 
 const state = () => ({
   MOVIES: [],
-  selectedMovieId: '',
   selectedCinema: '',
   loading: false,
   loadingRating: false,
@@ -127,7 +126,6 @@ const actions = {
     }
   },
   setAthinoramaMoviesDetailsAction(payload) {
-    if (payload.imdbLink) payload.imdbLink = payload.imdbLink.replace(/ /g, '');
     this.MOVIES = payload
   },
   setAthinoramaMovieImdbDataAction(id, imdbLink, payload) {
@@ -156,9 +154,6 @@ const actions = {
   setLoadingRatingAction(value) {
     this.loadingRating = value;
   },
-  setSelectedMovieAction(value) {
-    this.selectedMovieId = value;
-  },
   setSelectedCinemaAction(value) {
     this.selectedCinema = value;
   },
@@ -168,9 +163,8 @@ const actions = {
 };
 
 const getters = {
-  getIndividualMovie: (state) => (movieId) => state.MOVIES.find((film) => film.id === movieId),
+  getIndividualMovie: (state) => (movieId) => state.MOVIES?.find((film) => film.id === movieId) || false,
   getMinReleaseDate: (state) =>  Math.min(...state.MOVIES.map(film => film.year)),
-  getSelectedMovie: (state) => state.MOVIES.find((film) => film.id === state.selectedMovieId) || ''
 };
 
 export const useMoviesStore = defineStore('movies', {

@@ -52,7 +52,8 @@ const extractAthinoramaMovieDetails = (html_data, id, athinoramaLink) => {
     const trailer = $('div.review-content').find('iframe').attr('src');
 
     const summary = $(header).find('div.summary').children().text().trim() || '';
-    const imdbLink = $('div.review-links').find('a.imdb').attr('href') || '';
+    let imdbLink = $('div.review-links').find('a.imdb').attr('href') || '';
+    imdbLink = imdbLink.replace(/ /g, '');
 
     const directors = $(header).find('div.cast-crew').children().first().find('a');
     const drcts = [];

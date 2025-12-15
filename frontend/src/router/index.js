@@ -32,7 +32,7 @@ const router = createRouter({
       component: () => import('@/components/IndividualMovie.vue'),
       props: true,
       meta: {
-        isProtected: true
+        isProtected: false
       }
     },
     {

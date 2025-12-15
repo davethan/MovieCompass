@@ -49,7 +49,6 @@ const movieNotFound = ref(false)
 const resetSearch = ref(false);
 
 const goToMoviePage = (id) => {
-  moviesStore.setSelectedMovieAction(id);
   router.push({ name: 'IndividualMovie', params: { filmId: id } });
   resetDrawer();
 };

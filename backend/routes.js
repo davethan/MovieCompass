@@ -31,7 +31,7 @@ router.post("/imdbMovieRating", async (req, res) => {
 // Fetches all films that are currently on cinemas
 router.get("/athinoramaMoviesDetails", async (req, res) => {
     try {
-        res.setHeader('Cache-Control', 'no-cache');
+        res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
         const movieDataFromCronJob = getMoviesDataFromCronJob();
         res.status(200).send(movieDataFromCronJob);
     } catch (error) {

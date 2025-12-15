@@ -1,7 +1,7 @@
 <template>
   <drawer id="individualMovieDrawer" :modelValue="modelValue" @update:modelValue="closeDrawer">
     <template #drawerHeader>
-      <h5 class="m-0 text-secondary"><b>{{ moviesStore.getSelectedMovie.greekTitle }}</b></h5>
+      <h5 class="m-0 text-secondary"><b>{{ props.state.greekTitle }}</b></h5>
     </template>
     <template #drawerBody>
       <div class="row g-2">
@@ -57,10 +57,7 @@
 
 <script setup>
 import { ref, unref, computed } from 'vue';
-import { useMoviesStore } from '@/stores/movies';
 import { toPascalCase } from '@/tools/tools';
-
-const moviesStore = useMoviesStore();
 
 const props = defineProps({
   state: {

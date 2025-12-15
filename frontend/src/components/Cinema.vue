@@ -81,7 +81,6 @@ const filmSchedule = (film) => {
 }
 
 const goToMoviePage = (id) => {
-  moviesStore.setSelectedMovieAction(id);
   router.push({ name: 'IndividualMovie', params: { filmId: id } });
 };
 </script>

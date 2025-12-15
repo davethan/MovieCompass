@@ -1,5 +1,5 @@
 <template>
-  <div class="row justify-content-center g-2 mb-3">
+  <div class="row justify-content-center g-3 mb-3">
     <div class="col-lg-6">
       <div class="card border-0">
         <div class="card-header">
@@ -156,7 +156,7 @@ const router = useRouter();
 
 const state = ref('');
 const isMovieDrawerOpen = ref(false);
-const filteredCinemas = ref(state.value.cinemas);
+const filteredCinemas = ref([]);
 
 const TODAY = 2, TOMORROW = 3, WEEKEND = 4;
 const SUMMER_CINEMAS = 2, WINTER_CINEMAS = 3;
@@ -209,7 +209,7 @@ const openMovieDrawer = () => {
 
 const loadMovieData = (id) => {
   state.value = moviesStore.getIndividualMovie(id);
-  filteredCinemas.value = [...state.value.cinemas];
+  filteredCinemas.value = state.value ? [...state.value.cinemas] : [];
 };
 
 watch(() => props.filmId, (newFilmId) => {
