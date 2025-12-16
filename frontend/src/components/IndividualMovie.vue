@@ -1,6 +1,6 @@
 <template>
   <div class="row justify-content-center g-3 mb-3">
-    <div class="col-lg-6">
+    <div class="col-xl-6">
       <div class="card border-0">
         <div class="card-header">
 
@@ -29,7 +29,7 @@
                   </div>
                 </div>
               </div>
-              <i class="bi bi-list fs-3 cursor-pointer" @click="openMovieDrawer" />
+              <i class="height-fit-content bi bi-list fs-3 cursor-pointer" @click="openMovieDrawer" />
             </div>
           </div>
 
@@ -41,7 +41,7 @@
                 <h2 class="text-primary m-0">{{ state.greekTitle }}</h2>
                 <div class="col-12">{{ state.originalTitle }} </div>
               </div>
-              <i class="col-1 bi bi-list fs-3 cursor-pointer" @click="openMovieDrawer" />
+              <i class="height-fit-content col-1 bi bi-list fs-3 cursor-pointer" @click="openMovieDrawer" />
             </div>
             <div class="row g-2">
               <div class="col-12 d-flex justify-content-start flex-wrap gap-1 align-items-center">
@@ -82,6 +82,9 @@
           <div v-if="state.awards" class="mb-2">
             <b>Βραβεία: </b><span> {{ state.awards }}</span>
           </div>
+          <div v-if="state.note" class="text-truncate mb-2">
+            <b>Σημείωση: </b><span> {{ state.note }}</span>
+          </div>
           <div class="d-flex justify-content-end align-items-end gap-2">
             <a :href="athinoramaUrl" target="_blank" rel="noopener noreferrer">
               <img src="@/assets/images/athinorama.jpg" alt="Athinorama" width="30" height="30"
@@ -94,7 +97,7 @@
         </div>
       </div>
     </div>
-    <div v-if="state.trailer" class="col-lg-6">
+    <div v-if="state.trailer" class="col-xl-6">
       <div class="card film-item-no-hover">
         <div class="card-body" style="min-height: 350px">
           <iframe :src="state.trailer" style="width: 100%; height:100%" />

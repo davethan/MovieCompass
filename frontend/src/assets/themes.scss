@@ -105,7 +105,7 @@
         --bs-btn-hover-border-color: #{$light-primary};
         --bs-btn-focus-shadow-rgb: #{to-rgb($light-primary)};
         --bs-btn-active-bg: #{$light-primary};
-        --bs-btn-active-color: #{$color-text-dark-light};
+        --bs-btn-active-color: #{$white-highlight};
         --bs-btn-active-border-color: #{$light-primary};
         --bs-btn-disabled-border-color: #{$light-primary};
         --bs-btn-hover-bg: #{shade-color($light-primary, 10%)};
@@ -113,15 +113,15 @@
     }
     .btn-primary {
         --bs-btn-bg: #{$light-primary};
-        --bs-btn-color: #{$color-text-dark-light};
+        --bs-btn-color: #{$white-highlight};
         --bs-btn-disabled-bg: #{$light-primary};
         --bs-btn-disabled-color: #{$color-text-light};
-        --bs-btn-hover-color: #{$color-text-dark-light};
+        --bs-btn-hover-color: #{$white-highlight};
     }
     .btn-outline-primary {
         --bs-btn-color: #{$light-primary};
         --bs-btn-disabled-color: #{$light-primary};
-        --bs-btn-hover-color: #{$color-text-dark-light};
+        --bs-btn-hover-color: #{$white-highlight};
     }
     .btn-secondary, .btn-outline-secondary {
         --bs-btn-border-color: #{$light-secondary};
@@ -129,7 +129,7 @@
         --bs-btn-hover-border-color: #{$light-secondary};
         --bs-btn-focus-shadow-rgb: #{to-rgb($light-secondary)};
         --bs-btn-active-bg: #{$light-secondary};
-        --bs-btn-active-color: #{$color-text-dark-light};
+        --bs-btn-active-color: #{$white-highlight};
         --bs-btn-active-border-color: #{$light-secondary};
         --bs-btn-disabled-border-color: #{$light-secondary};
         --bs-btn-hover-bg: #{shade-color($light-secondary, 10%)};
@@ -137,14 +137,14 @@
     }
     .btn-secondary {
         --bs-btn-bg: #{$light-secondary};
-        --bs-btn-color: #{$color-text-dark-light};
+        --bs-btn-color: #{$white-highlight};
         --bs-btn-disabled-bg: #{$light-secondary};
         --bs-btn-disabled-color: #{$color-text-light};
-        --bs-btn-hover-color: #{$color-text-dark-light};
+        --bs-btn-hover-color: #{$white-highlight};
     }
     .btn-outline-secondary {
         --bs-btn-color: #{$light-secondary};
         --bs-btn-disabled-color: #{$light-secondary};
-        --bs-btn-hover-color: #{$color-text-dark-light};
+        --bs-btn-hover-color: #{$white-highlight};
     }
 }

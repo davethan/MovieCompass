@@ -25,7 +25,7 @@
       <search-autocomplete :dataset="moviesStore.MOVIES" :showInside="true" cssClass="d-none d-lg-block"
         :reset-search="resetSearch" @reset-value-changed="resetSearch = false" @film-selected="handleMovieSelection" />
       <button class="btn btn-sm btn-primary" @click="changeTheme">
-        <i :class="theme === 'dark' ? 'bi bi-sun' : 'bi bi-moon'" />
+        <i :class="theme === 'dark' ? 'bi bi-brightness-high-fill' : 'bi bi-moon'" />
       </button>
     </div>
   </div>

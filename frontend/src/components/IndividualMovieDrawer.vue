@@ -50,14 +50,25 @@
             </label>
           </div>
         </div>
+        <div class="col-12" />
+        <div class="col-12">
+          <span class="mb-1">Σημείωση</span>
+          <textarea class="search-input" v-model="note" style="min-height: 200px;" />
+        </div>
+        <div class="col-12">
+          <icon-button cssClass="btn btn-outline-secondary" @click="editNoteThrottled" icon="bi bi-send"
+            title="Αποστολή" />
+        </div>
       </div>
     </template>
   </drawer>
 </template>
 
 <script setup>
-import { ref, unref, computed } from 'vue';
+import { ref, unref, computed, defineAsyncComponent } from 'vue';
 import { toPascalCase } from '@/tools/tools';
+import { useMoviesStore } from '@/stores/movies';
+import { throttle } from 'lodash';
 
 const props = defineProps({
   state: {
@@ -75,9 +86,12 @@ const emit = defineEmits(['filter-changed', 'update:modelValue']);
 const EVERY_DAY = 1, TODAY = 2, TOMORROW = 3, WEEKEND = 4;
 const ALL_CINEMAS = 1, SUMMER_CINEMAS = 2, WINTER_CINEMAS = 3;
 
+const note = ref(unref(props.state).note);
 const filteredByDay = ref(EVERY_DAY);
 const filteredByCinema = ref(ALL_CINEMAS);
 const filteredByLocations = ref([]);
+
+const IconButton = defineAsyncComponent(() => import('@/shared/IconButton.vue'))
 
 const handleDayChange = (value) => {
   filteredByDay.value = value;
@@ -97,6 +111,13 @@ const uniqueCinemaLocations = computed(() => {
   const cinemaLocations = unref(props).state.cinemas.map((cinema) => cinema.cinemaLocation);
   return [...new Set(cinemaLocations)];
 });
+
+const editNote = async () => {
+  const moviesStore = useMoviesStore();
+  const response = await moviesStore.editNoteAction({ id: unref(props.state).id, note: note.value });
+  if (response) closeDrawer();
+};
+const editNoteThrottled = throttle(editNote, 1000, { 'trailing': false });
 
 const closeDrawer = () => {
   emit('update:modelValue', false);

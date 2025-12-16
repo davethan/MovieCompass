@@ -114,6 +114,7 @@ const extractAthinoramaMovieDetails = (html_data, id, athinoramaLink) => {
         imageUrl,
         trailer,
         cinemas: theaters,
+        note: '',
     };
 };
 

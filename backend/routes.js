@@ -18,6 +18,26 @@ router.get("/", async (req, res) => {
     }
 });
 
+// Edits note
+router.post("/takeNote", async (req, res) => {
+    try {
+        const request = req.body
+        const movieDataFromCronJob = getMoviesDataFromCronJob();
+        let flag = false
+        movieDataFromCronJob.forEach(film => {
+          if (film.id == request.id) {
+            film.note = request.note;
+            flag = true
+          }
+        })
+        if (flag) res.status(200).send({ id: request.id, note: request.note });
+        else res.status(404).send("Movie not found")
+    } catch (error) {
+        console.log(error)
+        res.status(500).send("Failed");
+    }
+});
+
 // Fetches the imdb data of a specific film
 router.post("/imdbMovieRating", async (req, res) => {
     try {

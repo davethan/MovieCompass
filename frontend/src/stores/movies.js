@@ -125,6 +125,20 @@ const actions = {
       return false;
     }
   },
+  async editNoteAction(payload) {
+    try {
+      const response = await request.post(`/takeNote`, payload);
+      if (response.status === 200) {
+        this.setNoteAction(response.data)
+        return true
+      }
+      return false
+    }
+    catch (error) {
+      console.log(error)
+      return false;
+    }
+  },
   setAthinoramaMoviesDetailsAction(payload) {
     this.MOVIES = payload
   },
@@ -159,7 +173,12 @@ const actions = {
   },
   setFiltersAction(value) {
     this.filters = { ...this.filters, ...value };
-  }
+  },
+  setNoteAction(payload) {
+    this.MOVIES.forEach(film => {
+      if (film.id == payload.id) film.note = payload.note;
+    })
+  },
 };
 
 const getters = {
