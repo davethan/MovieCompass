@@ -39,7 +39,7 @@ cron.schedule('0 8 * * 4', async () => {
   await cronJob();
 }, { timezone: "Europe/Athens" });
   
-  // Every Friday at 04:00
+// Every Friday at 04:00
 cron.schedule('0 4 * * 5', async () => {
   console.log('Running Friday task at 04:00');
   await cronJob();
