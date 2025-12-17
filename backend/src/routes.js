@@ -12,7 +12,7 @@ const { getMoviesDataFromCronJob } = require('./scraping/cron')
 // Serves the vue application
 router.get("/", async (req, res) => {
     try {
-        res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+        res.sendFile(path.join(__dirname, '../dist', 'index.html'));
     } catch (error) {
         console.log(error)
         res.status(500).send("Server failure");
@@ -28,7 +28,8 @@ router.post("/takeNote", async (req, res) => {
         movieDataFromCronJob.forEach(film => {
           if (film.id == request.id) {
             film.note = request.note;
-            flag = true
+            flag = true;
+            return;
           }
         })
         if (flag) res.status(200).send({ id: request.id, note: request.note });
@@ -123,7 +124,7 @@ router.post("/filmyUpcomingFilmDetails", async (req, res) => {
 // Catch-all route to default to the Vue application
 router.get('*', (req, res) => {
     try {
-        res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+        res.sendFile(path.join(__dirname, '../dist', 'index.html'));
     } catch (error) {
         console.error(error);
         res.status(500).send('Server failure');
