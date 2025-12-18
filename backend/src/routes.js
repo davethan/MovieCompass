@@ -7,7 +7,7 @@ const {
     getUpcomingLinks,
     getUpcomingFilmDetails
 } = require('./scraping/scrapingActions');
-const { getMoviesDataFromCronJob } = require('./scraping/cron')
+const { getMoviesDataFromCronJob, getLastCronJobRun } = require('./scraping/cron')
 
 // Serves the vue application
 router.get("/", async (req, res) => {
@@ -54,8 +54,7 @@ router.post("/imdbMovieRating", async (req, res) => {
 router.get("/athinoramaMoviesDetails", async (req, res) => {
     try {
         res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-        const movieDataFromCronJob = getMoviesDataFromCronJob();
-        res.status(200).send(movieDataFromCronJob);
+        res.status(200).send({ films: getMoviesDataFromCronJob(), lastCronJobRun: getLastCronJobRun() });
     } catch (error) {
         console.log(error);
         res.status(500).send("Failed");

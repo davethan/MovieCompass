@@ -5,8 +5,12 @@ const {
 } = require('./scrapingActions');
 
 let movieDataFromCronJob = [];
+let lastCronJobRun = null;
 
 const cronJob = async (slice) => {
+
+  console.log("cron job started")
+  lastCronJobRun = new Date(Date.now() + (2 * 60 * 60 * 1000));
   movieDataFromCronJob = [];
   let athinoramaCurrentMovieURLs = [];
 
@@ -46,5 +50,6 @@ cron.schedule('0 4 * * 5', async () => {
 }, { timezone: "Europe/Athens" });
 
 const getMoviesDataFromCronJob = () => movieDataFromCronJob
+const getLastCronJobRun = () => lastCronJobRun
 
-module.exports = { cronJob, getMoviesDataFromCronJob };
+module.exports = { cronJob, getMoviesDataFromCronJob, getLastCronJobRun };

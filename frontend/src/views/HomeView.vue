@@ -67,6 +67,7 @@
         </div>
       </expanding-circle-background>
     </div>
+    <div class="col-12 text-center">Τελευταία ενημέρωση: {{ moviesStore.lastUpdate }}</div>
   </div>
   <scroll-to-top-button />
 </template>

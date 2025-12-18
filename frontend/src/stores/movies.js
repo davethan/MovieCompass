@@ -5,6 +5,7 @@ const { VITE_OMDB_URL, VITE_OMDB_API_KEY } = import.meta.env;
 
 const state = () => ({
   MOVIES: [],
+  lastUpdate: '',
   selectedCinema: '',
   loading: false,
   loadingRating: false,
@@ -139,8 +140,9 @@ const actions = {
       return false;
     }
   },
-  setAthinoramaMoviesDetailsAction(payload) {
-    this.MOVIES = payload
+  setAthinoramaMoviesDetailsAction({ films, lastCronJobRun }) {
+    this.MOVIES = films
+    this.lastUpdate = lastCronJobRun.replace('T', ' ').replace('Z', '');
   },
   setAthinoramaMovieImdbDataAction(id, imdbLink, payload) {
     this.MOVIES.forEach((film) => {
