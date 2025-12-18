@@ -8,7 +8,10 @@ import {
 } from './scraping/scrapingActions.js';
 import { getMoviesDataFromCronJob, getLastCronJobRun } from './scraping/cron.js'
 import type { Request, Response } from 'express';
+import { fileURLToPath } from 'url';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const router = express.Router();
 
 // Serves the vue application
