@@ -12,4 +12,4 @@ const runCommand = (cmd, description) => {
   }
 }
 
-runCommand('cd ./backend && npm start', 'Starting backend server');
+runCommand('cd ./backend && npm start', '🚀 Starting backend server');

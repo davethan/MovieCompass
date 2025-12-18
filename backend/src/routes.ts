@@ -1,16 +1,18 @@
-const express = require('express');
-const router = express.Router();
-const path = require('path');
-const {
+import express from 'express';
+import path from 'path';
+import {
     getImdbMovieRating,
     getAthinoramaSpecials,
     getUpcomingLinks,
     getUpcomingFilmDetails
-} = require('./scraping/scrapingActions');
-const { getMoviesDataFromCronJob, getLastCronJobRun } = require('./scraping/cron')
+} from './scraping/scrapingActions.js';
+import { getMoviesDataFromCronJob, getLastCronJobRun } from './scraping/cron.js'
+import type { Request, Response } from 'express';
+
+const router = express.Router();
 
 // Serves the vue application
-router.get("/", async (req, res) => {
+router.get("/", async (req: Request, res: Response) => {
     try {
         res.sendFile(path.join(__dirname, '../dist', 'index.html'));
     } catch (error) {
@@ -20,7 +22,7 @@ router.get("/", async (req, res) => {
 });
 
 // Edits note
-router.post("/takeNote", async (req, res) => {
+router.post("/takeNote", async (req: Request, res: Response) => {
     try {
         const request = req.body
         const movieDataFromCronJob = getMoviesDataFromCronJob();
@@ -41,7 +43,7 @@ router.post("/takeNote", async (req, res) => {
 });
 
 // Fetches the imdb data of a specific film
-router.post("/imdbMovieRating", async (req, res) => {
+router.post("/imdbMovieRating", async (req: Request, res: Response) => {
     try {
         const response = await getImdbMovieRating(req.body.imdbLink);
         res.status(200).send(response);
@@ -51,7 +53,7 @@ router.post("/imdbMovieRating", async (req, res) => {
 });
 
 // Fetches all films that are currently on cinemas
-router.get("/athinoramaMoviesDetails", async (req, res) => {
+router.get("/athinoramaMoviesDetails", async (req: Request, res: Response) => {
     try {
         res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
         res.status(200).send({ films: getMoviesDataFromCronJob(), lastCronJobRun: getLastCronJobRun() });
@@ -62,7 +64,7 @@ router.get("/athinoramaMoviesDetails", async (req, res) => {
 });
 
 // Fetches special films
-router.get("/athinoramaSpecials", async (req, res) => {
+router.get("/athinoramaSpecials", async (req: Request, res: Response) => {
     try {
         const specialData = await getAthinoramaSpecials();
         res.status(200).send(specialData);
@@ -72,7 +74,7 @@ router.get("/athinoramaSpecials", async (req, res) => {
 });
 
 // Fetches all upcoming film links
-router.get("/filmyUpcomingLinksAndBriefFilms", async (req, res) => {
+router.get("/filmyUpcomingLinksAndBriefFilms", async (req: Request, res: Response) => {
     try {
         const { links, briefMovies } = await getUpcomingLinks();
         res.status(200).send({ links, briefMovies });
@@ -82,7 +84,7 @@ router.get("/filmyUpcomingLinksAndBriefFilms", async (req, res) => {
 });
 
 // Fetches upcoming film details
-router.post("/filmyUpcomingFilmDetails", async (req, res) => {
+router.post("/filmyUpcomingFilmDetails", async (req: Request, res: Response) => {
     try {
         const upcomingDetails = await getUpcomingFilmDetails(req.body.url);
         res.status(200).send(upcomingDetails);
@@ -92,7 +94,7 @@ router.post("/filmyUpcomingFilmDetails", async (req, res) => {
 });
 
 //--------------------sse--------------------
-// router.get('/events', (req, res) => {
+// router.get('/events', (req: Request, res: Response) => {
 //   res.setHeader('Content-Type', 'text/event-stream');
 //   res.setHeader('Cache-Control', 'no-cache');
 //   res.setHeader('Connection', 'keep-alive');
@@ -121,7 +123,7 @@ router.post("/filmyUpcomingFilmDetails", async (req, res) => {
 //-------------------------------------------
 
 // Catch-all route to default to the Vue application
-router.get('*', (req, res) => {
+router.get('*', (req: Request, res: Response) => {
     try {
         res.sendFile(path.join(__dirname, '../dist', 'index.html'));
     } catch (error) {
@@ -130,4 +132,4 @@ router.get('*', (req, res) => {
     }
 });
 
-module.exports = router;
+export default router;

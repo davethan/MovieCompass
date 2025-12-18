@@ -1,4 +1,6 @@
-const splitByHours = (input) => {
+import type { WeeklySchedule } from "./types.ts";
+
+const splitByHours = (input: string): string[] => {
     // Matches "hh.mm" or "hh.mm/ hh.mm" or "hh.mm /hh.mm" or "hh.mm/ hh.mm/ hh.mm/ hh.mm"
     const timePattern = /\b\d{2}\.\d{2}(?:\s*\/\s*\d{2}\.\d{2})*\b/g;
 
@@ -13,7 +15,7 @@ const splitByHours = (input) => {
     });
 };
 
-const getDaysInRange = (start, end) => {
+const getDaysInRange = (start: string, end: string) :string[] => {
     const daysOrder = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
     let startIndex = daysOrder.indexOf(start);
     let endIndex = daysOrder.indexOf(end);
@@ -26,7 +28,7 @@ const getDaysInRange = (start, end) => {
     }
 };
 
-function convertGreekDate(inputDate) {
+const convertGreekDate = (inputDate: string) :string => {
     const greekMonths = {
         'Ιανουαρίου': '01',
         'Φεβρουαρίου': '02',
@@ -48,7 +50,7 @@ function convertGreekDate(inputDate) {
     return `${day}-${monthNumber}-${year}`;
 };
 
-const parseDuration = (duration) => {
+const parseDuration = (duration: string) :number|null => {
     const match = duration.match(/(\d+)\s*ωρ\.\s*(\d+)\s*λεπ\./);
     if (match) {
         const hours = parseInt(match[1], 10);
@@ -58,7 +60,7 @@ const parseDuration = (duration) => {
     return null;
 };
 
-const parseSchedule = (schedule) => {
+const parseSchedule = (schedule: string[]) :WeeklySchedule|string => {
     const daysMap = {
         "Δευτ.": "Monday",
         "Τρ.": "Tuesday",
@@ -106,7 +108,7 @@ const parseSchedule = (schedule) => {
     }
 }
 
-module.exports = {
+export {
     splitByHours,
     convertGreekDate,
     parseDuration,

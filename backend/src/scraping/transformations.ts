@@ -1,28 +1,29 @@
-const { v4: uuidv4 } = require('uuid');
-const cheerio = require('cheerio');
-const {
+import { v4 as uuidv4 } from 'uuid';
+import { load } from 'cheerio';
+import {
     splitByHours,
     convertGreekDate,
     parseDuration,
     parseSchedule,
-} = require('../tools');
+} from '../tools.js';
+import type { Movie, AthinoramaUrl, SpecialFilm, UpcomingMovie, UpcomingMovieDetails } from '../types.js';
 
-const extractDataFromIMDB = (html) => {
-    const $ = cheerio.load(html);
+const extractDataFromIMDB = (html: string) => {
+    const $ = load(html);
     const container = $('[data-testid="hero-rating-bar__aggregate-rating"]');
     const ratingDiv = container.find('[data-testid="hero-rating-bar__aggregate-rating__score"]').first()
-    const rating = ratingDiv.text().trim().split('/')[0];
-    const popularity = ratingDiv.next().next().text().trim();
+    const rating: string = ratingDiv.text().trim().split('/')[0];
+    const popularity: string = ratingDiv.next().next().text().trim();
 
     return {rating, popularity};
 };
 
-const parseAthinoramaMovies = (html_data) => {
-    const $ = cheerio.load(html_data);
+const parseAthinoramaMovies = (html_data: string) => {
+    const $ = load(html_data);
     const container = $('div.tabs-panel').eq(1).find('ul.panel-guide-list');
-    const athinoramaMovieURLs = [];
+    const athinoramaMovieURLs = [] as AthinoramaUrl[];
 
-    container.find('li').each((_, li) => {
+    container.find('li').each((_:any, li) => {
         const link = $(li).find('a');
         const url = link.attr('href');
         const id = uuidv4();
@@ -32,8 +33,8 @@ const parseAthinoramaMovies = (html_data) => {
     return athinoramaMovieURLs;
 };
 
-const extractAthinoramaMovieDetails = (html_data, id, athinoramaLink) => {
-    const $ = cheerio.load(html_data);
+const extractAthinoramaMovieDetails = (html_data: string, id: string, athinoramaLink: string): Movie => {
+    const $ = load(html_data);
 
     const header = $('div.review-title');
 
@@ -44,7 +45,7 @@ const extractAthinoramaMovieDetails = (html_data, id, athinoramaLink) => {
 
     const reviewTags = $(header).find('ul.review-tags').find('a');
     let tags = [];
-    reviewTags.each((i, tag) => {
+    reviewTags.each((i: number, tag) => {
         tags.push($(tag).text().trim());
     })
 
@@ -57,14 +58,14 @@ const extractAthinoramaMovieDetails = (html_data, id, athinoramaLink) => {
 
     const directors = $(header).find('div.cast-crew').children().first().find('a');
     const drcts = [];
-    directors.each((i, dir) => {
+    directors.each((i: number, dir) => {
         const director = $(dir).text().trim();
         drcts.push(director);
     });
 
     const stars = $(header).find('div.cast-crew').children().eq(1).find('a');
     const actors = [];
-    stars.each((i, star) => {
+    stars.each((i:number , star) => {
         const actor = $(star).text().trim();
         actors.push(actor);
     });
@@ -73,7 +74,7 @@ const extractAthinoramaMovieDetails = (html_data, id, athinoramaLink) => {
     const theaters = [];
     let location = '';
     let counter = 0;
-    locationsAndCinemas.each((index, locationOrCinema) => {
+    locationsAndCinemas.each((index: number, locationOrCinema) => {
         const isLocation = $(locationOrCinema).hasClass('sticky-breaker-title');
         if (isLocation) location = $(locationOrCinema).children().text().trim();
         else {
@@ -82,7 +83,7 @@ const extractAthinoramaMovieDetails = (html_data, id, athinoramaLink) => {
             const isOutdoor = $(locationOrCinema).children().first().children().first().find('div.tags').text().includes('Θερινός') || false;
             theaters[counter] = { cinema: cinemaTitle, cinemaLocation, isOutdoor, cinemaSchedule: [] };
             const timeTables = $(locationOrCinema).children('div.grid.schedule-grid');
-            timeTables.each((i, timeTable) => {
+            timeTables.each((i: number, timeTable) => {
                 const times = $(timeTable).find('span.time').text().trim();
                 theaters[counter].cinemaSchedule.push(splitByHours(times));
             });
@@ -118,13 +119,13 @@ const extractAthinoramaMovieDetails = (html_data, id, athinoramaLink) => {
     };
 };
 
-const parseAthinoramaSpecials = (html_data) => {
-    const $ = cheerio.load(html_data);
+const parseAthinoramaSpecials = (html_data: string) => {
+    const $ = load(html_data);
 
     const container = $('div.guide-list.movies-list');
-    const items = [];
+    const items = [] as SpecialFilm[];
 
-    container.children('div.item').each((_, item) => {
+    container.children('div.item').each((_: any, item) => {
         try {
             const title = $(item).find('h2.item-title').text().trim();
             let cinema = $(item).find('div.item-description').find('h4').text().trim();
@@ -143,13 +144,13 @@ const parseAthinoramaSpecials = (html_data) => {
     return items
 }
 
-const parseUpcomingLinks = (html_data) => {
-    const $ = cheerio.load(html_data);
+const parseUpcomingLinks = (html_data: string) => {
+    const $ = load(html_data);
     try {
         const containers = $('div.amy-shortcode.amy-mv-grid.layout3');
         const movies = containers.find('div.col-md-15.grid-item');
-        const movieUrls = [];
-        movies.each((i, movie) => {
+        const movieUrls = [] as string[];
+        movies.each((i: number, movie) => {
             const link = $(movie).find('h3.entry-title').find('a').attr('href');
             if (link) movieUrls.push(link);
         });
@@ -160,15 +161,15 @@ const parseUpcomingLinks = (html_data) => {
     }
 }
 
-const parseUpcomingMovies = (html_data) => {
-    const $ = cheerio.load(html_data);
+const parseUpcomingMovies = (html_data: string) => {
+    const $ = load(html_data);
     try {
         const table = $('div.supsystic-tables-wrap');
         const tableRows = table.find('tbody').find('tr');
-        const summaryMovies = [];
-        tableRows.each((i, row) => {
+        const summaryMovies = [] as UpcomingMovie[];
+        tableRows.each((i: number, row) => {
             const premiere = $(row).children('td:eq(3)').text().trim();
-            let title = $(row).children('td:eq(1)').text()
+            let title: string = $(row).children('td:eq(1)').text()
                 .replace('*', '')
                 .replace('(κ.σ.)', '')
                 .replace('|►', '')
@@ -197,8 +198,8 @@ const parseUpcomingMovies = (html_data) => {
     }
 }
 
-const parseUpcomingFilmDetails = (html_data) => {
-    const $ = cheerio.load(html_data);
+const parseUpcomingFilmDetails = (html_data: string): UpcomingMovieDetails => {
+    const $ = load(html_data);
     try {
         const container = $('div.page-content')
         let greekTitle = container.find('li:contains("Ελληνικός Τίτλος")').text().replace('Ελληνικός Τίτλος:', '').trim();
@@ -237,7 +238,7 @@ const parseUpcomingFilmDetails = (html_data) => {
     }
 }
 
-module.exports = {
+export {
     extractDataFromIMDB,
     parseAthinoramaMovies,
     extractAthinoramaMovieDetails,

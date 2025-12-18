@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "outDir": "./built",
+    "target": "es6",
+    "module": "nodenext",
+  },
+  "include": ["./**/*"],
+  "exclude": ["node_modules"]
+}

@@ -1,18 +1,15 @@
-const cron = require('node-cron');
-const {
-    getAthinoramaMovieDetails,
-    getAthinoramaCurrentMovies,
-} = require('./scrapingActions');
+import cron from 'node-cron';
+import { getAthinoramaMovieDetails, getAthinoramaCurrentMovies } from './scrapingActions.js';
+import type { Movie, AthinoramaUrl } from '../types.js';
 
-let movieDataFromCronJob = [];
-let lastCronJobRun = null;
+let movieDataFromCronJob = [] as Movie[];
+let lastCronJobRun: Date | null = null;
 
-const cronJob = async (slice) => {
-
+const cronJob = async (slice?: number): Promise<void> => {
   console.log("cron job started")
   lastCronJobRun = new Date(Date.now() + (2 * 60 * 60 * 1000));
   movieDataFromCronJob = [];
-  let athinoramaCurrentMovieURLs = [];
+  let athinoramaCurrentMovieURLs = [] as AthinoramaUrl[];
 
   try {
     athinoramaCurrentMovieURLs = await getAthinoramaCurrentMovies();
@@ -29,8 +26,20 @@ const cronJob = async (slice) => {
     const requests = [];
     athinoramaCurrentMovieURLs.slice(0, slice).forEach(film => requests.push(getAthinoramaMovieDetails(film.url, film.id)))
     const moviesDetails = await Promise.allSettled(requests);
-    movieDataFromCronJob = moviesDetails.map(film => film.value);
-    console.log("Success fetching movies' details")
+    
+    movieDataFromCronJob = moviesDetails
+      .filter((result): result is PromiseFulfilledResult<Movie> => 
+        result.status === 'fulfilled'
+      )
+      .map(result => result.value);
+    
+    console.log(`Success fetching ${movieDataFromCronJob.length} movies' details`);
+    
+    const rejected = moviesDetails.filter(result => result.status === 'rejected');
+    if (rejected.length > 0) {
+      console.log(`${rejected.length} requests failed`);
+    }
+    return;
   } catch(error) {
     console.log("Failed fetching movies' details", error)
     return; 
@@ -52,4 +61,4 @@ cron.schedule('0 4 * * 5', async () => {
 const getMoviesDataFromCronJob = () => movieDataFromCronJob
 const getLastCronJobRun = () => lastCronJobRun
 
-module.exports = { cronJob, getMoviesDataFromCronJob, getLastCronJobRun };
+export { cronJob, getMoviesDataFromCronJob, getLastCronJobRun };

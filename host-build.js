@@ -15,8 +15,9 @@ const runCommand = (cmd, description) => {
 console.log('Starting deployment process\n');
 
 // Frontend
-runCommand('cd ./frontend && npm i', 'Installing frontend dependencies');
-runCommand('cd ./frontend && npm run build:UPLOAD', 'Building frontend');
+runCommand('cd ./frontend && npm i', '📦 Installing frontend dependencies');
+runCommand('cd ./frontend && npm run build:UPLOAD', '🔨 Building frontend');
 
 // Backend
-runCommand('cd ./backend && npm i', 'Installing backend dependencies');
+runCommand('cd ./backend && npm i', '📦 Installing backend dependencies');
+runCommand('cd ./backend && npm run build', '🔨 Building backend');

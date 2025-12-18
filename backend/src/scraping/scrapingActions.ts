@@ -1,4 +1,4 @@
-const {
+import {
     extractDataFromIMDB,
     parseAthinoramaMovies,
     extractAthinoramaMovieDetails,
@@ -6,10 +6,10 @@ const {
     parseUpcomingLinks,
     parseUpcomingMovies,
     parseUpcomingFilmDetails,
-} = require('./transformations');
-const request = require('./request');
+} from './transformations.js';
+import { request } from './request.js';
 
-const getImdbMovieRating = async (movieURL) => {
+const getImdbMovieRating = async (movieURL: string) => {
     try {
         const imdbFindSpecificMovie = await request(movieURL);
         const response = extractDataFromIMDB(imdbFindSpecificMovie.data);
@@ -20,7 +20,7 @@ const getImdbMovieRating = async (movieURL) => {
     }
 };
 
-const getAthinoramaMovieDetails = async (url, id) => {
+const getAthinoramaMovieDetails = async (url: string, id: string) => {
     try {
         const response = await request(`https://www.athinorama.gr${url}`);
         return extractAthinoramaMovieDetails(response.data, id, url);
@@ -62,7 +62,7 @@ const getUpcomingLinks = async () => {
     }
 };
 
-const getUpcomingFilmDetails = async (url) => {
+const getUpcomingFilmDetails = async (url: string) => {
     try {
         const response = await request(url);
         return parseUpcomingFilmDetails(response.data);
@@ -72,7 +72,7 @@ const getUpcomingFilmDetails = async (url) => {
     }
 };
 
-module.exports = {
+export {
     getImdbMovieRating,
     getAthinoramaMovieDetails,
     getAthinoramaCurrentMovies,
