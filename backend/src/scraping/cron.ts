@@ -28,17 +28,13 @@ const cronJob = async (slice?: number): Promise<void> => {
     const moviesDetails = await Promise.allSettled(requests);
     
     movieDataFromCronJob = moviesDetails
-      .filter((result): result is PromiseFulfilledResult<Movie> => 
-        result.status === 'fulfilled'
-      )
+      .filter((result): result is PromiseFulfilledResult<Movie> => result.status === 'fulfilled')
       .map(result => result.value);
     
     console.log(`Success fetching ${movieDataFromCronJob.length} movies' details`);
     
     const rejected = moviesDetails.filter(result => result.status === 'rejected');
-    if (rejected.length > 0) {
-      console.log(`${rejected.length} requests failed`);
-    }
+    if (rejected.length > 0) console.log(`${rejected.length} requests failed`);
     return;
   } catch(error) {
     console.log("Failed fetching movies' details", error)
@@ -46,15 +42,21 @@ const cronJob = async (slice?: number): Promise<void> => {
   }
 }
 
-// Every Thursday at 08:00
-cron.schedule('0 8 * * 4', async () => {
-  console.log('Running Thursday task at 08:00');
+// Every Thursday at 17:00
+cron.schedule('0 17 * * 4', async () => {
+  console.log('Running Thursday task at 17:00');
   await cronJob();
 }, { timezone: "Europe/Athens" });
-  
-// Every Friday at 04:00
-cron.schedule('0 4 * * 5', async () => {
-  console.log('Running Friday task at 04:00');
+
+// Every Thursday at 21:00
+cron.schedule('0 21 * * 4', async () => {
+  console.log('Running Thursday task at 21:00');
+  await cronJob();
+}, { timezone: "Europe/Athens" });
+
+// Every Friday at 18:00
+cron.schedule('0 18 * * 5', async () => {
+  console.log('Running Friday task at 18:00');
   await cronJob();
 }, { timezone: "Europe/Athens" });
 
