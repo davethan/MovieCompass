@@ -1,0 +1,150 @@
+[data-bs-theme=dark] {
+    //mine
+    --color-medium: #{$black-medium};
+    --color-highlight: #{$black-highlight};
+    --color-soft: #{$black-soft};
+    --color-light: #{$color-text-dark-light};
+
+    --gray: #{$gray-dark};
+    --yellow: #{$yellow-dark};
+    
+    --the-gradient: #{$gradient-dark};
+    --the-gradient-sat: #{$gradient-dark-sat};
+    --secondary-background: #{$dark-secondary-background};
+
+    //bs overrides
+    --background: #{$black};
+    --color: #{$color-text-dark};
+
+    --bs-primary: #{$dark-primary};
+    --bs-primary-rgb: #{to-rgb($dark-primary)};
+    --bs-secondary: #{$dark-secondary};
+    --bs-secondary-rgb: #{to-rgb($dark-secondary)};
+
+    //buttons
+    .btn-primary, .btn-outline-primary {
+        --bs-btn-border-color: #{$dark-primary};
+        --bs-btn-hover-bg: #{$dark-primary};
+        --bs-btn-hover-border-color: #{$dark-primary};
+        --bs-btn-focus-shadow-rgb: #{to-rgb($dark-primary)};
+        --bs-btn-active-bg: #{$dark-primary};
+        --bs-btn-active-border-color: #{$dark-primary};
+        --bs-btn-disabled-border-color: #{$dark-primary};
+    }
+    .btn-primary {
+        --bs-btn-bg: #{$dark-primary};
+        --bs-btn-color: #{$color-text-light};
+        --bs-btn-disabled-bg: #{$dark-primary};
+        --bs-btn-disabled-color: #{$color-text-light};
+
+        --bs-btn-hover-bg: #{tint-color($dark-primary, 10%)};
+        --bs-btn-hover-border-color: #{tint-color($dark-primary, 10%)};
+    }
+    .btn-outline-primary {
+        --bs-btn-color: #{$dark-primary};
+        --bs-btn-disabled-color: #{$dark-primary};
+
+        --bs-btn-hover-bg: #{tint-color($dark-primary, 10%)};
+        --bs-btn-hover-border-color: #{tint-color($dark-primary, 10%)};
+    }
+    .btn-secondary, .btn-outline-secondary {
+        --bs-btn-border-color: #{$dark-secondary};
+        --bs-btn-hover-bg: #{$dark-secondary};
+        --bs-btn-hover-border-color: #{$dark-secondary};
+        --bs-btn-focus-shadow-rgb: #{to-rgb($dark-secondary)};
+        --bs-btn-active-bg: #{$dark-secondary};
+        --bs-btn-active-border-color: #{$dark-secondary};
+        --bs-btn-disabled-border-color: #{$dark-secondary};
+    }
+    .btn-secondary {
+        --bs-btn-bg: #{$dark-secondary};
+        --bs-btn-color: #{$color-text-light};
+        --bs-btn-disabled-bg: #{$dark-secondary};
+        --bs-btn-disabled-color: #{$color-text-light};
+
+        --bs-btn-hover-bg: #{tint-color($dark-secondary, 10%)};
+        --bs-btn-hover-border-color: #{tint-color($dark-secondary, 10%)};
+    }
+    .btn-outline-secondary {
+        --bs-btn-color: #{$dark-secondary};
+        --bs-btn-disabled-color: #{$dark-secondary};
+
+        --bs-btn-hover-bg: #{tint-color($dark-secondary, 10%)};
+        --bs-btn-hover-border-color: #{tint-color($dark-secondary, 10%)};
+    }
+}
+
+[data-bs-theme=light] {
+    //mine
+    --color-medium: #{$white-medium};
+    --color-highlight: #{$white-highlight};
+    --color-soft: #{$white-soft};
+    --color-light: #{$color-text-light-light};
+
+    --gray: #{$gray-light};
+    --yellow: #{$yellow-light};
+
+    --the-gradient: #{$gradient-light};
+    --the-gradient-sat: #{$gradient-light-sat};
+    --secondary-background: #{$light-secondary-background};
+
+    //bs overrides
+    --background: #{$white};
+    --color: #{$color-text-light};
+    --bs-border-color: #{$gray-light};
+
+    --bs-primary: #{$light-primary};
+    --bs-primary-rgb: #{to-rgb($light-primary)};
+    --bs-secondary: #{$light-secondary};
+    --bs-secondary-rgb: #{to-rgb($light-secondary)};
+
+    //buttons
+    .btn-primary, .btn-outline-primary {
+        --bs-btn-border-color: #{$light-primary};
+        --bs-btn-hover-bg: #{$light-primary};
+        --bs-btn-hover-border-color: #{$light-primary};
+        --bs-btn-focus-shadow-rgb: #{to-rgb($light-primary)};
+        --bs-btn-active-bg: #{$light-primary};
+        --bs-btn-active-color: #{$white-highlight};
+        --bs-btn-active-border-color: #{$light-primary};
+        --bs-btn-disabled-border-color: #{$light-primary};
+        --bs-btn-hover-bg: #{shade-color($light-primary, 10%)};
+        --bs-btn-hover-border-color: #{shade-color($light-primary, 10%)};
+    }
+    .btn-primary {
+        --bs-btn-bg: #{$light-primary};
+        --bs-btn-color: #{$white-highlight};
+        --bs-btn-disabled-bg: #{$light-primary};
+        --bs-btn-disabled-color: #{$color-text-light};
+        --bs-btn-hover-color: #{$white-highlight};
+    }
+    .btn-outline-primary {
+        --bs-btn-color: #{$light-primary};
+        --bs-btn-disabled-color: #{$light-primary};
+        --bs-btn-hover-color: #{$white-highlight};
+    }
+    .btn-secondary, .btn-outline-secondary {
+        --bs-btn-border-color: #{$light-secondary};
+        --bs-btn-hover-bg: #{$light-secondary};
+        --bs-btn-hover-border-color: #{$light-secondary};
+        --bs-btn-focus-shadow-rgb: #{to-rgb($light-secondary)};
+        --bs-btn-active-bg: #{$light-secondary};
+        --bs-btn-active-color: #{$white-highlight};
+        --bs-btn-active-border-color: #{$light-secondary};
+        --bs-btn-disabled-border-color: #{$light-secondary};
+        --bs-btn-hover-bg: #{shade-color($light-secondary, 10%)};
+        --bs-btn-hover-border-color: #{shade-color($light-secondary, 10%)};
+    }
+    .btn-secondary {
+        --bs-btn-bg: #{$light-secondary};
+        --bs-btn-color: #{$white-highlight};
+        --bs-btn-disabled-bg: #{$light-secondary};
+        --bs-btn-disabled-color: #{$color-text-light};
+        --bs-btn-hover-color: #{$white-highlight};
+    }
+    .btn-outline-secondary {
+        --bs-btn-color: #{$light-secondary};
+        --bs-btn-disabled-color: #{$light-secondary};
+        --bs-btn-hover-color: #{$white-highlight};
+    }
+}
