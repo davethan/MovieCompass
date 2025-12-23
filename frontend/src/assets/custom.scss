@@ -159,6 +159,10 @@ a,
   background-color: var(--color-medium);
 }
 
+.offcanvas-body {
+  overscroll-behavior: contain;
+}
+
 .card {
   background-color: var(--color-medium);
   color: var(--color);
