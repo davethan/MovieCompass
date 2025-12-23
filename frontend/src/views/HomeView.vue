@@ -18,55 +18,58 @@
         </div>
       </div>
     </div>
-    <div v-else class="col-sm-6 col-md-6 col-lg-4" v-for="movie in filteredMovies" :key="movie.id">
-      <expanding-circle-background cssClass="card film-item-no-hover cursor-pointer" @clicked="goToMoviePage(movie.id)">
-        <div class="card-header">
-          <div class="row g-2">
-            <div class="col-3">
-              <img :src="movie.imageUrl" :alt="movie.greekTitle" class="img-fluid">
-            </div>
-            <div class="col-9">
-              <i v-if="isGem(movie)" class="bi bi-gem text-danger float-end" />
-              <i v-if="isFlame(movie)" class="bi bi-fire text-warning float-end" />
-              <h2 class="text-primary m-0">{{ movie.greekTitle }}</h2>
-              <div>{{ movie.originalTitle }} </div>
-            </div>
+    <card-transition name="list">
+      <div class="col-sm-6 col-md-6 col-lg-4" v-for="movie in filteredMovies" :key="movie.id">
+        <expanding-circle-background cssClass="card film-item-no-hover cursor-pointer"
+          @clicked="goToMoviePage(movie.id)">
+          <div class="card-header">
             <div class="row g-2">
-              <div class="col-12 d-flex justify-content-start flex-wrap gap-1 align-items-center">
-                <div class="tag-outlined">Σε {{ movie.cinemas.length }} σινεμά
+              <div class="col-3">
+                <img :src="movie.imageUrl" :alt="movie.greekTitle" class="img-fluid">
+              </div>
+              <div class="col-9">
+                <i v-if="isGem(movie)" class="bi bi-gem text-danger float-end" />
+                <i v-if="isFlame(movie)" class="bi bi-fire text-warning float-end" />
+                <h2 class="text-primary m-0">{{ movie.greekTitle }}</h2>
+                <div>{{ movie.originalTitle }} </div>
+              </div>
+              <div class="row g-2">
+                <div class="col-12 d-flex justify-content-start flex-wrap gap-1 align-items-center">
+                  <div class="tag-outlined">Σε {{ movie.cinemas.length }} σινεμά
+                  </div>
+                  <div class="tag-outlined"> {{ formatDuration(movie.duration) }} </div>
+                  <div class="tag-outlined">{{ movie.year }} </div>
+                  <div class="tag-outlined" v-if="movie.imdbRating">
+                    {{ movie.imdbRating === "None" ? '?/10' : `${movie.imdbRating}/10` }}
+                  </div>
+                  <div v-else class="rating-placeholder placeholder-glow"> <span
+                      class="placeholder rounded-3 col-12"></span>
+                  </div>
+                  <div v-for="(tag, i) in movie.tags" :key="i" class="tag-square">{{ tag }}</div>
                 </div>
-                <div class="tag-outlined"> {{ formatDuration(movie.duration) }} </div>
-                <div class="tag-outlined">{{ movie.year }} </div>
-                <div class="tag-outlined" v-if="movie.imdbRating">
-                  {{ movie.imdbRating === "None" ? '?/10' : `${movie.imdbRating}/10` }}
-                </div>
-                <div v-else class="rating-placeholder placeholder-glow"> <span
-                    class="placeholder rounded-3 col-12"></span>
-                </div>
-                <div v-for="(tag, i) in movie.tags" :key="i" class="tag-square">{{ tag }}</div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="card-body">
-          <div class="d-flex gap-3">
-            <div>
-              <b>Σκηνοθεσία:</b> <template v-for="(director, index) in movie.directors">
-                {{ director }}<span :key="index" v-if="index < movie.directors.length - 1">, </span>
+          <div class="card-body">
+            <div class="d-flex gap-3">
+              <div>
+                <b>Σκηνοθεσία:</b> <template v-for="(director, index) in movie.directors">
+                  {{ director }}<span :key="index" v-if="index < movie.directors.length - 1">, </span>
+                </template>
+              </div>
+            </div>
+            <div class="my-4">
+              {{ movie.summary }}
+            </div>
+            <div v-if="movie.actors.length" class="mb-2">
+              <b>Παίζουν:</b> <template v-for="(actor, index) in movie.actors">
+                {{ actor }}<span :key="index" v-if="index < movie.actors.length - 1">, </span>
               </template>
             </div>
           </div>
-          <div class="my-4">
-            {{ movie.summary }}
-          </div>
-          <div v-if="movie.actors.length" class="mb-2">
-            <b>Παίζουν:</b> <template v-for="(actor, index) in movie.actors">
-              {{ actor }}<span :key="index" v-if="index < movie.actors.length - 1">, </span>
-            </template>
-          </div>
-        </div>
-      </expanding-circle-background>
-    </div>
+        </expanding-circle-background>
+      </div>
+    </card-transition>
     <div class="col-12 text-center">Τελευταία ενημέρωση: {{ moviesStore.lastUpdate }}</div>
   </div>
   <scroll-to-top-button />
@@ -77,6 +80,7 @@ import { useRouter } from 'vue-router';
 import { computed, unref } from 'vue';
 import { formatDuration } from '@/tools/tools';
 import { useMoviesStore } from '@/stores/movies';
+import CardTransition from '@/components/CardTransition.vue';
 
 const moviesStore = useMoviesStore();
 const router = useRouter();

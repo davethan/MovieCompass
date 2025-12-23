@@ -106,35 +106,37 @@
     </div>
   </div>
   <div class="d-flex flex-column justify-content-center flex-md-row gap-3 flex-md-wrap">
-    <expanding-circle-background v-for="(cinema, i) in filteredCinemas" :key="i"
-      cssClass="card border-0 cinema-item cursor-pointer" @clicked="goToCinemaPage(cinema)">
-      <div class="card-header">
-        <h2 class="text-secondary">{{ cinema.cinema }}</h2>
-        <div class="d-flex justify-content-between flex-wrap ">
-          <div>{{ cinema.cinemaLocation }}</div>
-          <div v-if="cinema.isOutdoor"><i class="bi bi-brightness-high-fill is-outdoor" /></div>
+    <card-transition>
+      <expanding-circle-background v-for="(cinema, i) in filteredCinemas" :key="i"
+        cssClass="card border-0 cinema-item cursor-pointer" @clicked="goToCinemaPage(cinema)">
+        <div class="card-header">
+          <h2 class="text-secondary">{{ cinema.cinema }}</h2>
+          <div class="d-flex justify-content-between flex-wrap ">
+            <div>{{ cinema.cinemaLocation }}</div>
+            <div v-if="cinema.isOutdoor"><i class="bi bi-brightness-high-fill is-outdoor" /></div>
+          </div>
         </div>
-      </div>
-      <div class="card-body">
-        <template v-if="typeof cinema.cinemaSchedule === 'string' || cinema.cinemaSchedule instanceof String">
-          {{ cinema.cinemaSchedule }}
-        </template>
-        <div v-else>
-          <template v-for="[dayName, hours] in Object.entries(cinema.cinemaSchedule)">
-            <div v-if="hours.length" class="row my-2" :key="dayName">
-              <div class="col-5 text-truncate">
-                {{ mapDayName(dayName) }}
-              </div>
-              <div class="col-7 d-flex flex-wrap column-gap-2">
-                <span v-for="(hour, i) in hours" :key="i">
-                  {{ hour }}
-                </span>
-              </div>
-            </div>
+        <div class="card-body">
+          <template v-if="typeof cinema.cinemaSchedule === 'string' || cinema.cinemaSchedule instanceof String">
+            {{ cinema.cinemaSchedule }}
           </template>
+          <div v-else>
+            <template v-for="[dayName, hours] in Object.entries(cinema.cinemaSchedule)">
+              <div v-if="hours.length" class="row my-2" :key="dayName">
+                <div class="col-5 text-truncate">
+                  {{ mapDayName(dayName) }}
+                </div>
+                <div class="col-7 d-flex flex-wrap column-gap-2">
+                  <span v-for="(hour, i) in hours" :key="i">
+                    {{ hour }}
+                  </span>
+                </div>
+              </div>
+            </template>
+          </div>
         </div>
-      </div>
-    </expanding-circle-background>
+      </expanding-circle-background>
+    </card-transition>
   </div>
   <individual-movie-drawer v-model="isMovieDrawerOpen" @filter-changed="filterCinemas" :state="state" />
   <scroll-to-top-button />
@@ -145,6 +147,7 @@ import { ref, defineProps, onBeforeMount, computed, unref, watch, defineAsyncCom
 import { formatDuration, mapDayName } from '@/tools/tools';
 import { useRouter } from 'vue-router';
 import { useMoviesStore } from '@/stores/movies';
+import CardTransition from '@/components/CardTransition.vue';
 
 const props = defineProps({
   filmId: {
