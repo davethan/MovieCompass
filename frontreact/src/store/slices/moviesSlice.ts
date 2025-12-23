@@ -1,9 +1,9 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import request from '../../http/request';
-import type { MoviesState } from './types';
+import type { MoviesState, getMovieOmdbDataBasedOnLinkActionPayload } from './types';
+const { VITE_OMDB_URL, VITE_OMDB_API_KEY } = import.meta.env;
 
 const initialState: MoviesState = {
-  count: 0,
   MOVIES: [],
   lastUpdate: '',
   selectedCinema: '',
@@ -20,33 +20,31 @@ const initialState: MoviesState = {
   }
 };
 
-export const getAllCurrentMoviesDetails = createAsyncThunk( 'movies/getAllCurrentMoviesDetails', async (_, { rejectWithValue }) => {
-  try {
-    const response = await request.get(`/athinoramaMoviesDetails`);
-    return response.data;
-  } catch (error) {
-    return rejectWithValue(error);
-  }
+export const getAllCurrentMoviesDetails = createAsyncThunk( 'movies/getAllCurrentMoviesDetails', async () => {
+  const response = await request.get(`/athinoramaMoviesDetails`);
+  return response.data;
+});
+
+export const getMovieOmdbDataBasedOnLinkAction = createAsyncThunk('movies/getMovieOmdbDataBasedOnLinkAction', async (payload: getMovieOmdbDataBasedOnLinkActionPayload) => {
+  const { imdbLink, id } = payload;
+  if (!imdbLink) throw ('No link available');
+  const imdbId = imdbLink.match(/\/title\/(tt\d+)\//);
+  if (!imdbId || !imdbId[1]) throw ('No link available');
+  const response = await request.get(`${VITE_OMDB_URL}/?apikey=${VITE_OMDB_API_KEY}&i=${imdbId[1]}`);
+  return {apiResponse: response.data, imdbLink, id}
 });
 
 const moviesSlice = createSlice({
   name: 'movies',
   initialState,
   reducers: {
-    incrementByAmount: (state, action) => {
-      state.count += action.payload;
-    },
     setLoading: (state, action) => {
       state.loading = action.payload;
-    },
-    reset: (state) => {
-      state.count = 0;
-      state.loading = false;
-      state.loadingRating = false;
     }
   },
   extraReducers: (builder) => {
     builder
+      //getAllCurrentMoviesDetails
       .addCase(getAllCurrentMoviesDetails.pending, (state) => {
         state.loading = true;
       })
@@ -58,14 +56,43 @@ const moviesSlice = createSlice({
       })
       .addCase(getAllCurrentMoviesDetails.rejected, (state) => {
         state.loading = false;
+      })
+    
+      //getAllCurrentMoviesDetails
+      .addCase(getMovieOmdbDataBasedOnLinkAction.pending, (state) => {
+        state.loadingRating = true;
+      })
+      .addCase(getMovieOmdbDataBasedOnLinkAction.fulfilled, (state, action) => {
+        const {apiResponse, id, imdbLink } = action.payload
+        state.MOVIES.forEach((film) => {
+          if (film.id === id) {
+            film.imdbLink = imdbLink || film.imdbLink;
+            film.imdbRating = (apiResponse.imdbRating && apiResponse.imdbRating !== 'N/A') ? apiResponse.imdbRating : 'None';
+            film.popularity = (apiResponse.imdbVotes && apiResponse.imdbVotes !== 'N/A') ? apiResponse.imdbVotes : 0;
+            film.awards = (apiResponse.Awards && apiResponse.Awards !== 'N/A') ? apiResponse.Awards : '';
+            film.rated = (apiResponse.Rated && apiResponse.Rated !== 'N/A') ? apiResponse.Rated : '';
+          };
+        });
+        state.loadingRating = false
+      })
+      .addCase(getMovieOmdbDataBasedOnLinkAction.rejected, (state, action) => {
+        const {id, imdbLink } = action.meta.arg
+        state.MOVIES.forEach((film) => {
+          if (film.id === id) {
+            film.imdbLink = imdbLink || film.imdbLink;
+            film.imdbRating = 'None';
+            film.popularity = 0;
+            film.awards = '';
+            film.rated = '';
+          };
+        });
+        state.loadingRating = false;
       });
   }
 });
 
 export const {
-  incrementByAmount,
   setLoading,
-  reset
 } = moviesSlice.actions;
 
 export default moviesSlice.reducer;

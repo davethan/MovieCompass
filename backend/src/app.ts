@@ -14,6 +14,6 @@ import routes from './routes.js';
 app.use('/', routes);
 
 import { cronJob } from './scraping/cron.js';
-cronJob();
+cronJob(6);
 
 export default app;

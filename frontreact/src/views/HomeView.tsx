@@ -1,70 +1,68 @@
-import { useSelector, useDispatch } from 'react-redux';
-import { incrementByAmount, getAllCurrentMoviesDetails } from '../store/slices/moviesSlice';
+import { lazy, useMemo, useState } from 'react';
+import { useSelector } from 'react-redux';
 import type { RootState } from '../store';
-import type { AppDispatch } from '../store';
+import { useNavigate } from 'react-router-dom';
+import type { Movie } from '../store/slices/types';
+
+const MovieCard = lazy(() => import('../components/MovieCard'));
 
 const HomeView = () => {
-    const count = useSelector((state: RootState) => state.movies.count);
-    const loading = useSelector((state: RootState) => state.movies.loading);
-    const movies = useSelector((state: RootState) => state.movies.MOVIES);
+  const loading = useSelector((state: RootState) => state.movies.loading);
+  const loadingRating = useSelector((state: RootState) => state.movies.loadingRating);
+  const movies = useSelector((state: RootState) => state.movies.MOVIES);
+  const navigate = useNavigate();
+
+  const onMovieClick = (movie: Movie) => {
+    navigate(`/film/${movie.id}`, {
+      state: { movie: movie },
+    });
+  };
+
+  const sortedMovies = useMemo(() => {
+    const sortedOnes = [...movies]
+    .sort((a, b) => {
+      if (a.imdbRating !== 'None' && b.imdbRating !== 'None') {
+        if (b.imdbRating !== a.imdbRating) {
+          return Number(b.imdbRating) - Number(a.imdbRating);
+        }
+      }
+      if (a.imdbRating === 'None' && b.imdbRating !== 'None') {
+        return 1;
+      }
+      if (a.imdbRating !== 'None' && b.imdbRating === 'None') {
+        return -1;
+      }
+      return b.cinemas.length - a.cinemas.length;
+    })
+    return sortedOnes
+  }, [movies]);
+
+  const [isSorted, setIsSorted] = useState(false);
   
-    const dispatch = useDispatch<AppDispatch>();
+  const moviesToDisplay = isSorted ? sortedMovies : movies;
 
-    const handleIncrement = () => {
-        dispatch(incrementByAmount(5));
-    };
-    
-    const handleFetch = () => {
-        dispatch(getAllCurrentMoviesDetails());
-    };
-
-    const handleCustomAmount = () => {
-        const input = document.getElementById('amountInput') as HTMLInputElement;
-        const amount = parseInt(input.value) || 0;
-        dispatch(incrementByAmount(amount));
-    };
+  const sortByRating = () => {
+    setIsSorted(!isSorted);
+  }
 
   return (
-    <>        
-        <div>
-          <p>Current Count: <strong>{count}</strong></p>
-          <p>Loading Status: 
-            <span>
-              {loading ? 'Loading...' : 'Idle'}
-            </span>
-          </p>
+    <div className='m-2'>
+      {!loadingRating && (
+        <button className='btn btn-outline-primary mb-2' onClick={sortByRating}>
+          {isSorted ? 'Show original' : 'Sort by rating'}
+        </button>
+      )}
+      {!loading && moviesToDisplay.length > 0 && (
+        <div className='row g-2'>
+          {moviesToDisplay.map((movie) => (
+            <MovieCard key={movie.id} movie={movie} cursorPointer='cursor-pointer' onMovieClick={onMovieClick} />
+          ))}
         </div>
-
-        <div>
-          <button className="btn btn-primary me-2" onClick={handleIncrement} disabled={loading}>
-            Add 5 to Count
-          </button>
-        </div>
-
-        <div>
-          <input 
-            type="number" 
-            id="amountInput"
-            defaultValue="10"
-            style={{ marginRight: '10px', padding: '5px' }}
-          />
-          <button className="btn btn-primary me-2" onClick={handleCustomAmount}>
-            Add Custom Amount
-          </button>
-          </div>
-          
-        <button className="btn btn-primary me-2" onClick={handleFetch}>
-            fetch
-          </button>
-          
-          {!loading && movies.length > 0 && (
-              movies.map((movie) => (
-                  <div>
-                      { movie.greekTitle }
-                  </div>
-              ))
-          )}
-    </>
+      )}
+      {!loading && moviesToDisplay.length === 0 && (
+        <div>no movies</div>
+      )}
+    </div>
   )
 }
 

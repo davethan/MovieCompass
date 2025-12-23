@@ -31,6 +31,10 @@ export type Movie = {
   trailer: string;
   cinemas: Cinema[];
   note: string;
+  imdbRating: number | string | undefined;
+  popularity: number;
+  awards: string;
+  rated: string;
 };
 
 export type AthinoramaUrl = {
@@ -63,11 +67,15 @@ export type UpcomingMovieDetails = {
 }
 
 export type MoviesState = {
-  count: number;
   MOVIES: Movie[];
   lastUpdate: string;
   selectedCinema: string;
   loading: boolean;
   loadingRating: boolean;
   filters: object;
+}
+
+export type getMovieOmdbDataBasedOnLinkActionPayload = {
+  imdbLink: string;
+  id: string;
 }
