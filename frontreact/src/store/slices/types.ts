@@ -79,3 +79,8 @@ export type getMovieOmdbDataBasedOnLinkActionPayload = {
   imdbLink: string;
   id: string;
 }
+
+export type takeNotePayload = {
+  id: string;
+  note: string;
+}

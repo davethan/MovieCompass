@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import request from '../../http/request';
-import type { MoviesState, getMovieOmdbDataBasedOnLinkActionPayload } from './types';
+import type { MoviesState, getMovieOmdbDataBasedOnLinkActionPayload, takeNotePayload } from './types';
 const { VITE_OMDB_URL, VITE_OMDB_API_KEY } = import.meta.env;
 
 const initialState: MoviesState = {
@@ -32,6 +32,11 @@ export const getMovieOmdbDataBasedOnLinkAction = createAsyncThunk('movies/getMov
   if (!imdbId || !imdbId[1]) throw ('No link available');
   const response = await request.get(`${VITE_OMDB_URL}/?apikey=${VITE_OMDB_API_KEY}&i=${imdbId[1]}`);
   return {apiResponse: response.data, imdbLink, id}
+});
+
+export const takeNote = createAsyncThunk('movies/takeNote', async (payload: takeNotePayload) => {
+  const response = await request.post(`/takeNote`, payload);
+  return response.data;
 });
 
 const moviesSlice = createSlice({
@@ -87,7 +92,14 @@ const moviesSlice = createSlice({
           };
         });
         state.loadingRating = false;
-      });
+      })
+      //takeNote
+      .addCase(takeNote.fulfilled, (state, action) => {
+        const { id, note } = action.payload as takeNotePayload;
+        state.MOVIES.forEach((film) => {
+          if (film.id === id) film.note = note;
+        });
+      })
   }
 });
 

@@ -53,6 +53,7 @@ const MovieCard = ({ movie, cssClass = 'col-sm-6 col-md-4 col-lg-3', cursorPoint
           <div className="my-4">
             {movie.summary}
           </div>
+          {movie.note && (<span>Note: {movie.note}</span>)}
           {movie.actors.length && (
             <div className='md-2'>
               <b>Παίζουν:</b> {movie.actors.map((actor, i) => <span key={i}>{actor} </span>)}
