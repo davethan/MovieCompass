@@ -1,11 +1,12 @@
 <template>
-  <div :class="[cssClass, 'background-circle']" @mouseenter="setCirclePosition" @click="clicked">
+  <div :class="[cssClass, 'background-circle']" @mouseenter="setCirclePosition" @touchstart="handleTouchStart"
+    @click="clicked">
     <slot />
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onUnmounted } from 'vue';
 
 defineProps({
   cssClass: {
@@ -25,7 +26,25 @@ const setCirclePosition = (event) => {
   circleY.value = event.clientY - rect.top;
 };
 
+let timeout;
+const handleTouchStart = (event) => {
+  const rect = event.currentTarget.getBoundingClientRect();
+  const touch = event.touches[0];
+
+  circleX.value = touch.clientX - rect.left;
+  circleY.value = touch.clientY - rect.top;
+
+  const element = event.currentTarget;
+  element.classList.add('touch-active');
+
+  timeout = setTimeout(() => {
+    element.classList.remove('touch-active');
+  }, 500);
+};
+
 const clicked = () => emit('clicked')
+
+onUnmounted(() => clearTimeout(timeout))
 
 </script>
 
@@ -49,7 +68,8 @@ const clicked = () => emit('clicked')
     z-index: 0;
   }
 
-  &:hover::before {
+  &:hover::before,
+  &.touch-active::before {
     width: 250%;
     height: 250%;
     opacity: 1;
