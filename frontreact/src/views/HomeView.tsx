@@ -1,10 +1,12 @@
-import { lazy, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import type { RootState } from '../store';
 import { useNavigate } from 'react-router-dom';
 import type { Movie } from '../store/slices/types';
+import MovieCardWrapper from '../components/MovieCard';
 
-const MovieCard = lazy(() => import('../components/MovieCard'));
+const NothingComponent = () => <></>
+const MovieCard = MovieCardWrapper(NothingComponent)
 
 const HomeView = () => {
   const loading = useSelector((state: RootState) => state.movies.loading);
@@ -14,7 +16,7 @@ const HomeView = () => {
 
   const onMovieClick = (movie: Movie) => {
     navigate(`/film/${movie.id}`, {
-      state: { movie: movie },
+      state: { movieId: movie.id }
     });
   };
 
@@ -41,9 +43,7 @@ const HomeView = () => {
   
   const moviesToDisplay = isSorted ? sortedMovies : movies;
 
-  const sortByRating = () => {
-    setIsSorted(!isSorted);
-  }
+  const sortByRating = () => setIsSorted(!isSorted);
 
   return (
     <div className='m-2'>

@@ -1,22 +1,31 @@
 import { useLocation } from 'react-router-dom';
-import { lazy } from 'react'
-import { useDispatch } from 'react-redux';
-import { takeNote } from '../store/slices/moviesSlice';
-import type { AppDispatch } from '../store';
+import { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
+import { takeNote, getMovieById } from '../store/slices/moviesSlice';
+import type { AppDispatch, RootState } from '../store';
 import type { Movie } from '../store/slices/types';
+import MovieCardWrapper from '../components/MovieCard';
+import { LastUpdateContext } from '../context/index'
 
-const MovieCard = lazy(() => import('../components/MovieCard'));
+const MovieNote = (movie: Movie) => (
+  <>
+    {movie.note && <div className="mb-4">Note: {movie.note}</div>}
+  </>
+);
+const MovieCard = MovieCardWrapper(MovieNote);
 
 const IndividualMovie = () => {
     const location = useLocation();
-
-    const movie = location.state?.movie as Movie;
     const dispatch = useDispatch<AppDispatch>();
 
-    const handleClick = () => dispatch(takeNote({ id: movie.id, note: 'my note is here!' }));
+    const movie = useSelector((state: RootState) => getMovieById(state, location.state.movieId)) as Movie;
+    const [filmNote, setFilmNote] = useState(movie.note)
+    const handleClick = () => dispatch(takeNote({ id: movie.id, note: filmNote }));
     return (
         <div className='row g-3 m-2'>
-            <MovieCard movie={movie} cssClass='col-6' />
+            <LastUpdateContext.Provider value={'value from indvidual movie'}>
+                <MovieCard movie={movie} cssClass='col-6' />
+            </LastUpdateContext.Provider>
             <div className='col-6'>
                 {movie.trailer && (
                     <div className="card film-item-no-hover">
@@ -28,7 +37,7 @@ const IndividualMovie = () => {
             </div>
             <div className='col-12 d-flex gap-2'>
                 <label>Note:</label>
-                <textarea></textarea>
+                <textarea value={filmNote} onChange={(e) => setFilmNote(e.target.value)}></textarea>
                 <button className='btn btn-outline-secondary' onClick={handleClick}>Send!</button>
             </div>
             <div className="col-12">

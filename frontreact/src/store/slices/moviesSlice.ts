@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import request from '../../http/request';
-import type { MoviesState, getMovieOmdbDataBasedOnLinkActionPayload, takeNotePayload } from './types';
+import type { RootState } from '../index';
+import type { MoviesState, getMovieOmdbDataBasedOnLinkActionPayload, takeNotePayload, Movie } from './types';
 const { VITE_OMDB_URL, VITE_OMDB_API_KEY } = import.meta.env;
 
 const initialState: MoviesState = {
@@ -9,15 +10,6 @@ const initialState: MoviesState = {
   selectedCinema: '',
   loading: false,
   loadingRating: false,
-  filters: {
-    sortedBy: 1,
-    filteredByDay: 1,
-    filteredByCinema: 1,
-    filteredByType: 1,
-    filteredByDuration: 3,
-    filteredByReleaseYear: 1,
-    filteredByLocation: [],
-  }
 };
 
 export const getAllCurrentMoviesDetails = createAsyncThunk( 'movies/getAllCurrentMoviesDetails', async () => {
@@ -102,6 +94,8 @@ const moviesSlice = createSlice({
       })
   }
 });
+
+export const getMovieById = (state: RootState, movieId: string) => state.movies.MOVIES.find((movie: Movie) => movie.id === movieId);
 
 export const {
   setLoading,

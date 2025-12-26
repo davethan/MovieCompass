@@ -72,7 +72,6 @@ export type MoviesState = {
   selectedCinema: string;
   loading: boolean;
   loadingRating: boolean;
-  filters: object;
 }
 
 export type getMovieOmdbDataBasedOnLinkActionPayload = {
