@@ -83,3 +83,8 @@ export type takeNotePayload = {
   id: string;
   note: string;
 }
+
+export type special = {
+  cinema: string;
+  title: string
+}
