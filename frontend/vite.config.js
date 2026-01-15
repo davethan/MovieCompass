@@ -18,14 +18,27 @@ export default defineConfig({
         name: 'Athens Cinemas',
         short_name: 'Athens Cinemas',
         start_url: '/',
-        display: 'minimal-ui',
+        display: 'standalone',
         background_color: '#121212',
         theme_color: '#808080',
         icons: [
           {
             src: '/pwa-ac.png',
-            sizes: '192x192',
+            sizes: '200x200',
             type: 'image/png'
+          }
+        ]
+      },
+      workbox: {
+        navigateFallback: '/index.html',
+        globPatterns: ['**/*.{js,css,ico,png,svg}'],
+        runtimeCaching: [
+          {
+            urlPattern: ({ request }) => request.mode === 'navigate',
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'html-cache',
+            }
           }
         ]
       }

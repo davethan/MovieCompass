@@ -11,12 +11,12 @@ import Drawer from '@/shared/Drawer.vue';
 import Range from '@/shared/Range.vue';
 import ExpandingCircleBackground from '@/shared/ExpandingCircleBackground.vue';
 
-registerSW({
+const updateSW = registerSW({
   immediate: true,
   onNeedRefresh: () => {
     console.log('New version available')
-    // eslint-disable-next-line no-undef
     updateSW(true)
+    window.location.reload()
   }
 })
 

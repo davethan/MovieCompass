@@ -3,7 +3,7 @@
     <div class="col-lg-12">
       <div class="card film-item-no-hover">
         <div class="card-body">
-          <h4 class="text-center text-secondary m-0"> Βλέπετε {{ filteredMovies.length }} ταινίες απ' τις {{
+          <h4 class="text-center text-secondary m-0"> Βλέπετε {{ filteredMovies.length }} ταινίες από τις {{
             moviesStore.MOVIES.length }} που παίζονται αυτές τις μέρες! </h4>
         </div>
       </div>
