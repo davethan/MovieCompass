@@ -16,10 +16,10 @@ export default defineConfig({
       includeAssets: ['favicon.svg'],
       manifest: {
         name: 'Athens Cinemas',
-        short_name: 'AthCnms',
+        short_name: 'Athens Cinemas',
         start_url: '/',
-        display: 'standalone',
-        background_color: '#808080',
+        display: 'minimal-ui',
+        background_color: '#121212',
         theme_color: '#808080',
         icons: [
           {
