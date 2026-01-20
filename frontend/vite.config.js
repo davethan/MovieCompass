@@ -13,7 +13,7 @@ export default defineConfig({
     vueDevTools(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.svg'],
+      includeAssets: ['ticket2.ico', 'pwa-ac.svg'],
       manifest: {
         name: 'Athens Cinemas',
         short_name: 'Athens Cinemas',
@@ -23,8 +23,13 @@ export default defineConfig({
         theme_color: '#808080',
         icons: [
           {
+            src: '/pwa-ac.gif',
+            sizes: '604x406',
+            type: 'image/gif'
+          },
+          {
             src: '/pwa-ac.png',
-            sizes: '200x200',
+            sizes: '250x250',
             type: 'image/png'
           }
         ]
