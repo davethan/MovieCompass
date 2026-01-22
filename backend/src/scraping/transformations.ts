@@ -10,6 +10,7 @@ import type { Movie, AthinoramaUrl, SpecialFilm, UpcomingMovie, UpcomingMovieDet
 
 const extractDataFromIMDB = (html: string) => {
     const $ = load(html);
+    // console.log($('body')?.text() || 'nothing');
     const container = $('[data-testid="hero-rating-bar__aggregate-rating"]');
     const ratingDiv = container.find('[data-testid="hero-rating-bar__aggregate-rating__score"]').first()
     const rating: string = ratingDiv.text().trim().split('/')[0];

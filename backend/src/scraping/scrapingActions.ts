@@ -11,7 +11,8 @@ import { request } from './request.js';
 
 const getImdbMovieRating = async (movieURL: string) => {
     try {
-        const imdbFindSpecificMovie = await request(movieURL);
+        const mobileUrl = movieURL.replace('www.imdb.com', 'm.imdb.com');
+        const imdbFindSpecificMovie = await request(mobileUrl);
         const response = extractDataFromIMDB(imdbFindSpecificMovie.data);
         return response;
     } catch (error) {
