@@ -71,7 +71,7 @@ const extractAthinoramaMovieDetails = (html_data: string, id: string, athinorama
         actors.push(actor);
     });
 
-    const locationsAndCinemas = $('div.guide-list.locations-list').children().children();
+    const locationsAndCinemas = $('div.guide-list.locations-list').children().find('div.piatsa-block').children();
     const theaters = [];
     let location = '';
     let counter = 0;
