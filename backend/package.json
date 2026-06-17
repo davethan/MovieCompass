@@ -21,7 +21,7 @@
     "nodemon": "^3.1.7",
     "path": "^0.12.7",
     "tough-cookie": "^6.0.1",
-    "uuid": "^11.0.3"
+    "uuid": "^14.0.0"
   },
   "devDependencies": {
     "@types/express": "^5.0.6",
