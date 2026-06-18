@@ -322,6 +322,15 @@ a,
   box-shadow: none;
 }
 
+.share-tooltip {
+  position: absolute;
+  top: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  z-index: 999;
+}
 
 [data-bs-theme=light] {
   .card {

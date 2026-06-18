@@ -85,14 +85,24 @@
           <div v-if="state.note" class="text-truncate mb-2">
             <b>Σημείωση: </b><span> {{ state.note }}</span>
           </div>
-          <div class="d-flex justify-content-end align-items-end gap-2">
-            <a :href="athinoramaUrl" target="_blank" rel="noopener noreferrer">
-              <img src="@/assets/images/athinorama.jpg" alt="Athinorama" width="30" height="30"
-                class="cursor-pointer" />
-            </a>
-            <a v-if="state.imdbLink" :href="state.imdbLink" target="_blank" rel="noopener noreferrer">
-              <img src="@/assets/images/imdb.png" alt="IMDb" width="30" height="30" class="cursor-pointer" />
-            </a>
+          <div class="d-flex justify-content-between align-items-end gap-2">
+            <div>
+              <div class="position-relative">
+                <i class="height-fit-content bi bi-share fs-3 cursor-pointer" @click="copyUrl" />
+                <div v-if="isToastShown" class="share-tooltip bg-dark text-white rounded small">
+                  URL copied!
+                </div>
+              </div>
+            </div>
+            <div class="d-flex gap-1">
+              <a :href="athinoramaUrl" target="_blank" rel="noopener noreferrer">
+                <img src="@/assets/images/athinorama.jpg" alt="Athinorama" width="30" height="30"
+                  class="cursor-pointer" />
+              </a>
+              <a v-if="state.imdbLink" :href="state.imdbLink" target="_blank" rel="noopener noreferrer">
+                <img src="@/assets/images/imdb.png" alt="IMDb" width="30" height="30" class="cursor-pointer" />
+              </a>
+            </div>
           </div>
         </div>
       </div>
@@ -143,7 +153,7 @@
 </template>
 
 <script setup>
-import { ref, defineProps, onBeforeMount, computed, unref, watch, defineAsyncComponent } from 'vue';
+import { ref, defineProps, onBeforeMount, computed, unref, watch, defineAsyncComponent, onUnmounted } from 'vue';
 import { formatDuration, mapDayName } from '@/tools/tools';
 import { useRouter } from 'vue-router';
 import { useMoviesStore } from '@/stores/movies';
@@ -163,6 +173,7 @@ const router = useRouter();
 const state = ref('');
 const isMovieDrawerOpen = ref(false);
 const filteredCinemas = ref([]);
+const isToastShown = ref(false)
 
 const TODAY = 2, TOMORROW = 3, WEEKEND = 4;
 const SUMMER_CINEMAS = 2, WINTER_CINEMAS = 3;
@@ -218,6 +229,18 @@ const loadMovieData = (id) => {
   filteredCinemas.value = state.value ? [...state.value.cinemas] : [];
 };
 
+let tooltipTimeout = null;
+
+const copyUrl = async () => {
+  await navigator.clipboard.writeText(window.location.href);
+
+  isToastShown.value = true;
+
+  tooltipTimeout = setTimeout(() => {
+    isToastShown.value = false;
+  }, 2000);
+};
+
 watch(() => props.filmId, (newFilmId) => {
   loadMovieData(newFilmId);
 });
@@ -225,4 +248,6 @@ watch(() => props.filmId, (newFilmId) => {
 onBeforeMount(() => {
   loadMovieData(props.filmId);
 });
+
+onUnmounted(() => clearTimeout(tooltipTimeout))
 </script>
