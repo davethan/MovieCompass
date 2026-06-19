@@ -1,46 +1,44 @@
-import { compareAsc, parse } from "date-fns";
+import { compareAsc, parse } from 'date-fns'
 
 export const formatDuration = (minutes) => {
-  const hours = Math.floor(minutes / 60);
-  const restMinutes = minutes % 60;
+  const hours = Math.floor(minutes / 60)
+  const restMinutes = minutes % 60
 
   if (hours === 0) {
-    return `${restMinutes}'`;
+    return `${restMinutes}'`
   } else if (restMinutes === 0) {
-    return `${hours}h`;
+    return `${hours}h`
   } else {
-    return `${hours}h ${restMinutes}'`;
+    return `${hours}h ${restMinutes}'`
   }
-};
+}
 
 export const convertToNumber = (input) => {
   if (typeof input !== 'string') {
-    return NaN;
+    return NaN
   }
-  input = input.replace(/,/g, '');
+  input = input.replace(/,/g, '')
 
   const suffixes = {
-      K: 1e3,
-      M: 1e6,
-      B: 1e9,
-      T: 1e12
-  };
-
-  const match = input.match(/^(\d+(\.\d+)?)([KMBT])?$/i);
-  if (!match) {
-      return parseFloat(input) || NaN;
+    K: 1e3,
+    M: 1e6,
+    B: 1e9,
+    T: 1e12,
   }
 
-  const value = parseFloat(match[1]);
-  const suffix = match[3] ? match[3].toUpperCase() : null;
+  const match = input.match(/^(\d+(\.\d+)?)([KMBT])?$/i)
+  if (!match) {
+    return parseFloat(input) || NaN
+  }
 
-  return suffix ? value * (suffixes[suffix] || 1) : value;
+  const value = parseFloat(match[1])
+  const suffix = match[3] ? match[3].toUpperCase() : null
+
+  return suffix ? value * (suffixes[suffix] || 1) : value
 }
 
 export const toPascalCase = (input) => {
-  return input
-    .toLowerCase()
-    .replace(/(?:^|[\s\-.])(\p{L})/gu, match => match.toUpperCase());
+  return input.toLowerCase().replace(/(?:^|[\s\-.])(\p{L})/gu, (match) => match.toUpperCase())
 }
 
 const dayNameMapping = {
@@ -50,21 +48,21 @@ const dayNameMapping = {
   Thursday: 'Πέμπτη',
   Friday: 'Παρασκευή',
   Saturday: 'Σάββατο',
-  Sunday: 'Κυριακή'
-};
+  Sunday: 'Κυριακή',
+}
 
 export const mapDayName = (dayName) => {
-  return dayNameMapping[dayName] || dayName;
-};
+  return dayNameMapping[dayName] || dayName
+}
 
 export const sortByDate = (date1, date2) => {
-  const format = 'dd-MM-yyyy';
+  const format = 'dd-MM-yyyy'
 
-  if (!date1 && !date2) return 0;
-  if (!date1) return 1;
-  if (!date2) return -1;
+  if (!date1 && !date2) return 0
+  if (!date1) return 1
+  if (!date2) return -1
 
-  const parsedDate1 = parse(date1, format, new Date());
-  const parsedDate2 = parse(date2, format, new Date());
-  return compareAsc(parsedDate1, parsedDate2);
-};
+  const parsedDate1 = parse(date1, format, new Date())
+  const parsedDate2 = parse(date2, format, new Date())
+  return compareAsc(parsedDate1, parsedDate2)
+}

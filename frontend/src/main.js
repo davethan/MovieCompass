@@ -6,10 +6,10 @@ import { registerSW } from 'virtual:pwa-register'
 
 import App from './App.vue'
 import router from './router'
-import ScrollToTopButton from '@/shared/ScrollToTopButton.vue';
-import Drawer from '@/shared/Drawer.vue';
-import Range from '@/shared/Range.vue';
-import ExpandingCircleBackground from '@/shared/ExpandingCircleBackground.vue';
+import ScrollToTopButton from '@/shared/ScrollToTopButton.vue'
+import Drawer from '@/shared/Drawer.vue'
+import Range from '@/shared/Range.vue'
+import ExpandingCircleBackground from '@/shared/ExpandingCircleBackground.vue'
 
 const updateSW = registerSW({
   immediate: true,
@@ -17,7 +17,7 @@ const updateSW = registerSW({
     console.log('New version available')
     updateSW(true)
     window.location.reload()
-  }
+  },
 })
 
 const app = createApp(App)

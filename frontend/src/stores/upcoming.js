@@ -1,18 +1,18 @@
-import { defineStore } from 'pinia';
-import request from '@/http/request';
+import { defineStore } from 'pinia'
+import request from '@/http/request'
 
 const state = () => ({
   UPCOMING_LINKS: [],
   UPCOMING: [],
   loadingUpcoming: false,
-});
+})
 
 const actions = {
   async getUpcomingLinksAction() {
     try {
-      const response = await request.get(`/filmyUpcomingLinksAndBriefFilms`);
-      this.setUpcomingLinksAction(response.data.links);
-      for (let i in response.data.briefMovies) this.setUpcomingAction(response.data.briefMovies[i]);
+      const response = await request.get(`/filmyUpcomingLinksAndBriefFilms`)
+      this.setUpcomingLinksAction(response.data.links)
+      for (let i in response.data.briefMovies) this.setUpcomingAction(response.data.briefMovies[i])
       return true
     } catch {
       return false
@@ -20,12 +20,11 @@ const actions = {
   },
   async getUpcomingFilmDetailsAction(payload) {
     try {
-      const response = await request.post(`/filmyUpcomingFilmDetails`, { url: payload });
-      this.setUpcomingAction(response.data);
-      return true;
-    }
-    catch {
-      return false;
+      const response = await request.post(`/filmyUpcomingFilmDetails`, { url: payload })
+      this.setUpcomingAction(response.data)
+      return true
+    } catch {
+      return false
     }
   },
   //generic action to fill the upcoming state
@@ -33,38 +32,37 @@ const actions = {
     this.resetUpcomingStore()
     try {
       this.setLoadingUpcomingAction(true)
-      await this.getUpcomingLinksAction();
-      const requests = [];
+      await this.getUpcomingLinksAction()
+      const requests = []
       this.UPCOMING_LINKS.forEach((link) => {
-        requests.push(this.getUpcomingFilmDetailsAction(link));
-      });
-      await Promise.allSettled(requests);
-      return true;
-    }
-    catch {
-      return false;
+        requests.push(this.getUpcomingFilmDetailsAction(link))
+      })
+      await Promise.allSettled(requests)
+      return true
+    } catch {
+      return false
     } finally {
       this.setLoadingUpcomingAction(false)
     }
   },
   setUpcomingAction(payload) {
-    this.UPCOMING.push(payload);
+    this.UPCOMING.push(payload)
   },
   setUpcomingLinksAction(payload) {
-    this.UPCOMING_LINKS = [...payload]//.slice(0, 1);
+    this.UPCOMING_LINKS = [...payload] //.slice(0, 1);
   },
   setLoadingUpcomingAction(value) {
-    this.loadingUpcoming = value;
+    this.loadingUpcoming = value
   },
   resetUpcomingStore() {
     this.$reset()
-  }
-};
+  },
+}
 
-const getters = {};
+const getters = {}
 
 export const useUpcomingStore = defineStore('upcoming', {
   state,
   actions,
-  getters
-});
+  getters,
+})
