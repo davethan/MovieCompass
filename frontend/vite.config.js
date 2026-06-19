@@ -25,14 +25,14 @@ export default defineConfig({
           {
             src: '/pwa-ac.gif',
             sizes: '604x406',
-            type: 'image/gif'
+            type: 'image/gif',
           },
           {
             src: '/pwa-ac.png',
             sizes: '250x250',
-            type: 'image/png'
-          }
-        ]
+            type: 'image/png',
+          },
+        ],
       },
       workbox: {
         navigateFallback: '/index.html',
@@ -43,23 +43,23 @@ export default defineConfig({
             handler: 'NetworkFirst',
             options: {
               cacheName: 'html-cache',
-            }
-          }
-        ]
-      }
-    })
+            },
+          },
+        ],
+      },
+    }),
   ],
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
   css: {
-      preprocessorOptions: {
-        scss: {
-          additionalData: `@import "@/assets/variables.scss";`
-        }
-      }
+    preprocessorOptions: {
+      scss: {
+        additionalData: `@import "@/assets/variables.scss";`,
+      },
+    },
   },
   build: {
     outDir: '../backend/built/dist',
