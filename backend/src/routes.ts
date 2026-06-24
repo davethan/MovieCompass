@@ -97,32 +97,31 @@ router.post("/filmyUpcomingFilmDetails", async (req: Request, res: Response) => 
 });
 
 //--------------------sse--------------------
-// router.get('/events', (req: Request, res: Response) => {
-//   res.setHeader('Content-Type', 'text/event-stream');
-//   res.setHeader('Cache-Control', 'no-cache');
-//   res.setHeader('Connection', 'keep-alive');
-//   res.setHeader('Access-Control-Allow-Origin', '*');
+router.get('/events', (req: Request, res: Response) => {
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('Connection', 'keep-alive');
+  res.setHeader('Access-Control-Allow-Origin', '*');
 
-//   res.write('data: Connected to SSE server\n\n');
+  res.write('data: Connected to SSE server\n\n');
 
-//   const intervalId = setInterval(() => {
-//     const timestamp = new Date().toISOString();
-//     const message = `Server time: ${timestamp}`;
-    
-//       res.write(`data: ${message}\n\n`);
+  const intervalId = setInterval(() => {
+    const timestamp = new Date().toISOString();
+    const message = `Server time: ${timestamp}`;
+    res.write(`data: ${message}\n\n`);
       
-//   }, 10000);
+  }, 10000);
 
-//   req.on('close', () => {
-//     clearInterval(intervalId);
-//     res.end();
-//   });
+  req.on('close', () => {
+    clearInterval(intervalId);
+    res.end();
+  });
 
-//   req.on('error', (err) => {
-//     clearInterval(intervalId);
-//     res.end();
-//   });
-// });
+  req.on('error', (err) => {
+    clearInterval(intervalId);
+    res.end();
+  });
+});
 //-------------------------------------------
 
 // Catch-all route to default to the Vue application

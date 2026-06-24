@@ -96,7 +96,6 @@ const actions = {
     try {
       if (!imdbLink) {
         const omdbResult = await this.getMovieOmdbDataBasedOnTitleAction(payload) //find imdb link via api
-        console.log(omdbResult)
         if (!omdbResult.success && omdbResult.imdbLink) {
           await this.getMovieImdbDataAction({ id, imdbLink: omdbResult.imdbLink }) //scrap imdb for rating
         } else if (!omdbResult.success) {
