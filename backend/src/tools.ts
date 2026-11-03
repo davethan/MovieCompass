@@ -119,10 +119,16 @@ const isFilmyUrl = (value: unknown): value is string => {
     }
 };
 
+// Athinorama's own movie id, so it stays the same across scrapes and /film/:id links keep working.
+// "/cinema/movie/drakoulas-1004566/" -> "1004566". Falls back to the last part of the url.
+const getAthinoramaMovieId = (url: string): string =>
+    url.match(/-(\d+)\/?$/)?.[1] ?? url.split('/').filter(Boolean).pop() ?? url;
+
 export {
     splitByHours,
     convertGreekDate,
     parseDuration,
     parseSchedule,
     isFilmyUrl,
+    getAthinoramaMovieId,
 };

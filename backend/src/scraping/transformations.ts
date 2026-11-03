@@ -1,10 +1,10 @@
-import { v4 as uuidv4 } from 'uuid';
 import { load } from 'cheerio';
 import {
     splitByHours,
     convertGreekDate,
     parseDuration,
     parseSchedule,
+    getAthinoramaMovieId,
 } from '../tools.js';
 import type { Movie, AthinoramaUrl, SpecialFilm, UpcomingMovie, UpcomingMovieDetails } from '../types.js';
 
@@ -16,8 +16,8 @@ const parseAthinoramaMovies = (html_data: string) => {
     container.find('li').each((_:any, li) => {
         const link = $(li).find('a');
         const url = link.attr('href');
-        const id = uuidv4();
-        athinoramaMovieURLs.push({url, id});
+        if (!url) return;
+        athinoramaMovieURLs.push({ url, id: getAthinoramaMovieId(url) });
     });
 
     return athinoramaMovieURLs;
