@@ -1,35 +1,49 @@
 # movieCompass
 
-This template should help get you started developing with Vue 3 in Vite.
-
-## Recommended IDE Setup
-
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
+Vue 3 + Vite frontend of MovieCompass.
 
 ## Project Setup
 
+Install the dependencies in both folders:
+
 ```sh
-npm install
+cd frontend && npm install
+cd backend && npm install
 ```
 
-### Compile and Hot-Reload for Development
+The frontend reads its settings from `frontend/.env` (not committed). For local work it should point to the local backend:
 
 ```sh
+VITE_BACKEND_URL = 'http://localhost:5000/'
+VITE_OMDB_URL = 'https://www.omdbapi.com'
+VITE_OMDB_API_KEY = '<your OMDB key>'
+```
+
+## Development
+
+Run both, each in its own terminal:
+
+```sh
+# frontend: hot reload, open the url Vite prints (http://localhost:5173)
+cd frontend
 npm run dev
 ```
 
-### Compile and Minify for Production
-
 ```sh
-npm run build
+# backend: http://localhost:5000, restarts on every change, scrapes only 5 movies
+cd backend
+npm run dev
 ```
 
-### Lint with [ESLint](https://eslint.org/)
+## Serve the built app locally from the backend
+
+Build the frontend first, then the backend, then start the backend and open http://localhost:5000:
 
 ```sh
-npm run lint
+cd frontend
+npm run build   # outputs to backend/built/dist
+
+cd ../backend
+npm run build   # compiles the TypeScript to backend/built
+npm start
 ```

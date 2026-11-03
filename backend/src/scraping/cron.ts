@@ -7,6 +7,8 @@ let movieDataFromCronJob = [] as Movie[];
 let lastCronJobRun: Date | null = null;
 let currentRun: Promise<void> | null = null;
 
+const DEV_MOVIES_LIMIT = process.argv.includes('--dev') ? 5 : undefined;
+
 const cronJob = async (slice?: number): Promise<void> => {
   console.log("cron job started")
   lastCronJobRun = new Date(Date.now() + (2 * 60 * 60 * 1000));
@@ -50,7 +52,7 @@ const cronJob = async (slice?: number): Promise<void> => {
 }
 
 // Starts a job, or returns the one already running, so two runs never overlap.
-const runCronJob = (slice?: number): Promise<void> => {
+const runCronJob = (slice = DEV_MOVIES_LIMIT): Promise<void> => {
   currentRun ??= cronJob(slice).finally(() => { currentRun = null; });
   return currentRun;
 }
