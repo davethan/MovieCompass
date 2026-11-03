@@ -152,7 +152,8 @@
                   {{ mapDayName(dayName) }}
                 </div>
                 <div class="col-7 d-flex flex-wrap column-gap-2">
-                  <span v-for="(hour, i) in hours" :key="i">
+                  <span v-for="(hour, i) in hours" :key="i"
+                    :class="{ 'fw-bold': isHighlighted(dayName, hour) }">
                     {{ hour }}
                   </span>
                 </div>
@@ -170,7 +171,10 @@
 
 <script setup>
 import { ref, defineProps, onBeforeMount, computed, unref, watch, defineAsyncComponent, onUnmounted } from 'vue';
-import { formatDuration, mapDayName, toPascalCase } from '@/tools/tools';
+import {
+  formatDuration, mapDayName, toPascalCase, formatHour, HOUR_RANGE, isFullHourRange, isShowtimeInRange,
+  getFilterDays, cinemaPlaysAt
+} from '@/tools/tools';
 import { useRouter } from 'vue-router';
 import { useMoviesStore } from '@/stores/movies';
 import CardTransition from '@/components/CardTransition.vue';
@@ -193,25 +197,35 @@ const isToastShown = ref(false)
 
 const TODAY = 2, TOMORROW = 3, WEEKEND = 4;
 const SUMMER_CINEMAS = 2, WINTER_CINEMAS = 3;
-const initialFilters = ref({ day: 1, cinemaType: 1, locations: [] });
-const activeFilters = ref({ day: 1, cinemaType: 1, locations: [] });
+const EVERY_DAY = 1;
+const noFilters = () => ({ day: EVERY_DAY, cinemaType: 1, locations: [], hours: [...HOUR_RANGE] });
+const initialFilters = ref(noFilters());
+const activeFilters = ref(noFilters());
 
 const DAY_LABELS = { [TODAY]: 'Σήμερα', [TOMORROW]: 'Αύριο', [WEEKEND]: 'Το ΣΚ' };
 const CINEMA_LABELS = { [SUMMER_CINEMAS]: 'Θερινοί', [WINTER_CINEMAS]: 'Χειμερινοί' };
 
 // Greek labels of the filters that are on, for the notice above the cinemas
 const activeFilterLabels = computed(() => {
-  const { day, cinemaType, locations } = activeFilters.value;
+  const { day, cinemaType, locations, hours } = activeFilters.value;
   return [
     DAY_LABELS[day],
+    isFullHourRange(hours) ? null : `${formatHour(hours[0])}–${formatHour(hours[1])}`,
     CINEMA_LABELS[cinemaType],
     ...locations.map(toPascalCase),
   ].filter(Boolean);
 });
 
+// Showtimes that match the day & hour filters stand out (only when one of them is on)
+const isHighlighted = (dayName, hour) => {
+  const { day, hours } = activeFilters.value;
+  if (day === EVERY_DAY && isFullHourRange(hours)) return false;
+  return getFilterDays(day).includes(dayName) && isShowtimeInRange(hour, hours);
+};
+
 const clearFilters = () => {
   // New object, so the drawer's watch resets its selection too
-  initialFilters.value = { day: 1, cinemaType: 1, locations: [] };
+  initialFilters.value = noFilters();
   filterCinemas(initialFilters.value);
 };
 
@@ -221,29 +235,9 @@ const athinoramaUrl = computed(() => {
   return url;
 })
 
-const filterCinemas = ({ day, cinemaType, locations }) => {
-  activeFilters.value = { day, cinemaType, locations: [...unref(locations)] };
-  filteredCinemas.value = [...unref(state).cinemas];
-
-  if (day === TODAY) {
-    const date = new Date();
-    const today = date.toLocaleDateString('en-US', { weekday: 'long' });
-    filteredCinemas.value = filteredCinemas.value.filter((cinema) => {
-      return cinema.cinemaSchedule[today] && cinema.cinemaSchedule[today].length > 0;
-    })
-  } else if (day === TOMORROW) {
-    const date = new Date();
-    date.setDate(date.getDate() + 1);
-    const tomorrow = date.toLocaleDateString('en-US', { weekday: 'long' });
-    filteredCinemas.value = filteredCinemas.value.filter((cinema) => {
-      return cinema.cinemaSchedule[tomorrow] && cinema.cinemaSchedule[tomorrow].length > 0;
-    })
-  } else if (day === WEEKEND) {
-    filteredCinemas.value = filteredCinemas.value.filter((cinema) => {
-      return ((cinema.cinemaSchedule.Saturday && cinema.cinemaSchedule.Saturday.length > 0) ||
-        (cinema.cinemaSchedule.Sunday && cinema.cinemaSchedule.Sunday.length > 0));
-    })
-  }
+const filterCinemas = ({ day, cinemaType, locations, hours = HOUR_RANGE }) => {
+  activeFilters.value = { day, cinemaType, locations: [...unref(locations)], hours: [...hours] };
+  filteredCinemas.value = unref(state).cinemas.filter((cinema) => cinemaPlaysAt(cinema, day, hours));
 
   if (cinemaType === SUMMER_CINEMAS) filteredCinemas.value = filteredCinemas.value.filter((cinema) => cinema.isOutdoor);
   else if (cinemaType === WINTER_CINEMAS) filteredCinemas.value = filteredCinemas.value.filter((cinema) => !cinema.isOutdoor);
@@ -275,6 +269,7 @@ const loadMovieData = (id) => {
     day: moviesStore.filters.filteredByDay,
     cinemaType: moviesStore.filters.filteredByCinema,
     locations: moviesStore.filters.filteredByLocation.filter((location) => movieLocations.includes(location)),
+    hours: [...moviesStore.filters.filteredByHour],
   };
   filterCinemas(filters);
   initialFilters.value = filters;

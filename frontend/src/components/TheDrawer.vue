@@ -143,6 +143,15 @@
             <span>Φέτος</span>
           </div>
         </div>
+        <div class="col-12 mb-1" />
+        <div class="col-12">
+          <div class="mb-0">Ώρα έναρξης</div>
+          <double-range :min="HOUR_RANGE[0]" :max="HOUR_RANGE[1]" :step="1" :modelValue="hourRange"
+            @changed="handleHourChange" :show-step="true" :editStepString="formatHour" />
+          <div class="d-flex justify-content-between mb-2">
+            <span v-for="hour in [0, 6, 12, 18, 24]" :key="hour">{{ formatHour(hour) }}</span>
+          </div>
+        </div>
       </div>
     </template>
   </drawer>
@@ -154,7 +163,7 @@ import { computed, ref } from 'vue';
 import { useMoviesStore } from '@/stores/movies';
 import { isEqual } from 'lodash';
 import { toPascalCase } from '@/tools/tools';
-import { formatDuration } from '@/tools/tools';
+import { formatDuration, formatHour, HOUR_RANGE } from '@/tools/tools';
 
 const router = useRouter();
 const moviesStore = useMoviesStore();
@@ -181,6 +190,7 @@ const currentYear = new Date().getFullYear();
 const yearsApartRounded = Math.round((currentYear - moviesStore.getMinReleaseDate) / 5);
 const duration = ref(3)
 const releaseYear = ref(moviesStore.getMinReleaseDate)
+const hourRange = ref([...moviesStore.filters.filteredByHour])
 
 const floatToHour = (v) => formatDuration(Number(v) * 60);
 const handleFilterChange = (value) => {
@@ -194,6 +204,7 @@ const handleFilterChange = (value) => {
     filteredByType: temporaryFilters.filteredByType,
     filteredByDuration: temporaryFilters.filteredByDuration,
     filteredByReleaseYear: temporaryFilters.filteredByReleaseYear,
+    filteredByHour: temporaryFilters.filteredByHour,
   })
   window.scrollTo(0, 0);
 };
@@ -205,9 +216,11 @@ const resetFilters = () => {
     filteredByDuration: 3,
     filteredByReleaseYear: moviesStore.getMinReleaseDate,
     filteredByLocation: [],
+    filteredByHour: [...HOUR_RANGE],
   })
   duration.value = 3;
   releaseYear.value = moviesStore.getMinReleaseDate;
+  hourRange.value = [...HOUR_RANGE];
 }
 
 const handleLocationFilterChange = (value) => {
@@ -228,6 +241,11 @@ const handleDurationChange = (e) => {
 const handleReleaseYearChange = (e) => {
   releaseYear.value = e
   handleFilterChange({ filteredByReleaseYear: releaseYear.value })
+}
+
+const handleHourChange = (range) => {
+  hourRange.value = range
+  handleFilterChange({ filteredByHour: range })
 }
 
 const closeDrawer = () => {

@@ -78,14 +78,13 @@
 <script setup>
 import { useRouter } from 'vue-router';
 import { computed, unref } from 'vue';
-import { formatDuration } from '@/tools/tools';
+import { formatDuration, cinemaPlaysAt } from '@/tools/tools';
 import { useMoviesStore } from '@/stores/movies';
 import CardTransition from '@/components/CardTransition.vue';
 
 const moviesStore = useMoviesStore();
 const router = useRouter();
 
-const TODAY = 2, TOMORROW = 3, WEEKEND = 4;
 const SUMMER_CINEMAS = 2, WINTER_CINEMAS = 3;
 const POPULARITY = 1, RATING = 2;
 const REGULAR = 2, ANIMATION = 3;
@@ -98,6 +97,7 @@ const filteredMovies = computed(() => {
   const filterLocation = moviesStore.filters.filteredByLocation;
   const filterDuration = moviesStore.filters.filteredByDuration;
   const filterReleaseYear = moviesStore.filters.filteredByReleaseYear;
+  const filterHour = moviesStore.filters.filteredByHour;
 
   filtered = filtered.filter((film) => {
     const validCinemas = film.cinemas.filter((cinema) => {
@@ -108,23 +108,8 @@ const filteredMovies = computed(() => {
           ? cinema.isOutdoor === false
           : true;
 
-      const date = new Date();
-      let dayMatch = false;
-      if (filterDay === TODAY) {
-        const today = date.toLocaleDateString('en-US', { weekday: 'long' });
-        dayMatch = cinema.cinemaSchedule[today] && cinema.cinemaSchedule[today].length > 0;
-      } else if (filterDay === TOMORROW) {
-        date.setDate(date.getDate() + 1);
-        const tomorrow = date.toLocaleDateString('en-US', { weekday: 'long' });
-        dayMatch = cinema.cinemaSchedule[tomorrow] && cinema.cinemaSchedule[tomorrow].length > 0;
-      } else if (filterDay === WEEKEND) {
-        dayMatch =
-          (cinema.cinemaSchedule['Saturday'] && cinema.cinemaSchedule['Saturday'].length > 0) ||
-          (cinema.cinemaSchedule['Sunday'] && cinema.cinemaSchedule['Sunday'].length > 0);
-      } else {
-        dayMatch = true;
-      }
-      return locationMatch && typeMatch && dayMatch;
+      // Has a showtime on the selected day(s) that starts within the selected hours
+      return locationMatch && typeMatch && cinemaPlaysAt(cinema, filterDay, filterHour);
     });
     return validCinemas.length > 0;
   });

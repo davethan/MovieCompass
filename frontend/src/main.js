@@ -9,6 +9,7 @@ import router from './router'
 import ScrollToTopButton from '@/shared/ScrollToTopButton.vue'
 import Drawer from '@/shared/Drawer.vue'
 import Range from '@/shared/Range.vue'
+import DoubleRange from '@/shared/DoubleRange.vue'
 import ExpandingCircleBackground from '@/shared/ExpandingCircleBackground.vue'
 
 const updateSW = registerSW({
@@ -28,6 +29,7 @@ app
   .component('ScrollToTopButton', ScrollToTopButton)
   .component('Drawer', Drawer)
   .component('Range', Range)
+  .component('DoubleRange', DoubleRange)
   .component('ExpandingCircleBackground', ExpandingCircleBackground)
 
 app.mount('#app')

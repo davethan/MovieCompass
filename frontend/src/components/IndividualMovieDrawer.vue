@@ -21,6 +21,14 @@
           <button :class="`btn w-100 ${filteredByDay === WEEKEND ? 'btn-primary' : 'btn-outline-primary'}`"
             @click="handleDayChange(WEEKEND)">Το ΣΚ</button>
         </div>
+        <div class="col-12 mt-3">
+          <div class="mb-0">Ώρα έναρξης</div>
+          <double-range :min="HOUR_RANGE[0]" :max="HOUR_RANGE[1]" :step="1" :modelValue="filteredByHours"
+            @changed="handleHourChange" :show-step="true" :editStepString="formatHour" />
+          <div class="d-flex justify-content-between">
+            <span v-for="hour in [0, 6, 12, 18, 24]" :key="hour">{{ formatHour(hour) }}</span>
+          </div>
+        </div>
         <div class="col-12 mb-2" />
         <div class="col-12">
           <button :class="`btn w-100 ${filteredByCinema === ALL_CINEMAS ? 'btn-primary' : 'btn-outline-primary'}`"
@@ -66,7 +74,7 @@
 
 <script setup>
 import { ref, unref, computed, watch, defineAsyncComponent } from 'vue';
-import { toPascalCase } from '@/tools/tools';
+import { toPascalCase, formatHour, HOUR_RANGE } from '@/tools/tools';
 import { useMoviesStore } from '@/stores/movies';
 import { throttle } from 'lodash';
 
@@ -81,7 +89,7 @@ const props = defineProps({
   },
   initialFilters: {
     type: Object,
-    default: () => ({ day: 1, cinemaType: 1, locations: [] })
+    default: () => ({ day: 1, cinemaType: 1, locations: [], hours: [0, 24] })
   }
 });
 
@@ -94,28 +102,41 @@ const note = ref(unref(props.state).note);
 const filteredByDay = ref(EVERY_DAY);
 const filteredByCinema = ref(ALL_CINEMAS);
 const filteredByLocations = ref([]);
+const filteredByHours = ref([...HOUR_RANGE]);
 
 // Sync with the filters the movie page starts with (taken from the home page filters)
 watch(() => props.initialFilters, (filters) => {
   filteredByDay.value = filters.day;
   filteredByCinema.value = filters.cinemaType;
   filteredByLocations.value = [...filters.locations];
+  filteredByHours.value = [...(filters.hours ?? HOUR_RANGE)];
 }, { immediate: true });
 
 const IconButton = defineAsyncComponent(() => import('@/shared/IconButton.vue'))
 
+const emitFilters = () => emit('filter-changed', {
+  day: filteredByDay.value,
+  cinemaType: filteredByCinema.value,
+  locations: filteredByLocations.value,
+  hours: filteredByHours.value,
+});
+
 const handleDayChange = (value) => {
   filteredByDay.value = value;
-  emit('filter-changed', { day: filteredByDay.value, cinemaType: filteredByCinema.value, locations: filteredByLocations.value });
+  emitFilters();
+};
+const handleHourChange = (range) => {
+  filteredByHours.value = range;
+  emitFilters();
 };
 const handleCinemaChange = (value) => {
   filteredByCinema.value = value;
-  emit('filter-changed', { day: filteredByDay.value, cinemaType: filteredByCinema.value, locations: filteredByLocations.value });
+  emitFilters();
 };
 const handleLocationChange = (value) => {
   if (value) filteredByLocations.value.includes(value) ? filteredByLocations.value = filteredByLocations.value.filter(item => item !== value) : filteredByLocations.value.push(value);
   else filteredByLocations.value = []
-  emit('filter-changed', { day: filteredByDay.value, cinemaType: filteredByCinema.value, locations: filteredByLocations.value });
+  emitFilters();
 };
 
 const uniqueCinemaLocations = computed(() => {

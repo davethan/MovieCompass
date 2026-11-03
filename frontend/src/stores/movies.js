@@ -17,6 +17,7 @@ const state = () => ({
     filteredByDuration: 3,
     filteredByReleaseYear: 1,
     filteredByLocation: [],
+    filteredByHour: [0, 24],
   },
 })
 
