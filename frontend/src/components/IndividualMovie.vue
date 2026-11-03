@@ -115,6 +115,21 @@
       </div>
     </div>
   </div>
+  <div v-if="activeFilterLabels.length" class="card border-0 fit-content mx-auto mb-3">
+    <div class="card-body d-flex flex-wrap align-items-center gap-2">
+      <div>
+        <template v-if="filteredCinemas.length">
+          Εμφανίζονται <b>{{ filteredCinemas.length }}</b> από {{ state.cinemas.length }} σινεμά
+        </template>
+        <template v-else>Κανένα σινεμά δεν ταιριάζει</template>
+        με τα φίλτρα: <b>{{ activeFilterLabels.join(' · ') }}</b>
+      </div>
+      <div class="d-flex gap-1">
+        <button class="btn btn-sm btn-outline-primary" @click="openMovieDrawer">Αλλαγή</button>
+        <button class="btn btn-sm btn-outline-primary" @click="clearFilters">Καθαρισμός</button>
+      </div>
+    </div>
+  </div>
   <div class="d-flex flex-column justify-content-center flex-md-row gap-3 flex-md-wrap">
     <card-transition>
       <expanding-circle-background v-for="(cinema, i) in filteredCinemas" :key="i"
@@ -148,13 +163,14 @@
       </expanding-circle-background>
     </card-transition>
   </div>
-  <individual-movie-drawer v-model="isMovieDrawerOpen" @filter-changed="filterCinemas" :state="state" />
+  <individual-movie-drawer v-model="isMovieDrawerOpen" @filter-changed="filterCinemas" :state="state"
+    :initialFilters="initialFilters" />
   <scroll-to-top-button />
 </template>
 
 <script setup>
 import { ref, defineProps, onBeforeMount, computed, unref, watch, defineAsyncComponent, onUnmounted } from 'vue';
-import { formatDuration, mapDayName } from '@/tools/tools';
+import { formatDuration, mapDayName, toPascalCase } from '@/tools/tools';
 import { useRouter } from 'vue-router';
 import { useMoviesStore } from '@/stores/movies';
 import CardTransition from '@/components/CardTransition.vue';
@@ -177,6 +193,27 @@ const isToastShown = ref(false)
 
 const TODAY = 2, TOMORROW = 3, WEEKEND = 4;
 const SUMMER_CINEMAS = 2, WINTER_CINEMAS = 3;
+const initialFilters = ref({ day: 1, cinemaType: 1, locations: [] });
+const activeFilters = ref({ day: 1, cinemaType: 1, locations: [] });
+
+const DAY_LABELS = { [TODAY]: 'Σήμερα', [TOMORROW]: 'Αύριο', [WEEKEND]: 'Το ΣΚ' };
+const CINEMA_LABELS = { [SUMMER_CINEMAS]: 'Θερινοί', [WINTER_CINEMAS]: 'Χειμερινοί' };
+
+// Greek labels of the filters that are on, for the notice above the cinemas
+const activeFilterLabels = computed(() => {
+  const { day, cinemaType, locations } = activeFilters.value;
+  return [
+    DAY_LABELS[day],
+    CINEMA_LABELS[cinemaType],
+    ...locations.map(toPascalCase),
+  ].filter(Boolean);
+});
+
+const clearFilters = () => {
+  // New object, so the drawer's watch resets its selection too
+  initialFilters.value = { day: 1, cinemaType: 1, locations: [] };
+  filterCinemas(initialFilters.value);
+};
 
 const athinoramaUrl = computed(() => {
   let url = state.value.athinoramaLink || '';
@@ -185,6 +222,7 @@ const athinoramaUrl = computed(() => {
 })
 
 const filterCinemas = ({ day, cinemaType, locations }) => {
+  activeFilters.value = { day, cinemaType, locations: [...unref(locations)] };
   filteredCinemas.value = [...unref(state).cinemas];
 
   if (day === TODAY) {
@@ -226,7 +264,20 @@ const openMovieDrawer = () => {
 
 const loadMovieData = (id) => {
   state.value = moviesStore.getIndividualMovie(id);
-  filteredCinemas.value = state.value ? [...state.value.cinemas] : [];
+  if (!state.value) {
+    filteredCinemas.value = [];
+    return;
+  }
+
+  // Start from the home page filters, keeping only locations this movie plays in.
+  const movieLocations = state.value.cinemas.map((cinema) => cinema.cinemaLocation);
+  let filters = {
+    day: moviesStore.filters.filteredByDay,
+    cinemaType: moviesStore.filters.filteredByCinema,
+    locations: moviesStore.filters.filteredByLocation.filter((location) => movieLocations.includes(location)),
+  };
+  filterCinemas(filters);
+  initialFilters.value = filters;
 };
 
 let tooltipTimeout = null;

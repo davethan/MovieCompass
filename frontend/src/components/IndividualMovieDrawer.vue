@@ -65,7 +65,7 @@
 </template>
 
 <script setup>
-import { ref, unref, computed, defineAsyncComponent } from 'vue';
+import { ref, unref, computed, watch, defineAsyncComponent } from 'vue';
 import { toPascalCase } from '@/tools/tools';
 import { useMoviesStore } from '@/stores/movies';
 import { throttle } from 'lodash';
@@ -78,6 +78,10 @@ const props = defineProps({
   modelValue: {
     type: Boolean,
     default: false
+  },
+  initialFilters: {
+    type: Object,
+    default: () => ({ day: 1, cinemaType: 1, locations: [] })
   }
 });
 
@@ -90,6 +94,13 @@ const note = ref(unref(props.state).note);
 const filteredByDay = ref(EVERY_DAY);
 const filteredByCinema = ref(ALL_CINEMAS);
 const filteredByLocations = ref([]);
+
+// Sync with the filters the movie page starts with (taken from the home page filters)
+watch(() => props.initialFilters, (filters) => {
+  filteredByDay.value = filters.day;
+  filteredByCinema.value = filters.cinemaType;
+  filteredByLocations.value = [...filters.locations];
+}, { immediate: true });
 
 const IconButton = defineAsyncComponent(() => import('@/shared/IconButton.vue'))
 
