@@ -34,16 +34,6 @@ const actions = {
       this.setLoadingAction(false)
     }
   },
-  //imdb data scrapping
-  async getMovieImdbDataAction(payload) {
-    const { imdbLink, id } = payload
-    try {
-      const response = await request.post(`/imdbMovieRating`, { imdbLink })
-      this.setAthinoramaMovieImdbDataAction(id, imdbLink, response.data)
-    } catch {
-      throw new Error()
-    }
-  },
   //omdb with id
   async getMovieOmdbDataBasedOnLinkAction(payload) {
     const { imdbLink, id } = payload
@@ -83,7 +73,7 @@ const actions = {
         response.data.imdbID &&
         response.data.imdbID !== 'N/A'
       ) {
-        //i may retrieve the imdb id (but not the rating) from the omdb api. if so, data scrap.
+        //omdb found the imdb id but has no rating
         return { success: false, imdbLink: `http://www.imdb.com/title/${response.data.imdbID}/` }
       } else throw new Error()
     } catch {
@@ -92,18 +82,20 @@ const actions = {
   },
   //generic action to get the imdb data
   async getMovieMdbDataAction(payload) {
-    const { imdbLink, id } = payload
+    const { imdbLink, id, imdbRating } = payload
+    if (imdbRating) return true //already rated by the backend (imdb dataset), no calls needed
     try {
       if (!imdbLink) {
-        const omdbResult = await this.getMovieOmdbDataBasedOnTitleAction(payload) //find imdb link via api
+        const omdbResult = await this.getMovieOmdbDataBasedOnTitleAction(payload) //find rating via title & year
         if (!omdbResult.success && omdbResult.imdbLink) {
-          await this.getMovieImdbDataAction({ id, imdbLink: omdbResult.imdbLink }) //scrap imdb for rating
+          this.setAthinoramaMovieOmdbDataAction(id, {}, omdbResult.imdbLink) //keep the link, no rating
+          return false
         } else if (!omdbResult.success) {
           throw new Error()
         }
       } else {
-        const rating = await this.getMovieOmdbDataBasedOnLinkAction(payload) //call api for rating
-        if (!rating) await this.getMovieImdbDataAction(payload) //scrap imdb for rating
+        const rating = await this.getMovieOmdbDataBasedOnLinkAction(payload) //find rating via imdb id
+        if (!rating) throw new Error()
       }
       return true
     } catch {
@@ -143,15 +135,6 @@ const actions = {
   setAthinoramaMoviesDetailsAction({ films, lastCronJobRun }) {
     this.MOVIES = films
     this.lastUpdate = lastCronJobRun.replace('T', ' ').replace('Z', '')
-  },
-  setAthinoramaMovieImdbDataAction(id, imdbLink, payload) {
-    this.MOVIES.forEach((film) => {
-      if (film.id === id) {
-        film.imdbRating = payload.rating ? payload.rating : 'None'
-        film.popularity = payload.popularity ? convertToNumber(payload.popularity) : 0
-        film.imdbLink = imdbLink ? imdbLink : ''
-      }
-    })
   },
   setAthinoramaMovieOmdbDataAction(id, payload, imdbLink) {
     this.MOVIES.forEach((film) => {

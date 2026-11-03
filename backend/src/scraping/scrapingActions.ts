@@ -1,5 +1,4 @@
 import {
-    extractDataFromIMDB,
     parseAthinoramaMovies,
     extractAthinoramaMovieDetails,
     parseAthinoramaSpecials,
@@ -8,18 +7,6 @@ import {
     parseUpcomingFilmDetails,
 } from './transformations.js';
 import { request } from './request.js';
-
-const getImdbMovieRating = async (movieURL: string) => {
-    try {
-        const mobileUrl = movieURL.replace('www.imdb.com', 'm.imdb.com');
-        const imdbFindSpecificMovie = await request(mobileUrl);
-        const response = extractDataFromIMDB(imdbFindSpecificMovie.data);
-        return response;
-    } catch (error) {
-        console.error('Error fetching IMDB data', movieURL);
-        return '';
-    }
-};
 
 const getAthinoramaMovieDetails = async (url: string, id: string) => {
     try {
@@ -74,7 +61,6 @@ const getUpcomingFilmDetails = async (url: string) => {
 };
 
 export {
-    getImdbMovieRating,
     getAthinoramaMovieDetails,
     getAthinoramaCurrentMovies,
     getAthinoramaSpecials,

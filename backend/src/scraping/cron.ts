@@ -1,5 +1,6 @@
 import cron from 'node-cron';
 import { getAthinoramaMovieDetails, getAthinoramaCurrentMovies } from './scrapingActions.js';
+import { applyImdbRatings } from './imdbRatings.js';
 import type { Movie, AthinoramaUrl } from '../types.js';
 
 let movieDataFromCronJob = [] as Movie[];
@@ -8,7 +9,7 @@ let lastCronJobRun: Date | null = null;
 const cronJob = async (slice?: number): Promise<void> => {
   console.log("cron job started")
   lastCronJobRun = new Date(Date.now() + (2 * 60 * 60 * 1000));
-  movieDataFromCronJob = [];
+  // The previous list stays visible until the new one (with ratings) is ready.
   let athinoramaCurrentMovieURLs = [] as AthinoramaUrl[];
 
   try {
@@ -27,9 +28,14 @@ const cronJob = async (slice?: number): Promise<void> => {
     athinoramaCurrentMovieURLs.slice(0, slice).forEach(film => requests.push(getAthinoramaMovieDetails(film.url, film.id)))
     const moviesDetails = await Promise.allSettled(requests);
     
-    movieDataFromCronJob = moviesDetails
+    const movies = moviesDetails
       .filter((result): result is PromiseFulfilledResult<Movie> => result.status === 'fulfilled')
       .map(result => result.value);
+
+    // Ratings are added before publishing, so the frontend gets rated movies right away.
+    // Movies without an IMDb link are matched by title + year first.
+    await applyImdbRatings(movies, { matchTitles: true });
+    movieDataFromCronJob = movies;
     
     console.log(`Success fetching ${movieDataFromCronJob.length} movies' details`);
     

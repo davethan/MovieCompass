@@ -31,6 +31,8 @@ export type Movie = {
   trailer: string;
   cinemas: Cinema[];
   note: string;
+  imdbRating?: string; // from the IMDb dataset, e.g. "7.4"; missing if not found
+  popularity?: number; // IMDb vote count
 };
 
 export type AthinoramaUrl = {

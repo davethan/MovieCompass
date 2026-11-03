@@ -8,17 +8,6 @@ import {
 } from '../tools.js';
 import type { Movie, AthinoramaUrl, SpecialFilm, UpcomingMovie, UpcomingMovieDetails } from '../types.js';
 
-const extractDataFromIMDB = (html: string) => {
-    const $ = load(html);
-    // console.log($('body')?.text() || 'nothing');
-    const container = $('[data-testid="hero-rating-bar__aggregate-rating"]');
-    const ratingDiv = container.find('[data-testid="hero-rating-bar__aggregate-rating__score"]').first()
-    const rating: string = ratingDiv.text().trim().split('/')[0];
-    const popularity: string = ratingDiv.next().next().text().trim();
-
-    return {rating, popularity};
-};
-
 const parseAthinoramaMovies = (html_data: string) => {
     const $ = load(html_data);
     const container = $('div.tabs-panel').eq(1).find('ul.panel-guide-list');
@@ -240,7 +229,6 @@ const parseUpcomingFilmDetails = (html_data: string): UpcomingMovieDetails => {
 }
 
 export {
-    extractDataFromIMDB,
     parseAthinoramaMovies,
     extractAthinoramaMovieDetails,
     parseAthinoramaSpecials,

@@ -1,7 +1,6 @@
 import express from 'express';
 import path from 'path';
 import {
-    getImdbMovieRating,
     getAthinoramaSpecials,
     getUpcomingLinks,
     getUpcomingFilmDetails
@@ -41,16 +40,6 @@ router.post("/takeNote", async (req: Request, res: Response) => {
         else res.status(404).send("Movie not found")
     } catch (error) {
         console.log(error)
-        res.status(500).send("Failed");
-    }
-});
-
-// Fetches the imdb data of a specific film
-router.post("/imdbMovieRating", async (req: Request, res: Response) => {
-    try {
-        const response = await getImdbMovieRating(req.body.imdbLink);
-        res.status(200).send(response);
-    } catch {
         res.status(500).send("Failed");
     }
 });
