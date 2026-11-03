@@ -23,7 +23,7 @@ app.use(
 import routes from './routes.js';
 app.use('/', routes);
 
-import { cronJob } from './scraping/cron.js';
-cronJob();
+import { runCronJob } from './scraping/cron.js';
+runCronJob();
 
 export default app;

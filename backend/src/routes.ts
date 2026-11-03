@@ -6,7 +6,7 @@ import {
     getUpcomingLinks,
     getUpcomingFilmDetails
 } from './scraping/scrapingActions.js';
-import { getMoviesDataFromCronJob, getLastCronJobRun } from './scraping/cron.js'
+import { getMoviesDataFromCronJob, getLastCronJobRun, waitForCurrentRun } from './scraping/cron.js'
 import type { Request, Response } from 'express';
 import { fileURLToPath } from 'url';
 
@@ -48,6 +48,7 @@ router.post("/takeNote", async (req: Request, res: Response) => {
 // Fetches all films that are currently on cinemas
 router.get("/athinoramaMoviesDetails", async (req: Request, res: Response) => {
     try {
+        if (getMoviesDataFromCronJob().length === 0) await waitForCurrentRun();
         res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
         res.status(200).send({ films: getMoviesDataFromCronJob(), lastCronJobRun: getLastCronJobRun() });
     } catch (error) {

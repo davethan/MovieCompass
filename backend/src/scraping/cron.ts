@@ -5,6 +5,7 @@ import type { Movie, AthinoramaUrl } from '../types.js';
 
 let movieDataFromCronJob = [] as Movie[];
 let lastCronJobRun: Date | null = null;
+let currentRun: Promise<void> | null = null;
 
 const cronJob = async (slice?: number): Promise<void> => {
   console.log("cron job started")
@@ -48,25 +49,36 @@ const cronJob = async (slice?: number): Promise<void> => {
   }
 }
 
+// Starts a job, or returns the one already running, so two runs never overlap.
+const runCronJob = (slice?: number): Promise<void> => {
+  currentRun ??= cronJob(slice).finally(() => { currentRun = null; });
+  return currentRun;
+}
+
+// Resolves when the running job (if any) has finished.
+const waitForCurrentRun = async (): Promise<void> => {
+  if (currentRun) await currentRun;
+}
+
 // Every Thursday at 17:00
 cron.schedule('0 17 * * 4', async () => {
   console.log('Running Thursday task at 17:00');
-  await cronJob();
+  await runCronJob();
 }, { timezone: "Europe/Athens" });
 
 // Every Thursday at 21:00
 cron.schedule('0 21 * * 4', async () => {
   console.log('Running Thursday task at 21:00');
-  await cronJob();
+  await runCronJob();
 }, { timezone: "Europe/Athens" });
 
 // Every Friday at 18:00
 cron.schedule('0 18 * * 5', async () => {
   console.log('Running Friday task at 18:00');
-  await cronJob();
+  await runCronJob();
 }, { timezone: "Europe/Athens" });
 
 const getMoviesDataFromCronJob = () => movieDataFromCronJob
 const getLastCronJobRun = () => lastCronJobRun
 
-export { cronJob, getMoviesDataFromCronJob, getLastCronJobRun };
+export { runCronJob, waitForCurrentRun, getMoviesDataFromCronJob, getLastCronJobRun };

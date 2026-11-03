@@ -10,6 +10,7 @@ description: How MovieCompass gets current movies (Athinorama scraping cron) and
 ### 1. Movies: Athinorama scraping cron (`scraping/cron.ts`)
 - `cronJob()` scrapes `https://www.athinorama.gr/cinema` (`getAthinoramaCurrentMovies` → `parseAthinoramaMovies`), then fetches each movie's detail page in parallel (`getAthinoramaMovieDetails` → `extractAthinoramaMovieDetails`). Failed detail fetches are dropped.
 - Before publishing, it calls `applyImdbRatings(movies, { matchTitles: true })` (see 2), then replaces `movieDataFromCronJob`. The old list stays visible while a scrape runs (~1 min).
+- Always started through `runCronJob()`, which reuses the job already running, so runs never overlap. While the list is still empty (right after a cold start), `/athinoramaMoviesDetails` waits for the running job (`waitForCurrentRun`) instead of returning no movies.
 - Runs at server start (`app.ts`), Thursday 17:00 and 21:00, and Friday 18:00 (Europe/Athens).
   - **Why these times:** in Greece the cinema schedule changes every Thursday for all cinemas, so new movies and showtimes appear then.
   - **Why the repeats:** Athinorama often finishes adding the new movies only a day later, so the 21:00 and Friday runs catch late updates. Don't remove them as "duplicates".
