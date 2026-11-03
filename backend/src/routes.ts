@@ -62,7 +62,8 @@ router.get("/athinoramaSpecials", async (req: Request, res: Response) => {
         const specialData = await getAthinoramaSpecials();
         res.status(200).send(specialData);
     } catch (error) {
-        res.status(500).send(error);
+        console.error(error);
+        res.status(500).send("Failed");
     }
 });
 
@@ -72,7 +73,8 @@ router.get("/filmyUpcomingLinksAndBriefFilms", async (req: Request, res: Respons
         const { links, briefMovies } = await getUpcomingLinks();
         res.status(200).send({ links, briefMovies });
     } catch (error) {
-        res.status(500).send(error);
+        console.error(error);
+        res.status(500).send("Failed");
     }
 });
 
@@ -86,7 +88,8 @@ router.post("/filmyUpcomingFilmDetails", async (req: Request, res: Response) => 
         const upcomingDetails = await getUpcomingFilmDetails(req.body.url);
         res.status(200).send(upcomingDetails);
     } catch (error) {
-        res.status(500).send(error);
+        console.error(error);
+        res.status(500).send("Failed");
     }
 });
 
