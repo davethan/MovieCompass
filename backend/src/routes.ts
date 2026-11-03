@@ -1,5 +1,6 @@
 import express from 'express';
 import path from 'path';
+import { isFilmyUrl } from './tools.js';
 import {
     getAthinoramaSpecials,
     getUpcomingLinks,
@@ -77,6 +78,10 @@ router.get("/filmyUpcomingLinksAndBriefFilms", async (req: Request, res: Respons
 
 // Fetches upcoming film details
 router.post("/filmyUpcomingFilmDetails", async (req: Request, res: Response) => {
+    if (!isFilmyUrl(req.body?.url)) {
+        res.status(400).send("Invalid url");
+        return;
+    }
     try {
         const upcomingDetails = await getUpcomingFilmDetails(req.body.url);
         res.status(200).send(upcomingDetails);

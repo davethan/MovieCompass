@@ -108,9 +108,21 @@ const parseSchedule = (schedule: string[]) :WeeklySchedule|string => {
     }
 }
 
+// Only filmy.gr pages may be fetched, so the server can't be used to request other addresses.
+const isFilmyUrl = (value: unknown): value is string => {
+    if (typeof value !== 'string') return false;
+    try {
+        const url = new URL(value);
+        return ['http:', 'https:'].includes(url.protocol) && ['filmy.gr', 'www.filmy.gr'].includes(url.hostname);
+    } catch {
+        return false;
+    }
+};
+
 export {
     splitByHours,
     convertGreekDate,
     parseDuration,
     parseSchedule,
+    isFilmyUrl,
 };
