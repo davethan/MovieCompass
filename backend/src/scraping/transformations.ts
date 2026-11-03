@@ -39,7 +39,8 @@ const extractAthinoramaMovieDetails = (html_data: string, id: string, athinorama
         tags.push($(tag).text().trim());
     })
 
-    const imageUrl = $('div.review-cover img').attr('src').replace(/&amp;/g, '&');
+    // Some movies have no poster; don't let that drop the whole movie.
+    const imageUrl = $('div.review-cover img').attr('src')?.replace(/&amp;/g, '&') || '';
     const trailer = $('div.review-content').find('iframe').attr('src');
 
     const summary = $(header).find('div.summary').children().text().trim() || '';
