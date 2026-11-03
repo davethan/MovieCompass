@@ -1,6 +1,6 @@
 import { createGunzip } from 'zlib';
 import { createInterface } from 'readline';
-import { Readable } from 'stream';
+import { Readable, pipeline } from 'stream';
 import type { Movie } from '../types.js';
 
 // Official IMDb datasets, refreshed daily by IMDb (free for non-commercial use).
@@ -23,16 +23,22 @@ const streamImdbDataset = async (url: string, onLine: (line: string) => boolean 
     if (!response.ok || !response.body) {
         throw new Error(`IMDb dataset download failed (${url}): HTTP ${response.status}`);
     }
-    const lines = createInterface({
-        input: Readable.fromWeb(response.body as any).pipe(createGunzip()),
-        crlfDelay: Infinity,
-    });
-    let isHeader = true;
-    for await (const line of lines) {
-        if (isHeader) { isHeader = false; continue; }
-        if (onLine(line) === false) break;
+    // pipeline (unlike .pipe) passes download errors on to readline, so they reach our caller's
+    // try/catch instead of crashing the process as an unhandled 'error' event.
+    const input = pipeline(Readable.fromWeb(response.body as any), createGunzip(), () => { });
+    const lines = createInterface({ input, crlfDelay: Infinity });
+    try {
+        let isHeader = true;
+        for await (const line of lines) {
+            if (isHeader) { isHeader = false; continue; }
+            if (onLine(line) === false) break;
+        }
+    } finally {
+        // Also stops the download when we exit early, otherwise the paused stream
+        // hits undici's body timeout minutes later.
+        lines.close();
+        input.destroy();
     }
-    lines.close();
 };
 
 // Keeps only the ratings of the given ids.
