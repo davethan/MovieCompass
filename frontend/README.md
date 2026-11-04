@@ -37,7 +37,7 @@ npm run dev
 
 ## Serve the built app locally from the backend
 
-Build the frontend first, then the backend, then start the backend and open http://localhost:5000:
+Build the frontend first, then the backend, then start the backend and open http://localhost:5000
 
 ```sh
 cd frontend

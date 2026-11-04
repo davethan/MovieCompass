@@ -71,8 +71,9 @@ const extractAthinoramaMovieDetails = (html_data: string, id: string, athinorama
         else {
             const cinemaLocation = location;
             const cinemaTitle = $(locationOrCinema).find('h2.item-title').children('a').text().trim();
+            const cinemaAddress = $(locationOrCinema).find('div.title-infos address').first().text().trim() || '';
             const isOutdoor = $(locationOrCinema).children().first().children().first().find('div.tags').text().includes('Θερινός') || false;
-            theaters[counter] = { cinema: cinemaTitle, cinemaLocation, isOutdoor, cinemaSchedule: [] };
+            theaters[counter] = { cinema: cinemaTitle, cinemaLocation, cinemaAddress, isOutdoor, cinemaSchedule: [] };
             const timeTables = $(locationOrCinema).children('div.grid.schedule-grid');
             timeTables.each((i: number, timeTable) => {
                 const times = $(timeTable).find('span.time').text().trim();

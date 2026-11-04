@@ -7,6 +7,11 @@
       </div>
       <div class="row g-2">
         <div class="col-12">{{ cinemaLocation }} </div>
+        <div v-if="cinemaAddress" class="col-12">
+          <a :href="mapsLink" target="_blank" rel="noopener noreferrer" class="text-reset">
+            <i class="bi bi-geo-alt me-1" />{{ cinemaAddress }}
+          </a>
+        </div>
         <div class="col-12 d-flex justify-content-start flex-wrap gap-1 align-items-center">
           <div class="tag-outlined">
             {{ filmsThisCinemaShows.length }}
@@ -74,6 +79,9 @@ const cinemaLocation = computed(() => {
   const location = filmsThisCinemaShows.value[0].cinemas.find((cinema) => cinema.cinema === moviesStore.selectedCinema).cinemaLocation;
   return location ? location : '';
 })
+const cinemaAddress = computed(() => filmsThisCinemaShows.value[0].cinemas.find((cinema) => cinema.cinema === moviesStore.selectedCinema).cinemaAddress || '')
+// Opens the cinema in Google Maps
+const mapsLink = computed(() => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${moviesStore.selectedCinema}, ${cinemaAddress.value}`)}`)
 const isCinemaOutdoor = computed(() => filmsThisCinemaShows.value[0].cinemas.find((cinema) => cinema.cinema === moviesStore.selectedCinema).isOutdoor)
 
 const filmSchedule = (film) => {
