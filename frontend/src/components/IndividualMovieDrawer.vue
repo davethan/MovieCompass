@@ -58,6 +58,7 @@
             </label>
           </div>
         </div>
+        <!--
         <div class="col-12" />
         <div class="col-12">
           <span class="mb-1">Σημείωση</span>
@@ -67,16 +68,18 @@
           <icon-button cssClass="btn btn-outline-secondary" @click="editNoteThrottled" icon="bi bi-send"
             title="Αποστολή" />
         </div>
+        -->
       </div>
     </template>
   </drawer>
 </template>
 
 <script setup>
-import { ref, unref, computed, watch, defineAsyncComponent } from 'vue';
+import { ref, unref, computed, watch } from 'vue';
+// import { defineAsyncComponent } from 'vue';
 import { toPascalCase, formatHour, HOUR_RANGE } from '@/tools/tools';
-import { useMoviesStore } from '@/stores/movies';
-import { throttle } from 'lodash';
+// import { useMoviesStore } from '@/stores/movies';
+// import { throttle } from 'lodash';
 
 const props = defineProps({
   state: {
@@ -98,7 +101,7 @@ const emit = defineEmits(['filter-changed', 'update:modelValue']);
 const EVERY_DAY = 1, TODAY = 2, TOMORROW = 3, WEEKEND = 4;
 const ALL_CINEMAS = 1, SUMMER_CINEMAS = 2, WINTER_CINEMAS = 3;
 
-const note = ref(unref(props.state).note);
+// const note = ref(unref(props.state).note);
 const filteredByDay = ref(EVERY_DAY);
 const filteredByCinema = ref(ALL_CINEMAS);
 const filteredByLocations = ref([]);
@@ -112,7 +115,7 @@ watch(() => props.initialFilters, (filters) => {
   filteredByHours.value = [...(filters.hours ?? HOUR_RANGE)];
 }, { immediate: true });
 
-const IconButton = defineAsyncComponent(() => import('@/shared/IconButton.vue'))
+// const IconButton = defineAsyncComponent(() => import('@/shared/IconButton.vue'))
 
 const emitFilters = () => emit('filter-changed', {
   day: filteredByDay.value,
@@ -144,12 +147,12 @@ const uniqueCinemaLocations = computed(() => {
   return [...new Set(cinemaLocations)];
 });
 
-const editNote = async () => {
-  const moviesStore = useMoviesStore();
-  const response = await moviesStore.editNoteAction({ id: unref(props.state).id, note: note.value });
-  if (response) closeDrawer();
-};
-const editNoteThrottled = throttle(editNote, 1000, { 'trailing': false });
+// const editNote = async () => {
+//   const moviesStore = useMoviesStore();
+//   const response = await moviesStore.editNoteAction({ id: unref(props.state).id, note: note.value });
+//   if (response) closeDrawer();
+// };
+// const editNoteThrottled = throttle(editNote, 1000, { 'trailing': false });
 
 const closeDrawer = () => {
   emit('update:modelValue', false);

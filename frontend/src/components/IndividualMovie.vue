@@ -82,9 +82,11 @@
           <div v-if="state.awards" class="mb-2">
             <b>Βραβεία: </b><span> {{ state.awards }}</span>
           </div>
+          <!--
           <div v-if="state.note" class="text-truncate mb-2">
             <b>Σημείωση: </b><span> {{ state.note }}</span>
           </div>
+          -->
           <div class="d-flex justify-content-between align-items-end gap-2">
             <div>
               <div class="position-relative">
