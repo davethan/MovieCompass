@@ -5,8 +5,8 @@ const { VITE_OMDB_URL, VITE_OMDB_API_KEY } = import.meta.env
 
 const state = () => ({
   MOVIES: [],
+  CINEMAS: [], // cinemas that currently show movies, for search
   lastUpdate: '',
-  selectedCinema: '',
   loading: false,
   loadingRating: false,
   filters: {
@@ -33,6 +33,17 @@ const actions = {
       return false
     } finally {
       this.setLoadingAction(false)
+    }
+  },
+  //get the cinemas that currently show movies (search). On failure search just shows movies.
+  async getAllCinemasAction() {
+    try {
+      const response = await request.get(`/cinemas`)
+      this.CINEMAS = response.data
+      return true
+    } catch {
+      this.CINEMAS = []
+      return false
     }
   },
   //omdb with id
@@ -142,9 +153,6 @@ const actions = {
   },
   setLoadingRatingAction(value) {
     this.loadingRating = value
-  },
-  setSelectedCinemaAction(value) {
-    this.selectedCinema = value
   },
   setFiltersAction(value) {
     this.filters = { ...this.filters, ...value }

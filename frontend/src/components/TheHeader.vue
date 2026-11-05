@@ -22,8 +22,9 @@
           @click="router.push({ name: 'Upcoming' })" title="Προσεχώς" icon="bi bi-fast-forward-fill" />
       </div>
       <i class="d-lg-none bi bi-search fs-6 cursor-pointer" @click="openSearchDrawer" />
-      <search-autocomplete :dataset="moviesStore.MOVIES" :showInside="true" cssClass="d-none d-lg-block"
-        :reset-search="resetSearch" @reset-value-changed="resetSearch = false" @film-selected="handleMovieSelection" />
+      <search-autocomplete :dataset="moviesStore.MOVIES" :cinemas="moviesStore.CINEMAS" :showInside="true"
+        cssClass="d-none d-lg-block" :reset-search="resetSearch" @reset-value-changed="resetSearch = false"
+        @film-selected="handleMovieSelection" @cinema-selected="handleCinemaSelection" />
       <button class="btn btn-sm btn-primary" @click="changeTheme">
         <i :class="theme === 'dark' ? 'bi bi-brightness-high-fill' : 'bi bi-moon'" />
       </button>
@@ -76,6 +77,11 @@ const openTheDrawer = () => {
 
 const handleMovieSelection = (id) => {
   router.push({ name: 'IndividualMovie', params: { filmId: id } });
+  resetSearch.value = true
+};
+
+const handleCinemaSelection = (id) => {
+  router.push({ name: 'Cinema', params: { id } });
   resetSearch.value = true
 };
 </script>

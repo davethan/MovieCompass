@@ -35,11 +35,14 @@ const router = createRouter({
       },
     },
     {
-      path: '/cinema/:cinema',
+      // Loads its own data from /cinemas/:id, so it can be opened directly.
+      // Ids change after a backend restart, so an old shared link may open another cinema.
+      path: '/cinema/:id',
       name: 'Cinema',
       component: () => import('@/components/Cinema.vue'),
+      props: true,
       meta: {
-        isProtected: true,
+        isProtected: false,
       },
     },
     {

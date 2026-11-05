@@ -247,11 +247,7 @@ const filterCinemas = ({ day, cinemaType, locations, hours = HOUR_RANGE }) => {
 }
 
 const goToCinemaPage = (cinema) => {
-  moviesStore.setSelectedCinemaAction(cinema.cinema);
-  router.push({
-    name: 'Cinema',
-    params: { cinema: cinema.cinema.match(/[\p{Script=Latin}\p{Script=Greek}0-9]/gu).join('') }
-  });
+  router.push({ name: 'Cinema', params: { id: cinema.id } });
 }
 
 const openMovieDrawer = () => {

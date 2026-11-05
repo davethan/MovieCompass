@@ -4,18 +4,27 @@
       <h5 class="m-0 text-secondary"><b>Athens Cinemas</b></h5>
     </template>
     <template #drawerBody>
-      <search-autocomplete :dataset="moviesStore.MOVIES" :showInside="false" cssClass="search-container-100"
-        :reset-search="resetSearch" @search-results-updated="updateSearchedFilms"
+      <search-autocomplete :dataset="moviesStore.MOVIES" :cinemas="moviesStore.CINEMAS" :showInside="false"
+        cssClass="search-container-100" :reset-search="resetSearch" @search-results-updated="updateSearchResults"
         @reset-value-changed="resetSearch = false" />
       <div v-if="searchedFilms.length" class="list-group">
-        <div v-for="film in searchedFilms" :key="film.id" class="cursor-pointer border-bottom p-2 list-header"
-          aria-current="true" @click="goToMoviePage(film.id)">
+        <div class="px-2 pt-2 pb-1 text-secondary small fw-bold">Ταινίες</div>
+        <div v-for="film in searchedFilms" :key="`film-${film.id}`"
+          class="cursor-pointer border-bottom p-2 list-header" aria-current="true" @click="goToMoviePage(film.id)">
           <h5 class="mb-1">{{ film.greekTitle }}</h5>
           <div>{{ film.originalTitle }}</div>
         </div>
       </div>
-      <div v-else-if="movieNotFound" class="mx-auto fit-content">
-        Δεν βρέθηκε κάποια ταινία...
+      <div v-if="searchedCinemas.length" class="list-group">
+        <div class="px-2 pt-3 pb-1 text-secondary small fw-bold">Σινεμά</div>
+        <div v-for="cinema in searchedCinemas" :key="`cinema-${cinema.id}`"
+          class="cursor-pointer border-bottom p-2 list-header" aria-current="true" @click="goToCinemaPage(cinema.id)">
+          <h5 class="mb-1">{{ cinema.name }}</h5>
+          <div>{{ cinema.location }}</div>
+        </div>
+      </div>
+      <div v-if="nothingFound" class="mx-auto fit-content">
+        Δεν βρέθηκε κάποια ταινία ή σινεμά...
       </div>
     </template>
   </drawer>
@@ -45,7 +54,8 @@ const emit = defineEmits(['update:modelValue']);
 const SearchAutocomplete = defineAsyncComponent(() => import('@/shared/SearchAutocomplete.vue'))
 
 const searchedFilms = ref([]);
-const movieNotFound = ref(false)
+const searchedCinemas = ref([]);
+const nothingFound = ref(false)
 const resetSearch = ref(false);
 
 const goToMoviePage = (id) => {
@@ -53,14 +63,16 @@ const goToMoviePage = (id) => {
   resetDrawer();
 };
 
-const updateSearchedFilms = (payload) => {
-  if (payload) {
-    movieNotFound.value = false
-    searchedFilms.value = payload
-  } else {
-    movieNotFound.value = true
-    searchedFilms.value = []
-  }
+const goToCinemaPage = (id) => {
+  router.push({ name: 'Cinema', params: { id } });
+  resetDrawer();
+};
+
+// payload is { films, cinemas }, or false when nothing matched
+const updateSearchResults = (payload) => {
+  nothingFound.value = !payload
+  searchedFilms.value = payload ? payload.films : []
+  searchedCinemas.value = payload ? payload.cinemas : []
 };
 
 const closeDrawer = () => emit("update:modelValue");
@@ -68,5 +80,6 @@ const closeDrawer = () => emit("update:modelValue");
 const resetDrawer = () => {
   resetSearch.value = true;
   searchedFilms.value = [];
+  searchedCinemas.value = [];
 };
 </script>

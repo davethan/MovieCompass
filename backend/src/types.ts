@@ -9,6 +9,7 @@ export type WeeklySchedule = {
 };
 
 export type Cinema = {
+  id?: number; // set by the database, not the scraper; changes after a restart
   cinema: string;
   cinemaLocation: string;
   cinemaAddress: string;

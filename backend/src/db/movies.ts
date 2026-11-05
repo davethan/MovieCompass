@@ -143,6 +143,7 @@ const rowToMovie = (row: MovieRow, cinemas: Cinema[]): Movie => {
 
 const rowToCinema = (row: CinemaRow, cinemaSchedule: WeeklySchedule | string): Cinema => {
   const cinema: Cinema = {
+    id: row.id,
     cinema: row.name,
     cinemaLocation: row.location,
     cinemaAddress: row.address ?? '',

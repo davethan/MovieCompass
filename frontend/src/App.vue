@@ -28,6 +28,8 @@ onMounted(async () => {
   theme.value = localStorage.getItem('theme');
 
   await moviesStore.getAllCurrentMoviesDetails();
+  // After the movies: on a cold server /cinemas would be empty until the first scrape is saved.
+  moviesStore.getAllCinemasAction();
   moviesStore.getAllImdbRatings();
 })
 
