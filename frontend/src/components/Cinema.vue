@@ -88,7 +88,7 @@ const cinemaAddress = computed(() => filmsThisCinemaShows.value[0].cinemas.find(
 // Opens the cinema in Google Maps
 const mapsLink = computed(() => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${moviesStore.selectedCinema}, ${cinemaAddress.value}`)}`)
 const ticketsUrl = computed(() => filmsThisCinemaShows.value[0].cinemas.find((cinema) => cinema.cinema === moviesStore.selectedCinema).ticketsUrl || '')
-const isCinemaOutdoor =computed(() => filmsThisCinemaShows.value[0].cinemas.find((cinema) => cinema.cinema === moviesStore.selectedCinema).isOutdoor)
+const isCinemaOutdoor = computed(() => filmsThisCinemaShows.value[0].cinemas.find((cinema) => cinema.cinema === moviesStore.selectedCinema).isOutdoor)
 
 const filmSchedule = (film) => {
   return film.cinemas.find((cinema) => cinema.cinema === moviesStore.selectedCinema).cinemaSchedule
