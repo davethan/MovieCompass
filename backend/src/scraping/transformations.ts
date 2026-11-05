@@ -39,7 +39,6 @@ const extractAthinoramaMovieDetails = (html_data: string, id: string, athinorama
         tags.push($(tag).text().trim());
     })
 
-    // Some movies have no poster; don't let that drop the whole movie.
     const imageUrl = $('div.review-cover img').attr('src')?.replace(/&amp;/g, '&') || '';
     const trailer = $('div.review-content').find('iframe').attr('src');
 
@@ -134,6 +133,35 @@ const parseAthinoramaSpecials = (html_data: string) => {
     })
 
     return items
+}
+
+// Cinema name -> more.com tickets link, from Athinorama's "propoliseis" page
+const parseMoreTicketLinks = (html_data: string) => {
+    const $ = load(html_data);
+    const links: Record<string, string> = {};
+
+    $('div.guide-list.locations-list div.item.card-item').each((_: any, item) => {
+        const cinema = $(item).find('h2.item-title a').first().text().trim();
+        const url = $(item).find('a[href*="more.com"]').first().attr('href')?.trim();
+        if (cinema && url) links[cinema] = url;
+    });
+
+    return links;
+}
+
+// Chains sell tickets on their own site, so all their cinemas share one link.
+const chainTicketLinks = [
+    { name: 'village', url: 'https://www.villagecinemas.gr/el/booking/epilogi-tainias' },
+    { name: 'cinemax', url: 'https://www.cinemaxshop.gr/ibooking93/shows.xhtml' },
+];
+
+const getChainTicketLink = (cinema: string) => chainTicketLinks.find(chain => cinema.toLowerCase().includes(chain.name))?.url;
+
+// Gives every cinema its tickets link: the more.com one first, otherwise its chain's.
+const addTicketLinks = (movies: Movie[], moreTicketLinks: Record<string, string>) => {
+    movies.forEach(movie => movie.cinemas.forEach(cinema => {
+        cinema.ticketsUrl = moreTicketLinks[cinema.cinema] || getChainTicketLink(cinema.cinema);
+    }));
 }
 
 const parseUpcomingLinks = (html_data: string) => {
@@ -234,6 +262,8 @@ export {
     parseAthinoramaMovies,
     extractAthinoramaMovieDetails,
     parseAthinoramaSpecials,
+    parseMoreTicketLinks,
+    addTicketLinks,
     parseUpcomingLinks,
     parseUpcomingMovies,
     parseUpcomingFilmDetails,

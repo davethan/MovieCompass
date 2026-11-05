@@ -14,6 +14,7 @@ export type Cinema = {
   cinemaAddress: string;
   isOutdoor: boolean;
   cinemaSchedule: WeeklySchedule;
+  ticketsUrl?: string;
 };
 
 export type Movie = {

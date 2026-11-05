@@ -2,6 +2,7 @@ import {
     parseAthinoramaMovies,
     extractAthinoramaMovieDetails,
     parseAthinoramaSpecials,
+    parseMoreTicketLinks,
     parseUpcomingLinks,
     parseUpcomingMovies,
     parseUpcomingFilmDetails,
@@ -38,6 +39,15 @@ const getAthinoramaSpecials = async () => {
     }
 };
 
+const getMoreTicketLinks = async () => {
+    try {
+        const response = await request("https://www.athinorama.gr/cinema/guide/propoliseis/cinemas/");
+        return parseMoreTicketLinks(response.data);
+    } catch (error) {
+        throw error;
+    }
+};
+
 const getUpcomingLinks = async () => {
     try {
         const response = await request("https://www.filmy.gr/to-be-released-in-greece/");
@@ -64,6 +74,7 @@ export {
     getAthinoramaMovieDetails,
     getAthinoramaCurrentMovies,
     getAthinoramaSpecials,
+    getMoreTicketLinks,
     getUpcomingLinks,
     getUpcomingFilmDetails
 };

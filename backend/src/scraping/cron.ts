@@ -1,6 +1,7 @@
 import cron from 'node-cron';
-import { getAthinoramaMovieDetails, getAthinoramaCurrentMovies } from './scrapingActions.js';
+import { getAthinoramaMovieDetails, getAthinoramaCurrentMovies, getMoreTicketLinks } from './scrapingActions.js';
 import { applyImdbRatings } from './imdbRatings.js';
+import { addTicketLinks } from './transformations.js';
 import type { Movie, AthinoramaUrl } from '../types.js';
 
 let movieDataFromCronJob = [] as Movie[];
@@ -38,6 +39,14 @@ const cronJob = async (slice?: number): Promise<void> => {
     // Ratings are added before publishing, so the frontend gets rated movies right away.
     // Movies without an IMDb link are matched by title + year first.
     await applyImdbRatings(movies, { matchTitles: true });
+
+    // Ticket links
+    let moreTicketLinks: Record<string, string> = {};
+    try {
+      moreTicketLinks = await getMoreTicketLinks();
+    } catch (error) {}
+    addTicketLinks(movies, moreTicketLinks);
+
     movieDataFromCronJob = movies;
     
     console.log(`Success fetching ${movieDataFromCronJob.length} movies' details`);

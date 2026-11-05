@@ -12,6 +12,11 @@
             <i class="bi bi-geo-alt me-1" />{{ cinemaAddress }}
           </a>
         </div>
+        <div v-if="ticketsUrl" class="col-12">
+          <a :href="ticketsUrl" target="_blank" rel="noopener noreferrer" class="text-reset">
+            <i class="bi bi-ticket-perforated me-1" />Εισιτήρια
+          </a>
+        </div>
         <div class="col-12 d-flex justify-content-start flex-wrap gap-1 align-items-center">
           <div class="tag-outlined">
             {{ filmsThisCinemaShows.length }}
@@ -82,7 +87,8 @@ const cinemaLocation = computed(() => {
 const cinemaAddress = computed(() => filmsThisCinemaShows.value[0].cinemas.find((cinema) => cinema.cinema === moviesStore.selectedCinema).cinemaAddress || '')
 // Opens the cinema in Google Maps
 const mapsLink = computed(() => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${moviesStore.selectedCinema}, ${cinemaAddress.value}`)}`)
-const isCinemaOutdoor = computed(() => filmsThisCinemaShows.value[0].cinemas.find((cinema) => cinema.cinema === moviesStore.selectedCinema).isOutdoor)
+const ticketsUrl = computed(() => filmsThisCinemaShows.value[0].cinemas.find((cinema) => cinema.cinema === moviesStore.selectedCinema).ticketsUrl || '')
+const isCinemaOutdoor =computed(() => filmsThisCinemaShows.value[0].cinemas.find((cinema) => cinema.cinema === moviesStore.selectedCinema).isOutdoor)
 
 const filmSchedule = (film) => {
   return film.cinemas.find((cinema) => cinema.cinema === moviesStore.selectedCinema).cinemaSchedule
