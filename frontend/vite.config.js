@@ -23,11 +23,6 @@ export default defineConfig({
         theme_color: '#808080',
         icons: [
           {
-            src: '/pwa-ac.gif',
-            sizes: '604x406',
-            type: 'image/gif',
-          },
-          {
             src: '/pwa-ac.png',
             sizes: '250x250',
             type: 'image/png',
