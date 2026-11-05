@@ -2,29 +2,42 @@ import cron from 'node-cron';
 import { getAthinoramaMovieDetails, getAthinoramaCurrentMovies, getMoreTicketLinks } from './scrapingActions.js';
 import { applyImdbRatings } from './imdbRatings.js';
 import { addTicketLinks } from './transformations.js';
+import { replaceAllMovies, clearMovies, getLastUpdate } from '../db/movies.js';
+import { athensWeekStart } from '../db/time.js';
 import type { Movie, AthinoramaUrl } from '../types.js';
 
-let movieDataFromCronJob = [] as Movie[];
-let lastCronJobRun: Date | null = null;
 let currentRun: Promise<void> | null = null;
 
 const DEV_MOVIES_LIMIT = process.argv.includes('--dev') ? 5 : undefined;
 
+// A failed run keeps the old movies only if they were saved during the current cinema week
+// (since Thursday 00:00 Athens time). Older movies are cleared, so last week's list is never shown.
+const handleFailedRun = (): void => {
+  const lastUpdate = getLastUpdate();
+  if (lastUpdate && lastUpdate >= athensWeekStart()) {
+    console.log("Keeping this week's movies");
+    return;
+  }
+  clearMovies();
+  console.log("Cleared old movies");
+}
+
 const cronJob = async (slice?: number): Promise<void> => {
   console.log("cron job started")
-  lastCronJobRun = new Date(Date.now() + (2 * 60 * 60 * 1000));
-  // The previous list stays visible until the new one (with ratings) is ready.
+  // The previous list stays visible until the new one (with ratings) is saved.
   let athinoramaCurrentMovieURLs = [] as AthinoramaUrl[];
 
   try {
     athinoramaCurrentMovieURLs = await getAthinoramaCurrentMovies();
     if (!athinoramaCurrentMovieURLs || athinoramaCurrentMovieURLs.length === 0) {
       console.log("Athinorama request success. But movies are empty...");
+      handleFailedRun();
       return;
     }
   } catch(error) {
     console.log("Failed fething athinorama movies", error);
-    return; 
+    handleFailedRun();
+    return;
   }
 
   try {
@@ -36,9 +49,23 @@ const cronJob = async (slice?: number): Promise<void> => {
       .filter((result): result is PromiseFulfilledResult<Movie> => result.status === 'fulfilled')
       .map(result => result.value);
 
-    // Ratings are added before publishing, so the frontend gets rated movies right away.
+    const rejected = moviesDetails.filter(result => result.status === 'rejected');
+    if (rejected.length > 0) console.log(`${rejected.length} requests failed`);
+
+    if (movies.length === 0) {
+      console.log("Every movie request failed");
+      handleFailedRun();
+      return;
+    }
+
+    // Ratings are added before saving, so the frontend gets rated movies right away.
     // Movies without an IMDb link are matched by title + year first.
-    await applyImdbRatings(movies, { matchTitles: true });
+    // If this fails, the movies are saved without ratings and the frontend's OMDB fallback fills them in.
+    try {
+      await applyImdbRatings(movies, { matchTitles: true });
+    } catch (error) {
+      console.log("Failed applying IMDb ratings", error);
+    }
 
     // Ticket links
     let moreTicketLinks: Record<string, string> = {};
@@ -47,16 +74,14 @@ const cronJob = async (slice?: number): Promise<void> => {
     } catch (error) {}
     addTicketLinks(movies, moreTicketLinks);
 
-    movieDataFromCronJob = movies;
-    
-    console.log(`Success fetching ${movieDataFromCronJob.length} movies' details`);
-    
-    const rejected = moviesDetails.filter(result => result.status === 'rejected');
-    if (rejected.length > 0) console.log(`${rejected.length} requests failed`);
+    replaceAllMovies(movies);
+
+    console.log(`Success fetching ${movies.length} movies' details`);
     return;
   } catch(error) {
     console.log("Failed fetching movies' details", error)
-    return; 
+    handleFailedRun();
+    return;
   }
 }
 
@@ -89,7 +114,4 @@ cron.schedule('0 18 * * 5', async () => {
   await runCronJob();
 }, { timezone: "Europe/Athens" });
 
-const getMoviesDataFromCronJob = () => movieDataFromCronJob
-const getLastCronJobRun = () => lastCronJobRun
-
-export { runCronJob, waitForCurrentRun, getMoviesDataFromCronJob, getLastCronJobRun };
+export { runCronJob, waitForCurrentRun };

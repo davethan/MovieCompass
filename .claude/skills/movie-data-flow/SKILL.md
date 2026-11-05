@@ -1,13 +1,13 @@
 ---
 name: movie-data-flow
-description: How MovieCompass gets current movies (Athinorama scraping cron) and their IMDb ratings (official IMDb dataset on the backend, OMDB fallback in the frontend). Use when working on, debugging, or explaining movie fetching, the cron jobs, the IMDb dataset, OMDB calls, the rating lookup in the frontend store, or Render hosting (CPU/RAM limits, Node version).
+description: How MovieCompass gets current movies (Athinorama scraping cron), stores them (SQLite, /cinemas endpoints) and gets their IMDb ratings (official IMDb dataset on the backend, OMDB fallback in the frontend). Use when working on, debugging, or explaining movie fetching, the cron jobs, the SQLite database, the IMDb dataset, OMDB calls, the rating lookup in the frontend store, or Render hosting (CPU/RAM limits, Node version).
 ---
 
 # MovieCompass movie & rating data flow
 
 ## Hosting
 - Hosted on Render (`athenscinemas.onrender.com`) on the cheap paid plan the user pays for: **less than 1 CPU, 512 MB RAM, $7/month**.
-- It's a paid plan, so the server doesn't sleep when idle (unlike Render's free plan). It restarts, and starts with an empty movie list, only on deploys, crashes or Render restarts.
+- It's a paid plan, so the server doesn't sleep when idle (unlike Render's free plan). It restarts, and starts with an empty database, only on deploys, crashes or Render restarts.
 - The small CPU and RAM are the main limits: keep scraping and the IMDb downloads light on memory, and don't add work that needs more resources without checking it fits.
 - **Node version:** both `backend/package.json` and `frontend/package.json` have `"engines": { "node": ">=24.3.0" }`. There is no `.nvmrc`, `.node-version` or `render.yaml`.
   - On 2026-11-03 Render ran **Node 26.13.0** (checked with `node -v` in Render dashboard → athenscinemas → Manage → Shell). That shell runs on the live instance, so it shows the version the app runs on.
@@ -18,13 +18,14 @@ description: How MovieCompass gets current movies (Athinorama scraping cron) and
 
 ### 1. Movies: Athinorama scraping cron (`scraping/cron.ts`)
 - `cronJob()` scrapes `https://www.athinorama.gr/cinema` (`getAthinoramaCurrentMovies` → `parseAthinoramaMovies`), then fetches each movie's detail page in parallel (`getAthinoramaMovieDetails` → `extractAthinoramaMovieDetails`). Failed detail fetches are dropped.
-- Before publishing, it calls `applyImdbRatings(movies, { matchTitles: true })` (see 2), then replaces `movieDataFromCronJob`. The old list stays visible while a scrape runs (~1 min).
+- Before saving, it calls `applyImdbRatings(movies, { matchTitles: true })` (see 2). If that throws, the movies are saved without ratings and the frontend's OMDB fallback fills them in. Then `addTicketLinks`, then `replaceAllMovies(movies)` (see 3). The old list stays visible while a scrape runs (~1 min).
+- **Failed run rule** (`handleFailedRun`): if fetching the link list fails, the list is empty, or every movie fetch fails, the old movies are kept only if they were saved during the current cinema week (since the latest Thursday 00:00 Athens time, `athensWeekStart` in `db/time.ts`). Otherwise the movies and the update time are cleared, so last week's movies are never shown. If only some movie fetches fail, the ones that worked are saved.
 - Always started through `runCronJob()`, which reuses the job already running, so runs never overlap. While the list is still empty (right after a cold start), `/athinoramaMoviesDetails` waits for the running job (`waitForCurrentRun`) instead of returning no movies.
 - Runs at server start (`app.ts`), Thursday 17:00 and 21:00, and Friday 18:00 (Europe/Athens).
   - **Why these times:** in Greece the cinema schedule changes every Thursday for all cinemas, so new movies and showtimes appear then.
   - **Why the repeats:** Athinorama often finishes adding the new movies only a day later, so the 21:00 and Friday runs catch late updates. Don't remove them as "duplicates".
   - Ratings are refreshed only by these runs. If the schedule changes, ratings freshness changes with it.
-- Served by `GET /athinoramaMoviesDetails` → `{ films, lastCronJobRun }`.
+- Served by `GET /athinoramaMoviesDetails` → `{ films, lastCronJobRun }`. `lastCronJobRun` is when the movies were last saved, as `"YYYY-MM-DD HH:mm:ss"` in Europe/Athens time (`formatAthens`), or `null` before the first save. The frontend hides the "last update" line when it's empty.
 
 ### 2. Ratings: official IMDb datasets (`scraping/imdbRatings.ts`)
 - IMDb blocks scraping, so everything comes from IMDb's official files, streamed with `streamImdbDataset` and never held in memory.
@@ -43,6 +44,15 @@ description: How MovieCompass gets current movies (Athinorama scraping cron) and
 - The ratings file is looked up by IMDb ID only. Title matching happens earlier, against `title.basics`.
 - There is no rating endpoint anymore: `/imdbMovieRating` was removed.
 
+### 3. Storage: SQLite (`db/`)
+- Node's built-in `node:sqlite` (`DatabaseSync`), no npm dependency. One file: `backend/data/moviecompass.db` (gitignored), or `DB_PATH`. `db/database.ts` creates the folder and tables on startup (imported first in `app.ts`), with WAL and foreign keys on.
+- On Render the file is lost on each restart, which is fine: the startup scrape refills it. Keeping data across restarts and history are not goals.
+- Tables: `movies` (with scrape `position`; arrays as JSON text), `cinemas` (id, name, location, address, is_outdoor, tickets_url; unique on name + location), `movie_cinemas` (which movie plays where, keeps cinemas with no parsed times; `raw_schedule` holds the scraped text when `parseSchedule` couldn't read it, and it's sent to the frontend as `cinemaSchedule` unchanged), `showtimes` (movie, cinema, day, time; ordered by rowid), `meta` (`lastUpdate`, UTC ISO string).
+- `db/movies.ts`: `replaceAllMovies` deletes all movies (links and showtimes cascade), inserts the new ones, upserts cinemas (last scraped address / tickets link wins) and sets `lastUpdate`, all in one transaction. `clearMovies`, `getLastUpdate`, and `getAllMovies`, which rebuilds the exact JSON the frontend expects.
+- Cinema rows are never deleted, so cinema ids stay stable until a restart.
+- `db/cinemas.ts` serves `GET /cinemas` (cinemas that currently show movies, with `movieCount`) and `GET /cinemas/:id` (the cinema plus its movies, each with its `cinemaSchedule` there; 404 if unknown or no movies). The frontend doesn't use these yet.
+- Specials (Athinorama) and upcoming movies (Filmy) are not stored; they're still scraped on each request.
+
 ## Frontend (Vue + Pinia, `frontend/src/stores/movies.js`)
 
 1. `App.vue` calls `getAllCurrentMoviesDetails()` (`GET /athinoramaMoviesDetails`), then `getAllImdbRatings()`.
@@ -59,6 +69,6 @@ description: How MovieCompass gets current movies (Athinorama scraping cron) and
 ## Gotchas
 - Movies rated by the dataset skip OMDB, so they have no `awards` / `rated` (age rating) fields. These are OMDB-only and shown in `IndividualMovie.vue`.
 - The OMDB key is `VITE_OMDB_API_KEY`, so it ships in the browser bundle.
-- Everything lives in memory only. A server restart re-scrapes and re-downloads, and notes from `/takeNote` are lost.
-- Each scrape downloads ~240 MB from IMDb. The Render plan has only 512 MB RAM (see Hosting), so `npm start` caps the JS heap with `--max-old-space-size=160` (backend `package.json`). Measured peaks with the cap: ~260 MB during the Athinorama scrape and ~235 MB during the IMDb step (vs ~350/335 MB without). Don't remove the cap or raise memory use without re-measuring. At server start the list is `[]` until the first scrape finishes (~1 min).
+- The database doesn't survive a Render restart. A restart re-scrapes and re-downloads. Notes were removed from the backend (`/takeNote` is gone); the frontend note code stays commented out.
+- Each scrape downloads ~240 MB from IMDb. The Render plan has only 512 MB RAM (see Hosting), so `npm start` caps the JS heap with `--max-old-space-size=160` (backend `package.json`). Measured peaks with the cap: ~260 MB during the Athinorama scrape and ~235 MB during the IMDb step (vs ~350/335 MB without). Don't remove the cap or raise memory use without re-measuring. At server start (with an empty database) the list is `[]` until the first scrape finishes (~1 min).
 - A wrong title match is possible for generic titles (year ±1 and runtime guard against it). Matches are logged as `IMDb title match: "<title>" (<year>) -> tt…` so they can be checked.

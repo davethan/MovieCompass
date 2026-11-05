@@ -6,7 +6,10 @@ import {
     getUpcomingLinks,
     getUpcomingFilmDetails
 } from './scraping/scrapingActions.js';
-import { getMoviesDataFromCronJob, getLastCronJobRun, waitForCurrentRun } from './scraping/cron.js'
+import { waitForCurrentRun } from './scraping/cron.js'
+import { getAllMovies, getLastUpdate } from './db/movies.js';
+import { getAllCinemas, getCinemaWithMovies } from './db/cinemas.js';
+import { formatAthens } from './db/time.js';
 import type { Request, Response } from 'express';
 import { fileURLToPath } from 'url';
 
@@ -24,33 +27,42 @@ router.get("/", async (req: Request, res: Response) => {
     }
 });
 
-// Edits note
-router.post("/takeNote", async (req: Request, res: Response) => {
+// Fetches all films that are currently on cinemas
+router.get("/athinoramaMoviesDetails", async (req: Request, res: Response) => {
     try {
-        const request = req.body
-        const movieDataFromCronJob = getMoviesDataFromCronJob();
-        let flag = false
-        movieDataFromCronJob.forEach(film => {
-          if (film.id == request.id) {
-            film.note = request.note;
-            flag = true;
-            return;
-          }
-        })
-        if (flag) res.status(200).send({ id: request.id, note: request.note });
-        else res.status(404).send("Movie not found")
+        if (getAllMovies().length === 0) await waitForCurrentRun();
+        const lastUpdate = getLastUpdate();
+        res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+        // lastCronJobRun is the time the movies were saved (Athens time), or null before the first save.
+        res.status(200).send({ films: getAllMovies(), lastCronJobRun: lastUpdate ? formatAthens(lastUpdate) : null });
     } catch (error) {
-        console.log(error)
+        console.log(error);
         res.status(500).send("Failed");
     }
 });
 
-// Fetches all films that are currently on cinemas
-router.get("/athinoramaMoviesDetails", async (req: Request, res: Response) => {
+// Cinemas that currently show movies, with their movie count
+router.get("/cinemas", async (req: Request, res: Response) => {
     try {
-        if (getMoviesDataFromCronJob().length === 0) await waitForCurrentRun();
         res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-        res.status(200).send({ films: getMoviesDataFromCronJob(), lastCronJobRun: getLastCronJobRun() });
+        res.status(200).send(getAllCinemas());
+    } catch (error) {
+        console.log(error);
+        res.status(500).send("Failed");
+    }
+});
+
+// One cinema with its movies and their times there
+router.get("/cinemas/:id", async (req: Request, res: Response) => {
+    try {
+        const id = Number(req.params.id);
+        const cinema = Number.isInteger(id) ? getCinemaWithMovies(id) : null;
+        if (!cinema) {
+            res.status(404).send("Cinema not found");
+            return;
+        }
+        res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+        res.status(200).send(cinema);
     } catch (error) {
         console.log(error);
         res.status(500).send("Failed");

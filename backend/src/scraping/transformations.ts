@@ -106,7 +106,6 @@ const extractAthinoramaMovieDetails = (html_data: string, id: string, athinorama
         imageUrl,
         trailer,
         cinemas: theaters,
-        note: '',
     };
 };
 

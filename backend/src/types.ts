@@ -13,7 +13,7 @@ export type Cinema = {
   cinemaLocation: string;
   cinemaAddress: string;
   isOutdoor: boolean;
-  cinemaSchedule: WeeklySchedule;
+  cinemaSchedule: WeeklySchedule | string; // string: the scraped text, when parseSchedule couldn't read it
   ticketsUrl?: string;
 };
 
@@ -32,7 +32,6 @@ export type Movie = {
   imageUrl: string;
   trailer: string;
   cinemas: Cinema[];
-  note: string;
   imdbRating?: string; // from the IMDb dataset, e.g. "7.4"; missing if not found
   popularity?: number; // IMDb vote count
 };

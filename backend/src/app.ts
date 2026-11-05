@@ -1,5 +1,6 @@
 import express from 'express';
 import path from 'path';
+import './db/database.js'; // opens the database and creates the tables before anything uses them
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);

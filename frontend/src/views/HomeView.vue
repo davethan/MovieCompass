@@ -70,7 +70,7 @@
         </expanding-circle-background>
       </div>
     </card-transition>
-    <div class="col-12 text-center">Τελευταία ενημέρωση: {{ moviesStore.lastUpdate }}</div>
+    <div v-if="moviesStore.lastUpdate" class="col-12 text-center">Τελευταία ενημέρωση: {{ moviesStore.lastUpdate }}</div>
   </div>
   <scroll-to-top-button />
 </template>
