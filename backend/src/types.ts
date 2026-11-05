@@ -8,6 +8,8 @@ export type WeeklySchedule = {
   Sunday: string[];
 };
 
+export type Day = keyof WeeklySchedule;
+
 export type Cinema = {
   id?: number; // set by the database, not the scraper; changes after a restart
   cinema: string;

@@ -1,34 +1,6 @@
 import { db, transaction } from './database.js';
 import type { Cinema, Movie, WeeklySchedule } from '../types.js';
-
-type MovieRow = {
-  id: string;
-  greek_title: string;
-  original_title: string | null;
-  year: string | null;
-  duration: string | null;
-  summary: string | null;
-  tags: string;
-  directors: string;
-  actors: string;
-  imdb_link: string | null;
-  imdb_rating: string | null;
-  imdb_votes: number | null;
-  athinorama_link: string | null;
-  image_url: string | null;
-  trailer: string | null;
-};
-
-type CinemaRow = {
-  id: number;
-  name: string;
-  location: string;
-  address: string | null;
-  is_outdoor: number;
-  tickets_url: string | null;
-};
-
-type ShowtimeRow = { movie_id: string; cinema_id: number; day: string; time: string };
+import type { MovieRow, CinemaRow, ShowtimeRow } from './types.js';
 
 const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'] as const;
 
@@ -195,4 +167,3 @@ export {
   groupShowtimes,
   emptySchedule,
 };
-export type { MovieRow, CinemaRow, ShowtimeRow };

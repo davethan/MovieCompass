@@ -22,9 +22,9 @@ const handleFailedRun = (): void => {
   console.log("Cleared old movies");
 }
 
+// The previous list stays visible until the new one (with ratings) is saved.
 const cronJob = async (slice?: number): Promise<void> => {
   console.log("cron job started")
-  // The previous list stays visible until the new one (with ratings) is saved.
   let athinoramaCurrentMovieURLs = [] as AthinoramaUrl[];
 
   try {
@@ -41,9 +41,9 @@ const cronJob = async (slice?: number): Promise<void> => {
   }
 
   try {
-    const requests = [];
-    athinoramaCurrentMovieURLs.slice(0, slice).forEach(film => requests.push(getAthinoramaMovieDetails(film.url, film.id)))
-    const moviesDetails = await Promise.allSettled(requests);
+    const moviesDetails = await Promise.allSettled(
+      athinoramaCurrentMovieURLs.slice(0, slice).map(film => getAthinoramaMovieDetails(film.url, film.id))
+    );
     
     const movies = moviesDetails
       .filter((result): result is PromiseFulfilledResult<Movie> => result.status === 'fulfilled')

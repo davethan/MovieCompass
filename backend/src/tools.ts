@@ -1,4 +1,4 @@
-import type { WeeklySchedule } from "./types.ts";
+import type { Day, WeeklySchedule } from "./types.ts";
 
 const splitByHours = (input: string): string[] => {
     // Matches "hh.mm" or "hh.mm/ hh.mm" or "hh.mm /hh.mm" or "hh.mm/ hh.mm/ hh.mm/ hh.mm"
@@ -15,8 +15,8 @@ const splitByHours = (input: string): string[] => {
     });
 };
 
-const getDaysInRange = (start: string, end: string) :string[] => {
-    const daysOrder = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+const getDaysInRange = (start: Day, end: Day) :Day[] => {
+    const daysOrder: Day[] = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
     let startIndex = daysOrder.indexOf(start);
     let endIndex = daysOrder.indexOf(end);
 
@@ -29,7 +29,7 @@ const getDaysInRange = (start: string, end: string) :string[] => {
 };
 
 const convertGreekDate = (inputDate: string) :string => {
-    const greekMonths = {
+    const greekMonths: Record<string, string> = {
         'Ιανουαρίου': '01',
         'Φεβρουαρίου': '02',
         'Μαρτίου': '03',
@@ -61,7 +61,7 @@ const parseDuration = (duration: string) :number|null => {
 };
 
 const parseSchedule = (schedule: string[]) :WeeklySchedule|string => {
-    const daysMap = {
+    const daysMap: Record<string, Day> = {
         "Δευτ.": "Monday",
         "Τρ.": "Tuesday",
         "Τετ.": "Wednesday",
@@ -71,7 +71,7 @@ const parseSchedule = (schedule: string[]) :WeeklySchedule|string => {
         "Κυρ.": "Sunday",
     };
 
-    const weeklySchedule = {
+    const weeklySchedule: WeeklySchedule = {
         Monday: [],
         Tuesday: [],
         Wednesday: [],
@@ -99,7 +99,7 @@ const parseSchedule = (schedule: string[]) :WeeklySchedule|string => {
         };
 
         // Remove duplicates and sort times for each day
-        for (const day in weeklySchedule) {
+        for (const day of Object.keys(weeklySchedule) as Day[]) {
             weeklySchedule[day] = [...new Set(weeklySchedule[day])].sort();
         };
         return weeklySchedule;

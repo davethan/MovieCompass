@@ -1,20 +1,6 @@
 import { db } from './database.js';
 import { emptySchedule, groupShowtimes, rowToMovie } from './movies.js';
-import type { CinemaRow, MovieRow, ShowtimeRow } from './movies.js';
-import type { Movie, WeeklySchedule } from '../types.js';
-
-type CinemaSummary = {
-  id: number;
-  name: string;
-  location: string;
-  address: string;
-  isOutdoor: boolean;
-  ticketsUrl?: string;
-  movieCount: number;
-};
-
-// cinemaSchedule is the scraped text when it couldn't be parsed into days.
-type CinemaMovie = Omit<Movie, 'cinemas'> & { cinemaSchedule: WeeklySchedule | string };
+import type { CinemaRow, CinemaMovie, CinemaSummary, MovieRow, ShowtimeRow } from './types.js';
 
 const toSummary = (row: CinemaRow & { movie_count: number }): CinemaSummary => {
   const cinema: CinemaSummary = {

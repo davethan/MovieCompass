@@ -6,7 +6,7 @@ import {
     parseSchedule,
     getAthinoramaMovieId,
 } from '../tools.js';
-import type { Movie, AthinoramaUrl, SpecialFilm, UpcomingMovie, UpcomingMovieDetails } from '../types.js';
+import type { Cinema, Movie, AthinoramaUrl, SpecialFilm, UpcomingMovie, UpcomingMovieDetails } from '../types.js';
 
 const parseAthinoramaMovies = (html_data: string) => {
     const $ = load(html_data);
@@ -34,7 +34,7 @@ const extractAthinoramaMovieDetails = (html_data: string, id: string, athinorama
     const duration = $(header).find('span.duration').text().trim().match(/\d+/g)?.join('') || '';
 
     const reviewTags = $(header).find('ul.review-tags').find('a');
-    let tags = [];
+    const tags: string[] = [];
     reviewTags.each((i: number, tag) => {
         tags.push($(tag).text().trim());
     })
@@ -47,48 +47,45 @@ const extractAthinoramaMovieDetails = (html_data: string, id: string, athinorama
     imdbLink = imdbLink.replace(/ /g, '');
 
     const directors = $(header).find('div.cast-crew').children().first().find('a');
-    const drcts = [];
+    const drcts: string[] = [];
     directors.each((i: number, dir) => {
         const director = $(dir).text().trim();
         drcts.push(director);
     });
 
     const stars = $(header).find('div.cast-crew').children().eq(1).find('a');
-    const actors = [];
+    const actors: string[] = [];
     stars.each((i:number , star) => {
         const actor = $(star).text().trim();
         actors.push(actor);
     });
 
     const locationsAndCinemas = $('div.guide-list.locations-list').children().find('div.piatsa-block').children();
-    const theaters = [];
+    const theaters: Cinema[] = [];
     let location = '';
-    let counter = 0;
     locationsAndCinemas.each((index: number, locationOrCinema) => {
         const isLocation = $(locationOrCinema).hasClass('sticky-breaker-title');
         if (isLocation) location = $(locationOrCinema).children().text().trim();
         else {
-            const cinemaLocation = location;
             const cinemaTitle = $(locationOrCinema).find('h2.item-title').children('a').text().trim();
             const cinemaAddress = $(locationOrCinema).find('div.title-infos address').first().text().trim() || '';
             const isOutdoor = $(locationOrCinema).children().first().children().first().find('div.tags').text().includes('Θερινός') || false;
-            theaters[counter] = { cinema: cinemaTitle, cinemaLocation, cinemaAddress, isOutdoor, cinemaSchedule: [] };
+            const scheduleLines: string[] = [];
             const timeTables = $(locationOrCinema).children('div.grid.schedule-grid');
             timeTables.each((i: number, timeTable) => {
                 const times = $(timeTable).find('span.time').text().trim();
-                theaters[counter].cinemaSchedule.push(splitByHours(times));
+                scheduleLines.push(...splitByHours(times));
             });
-            theaters[counter].cinemaSchedule = theaters[counter].cinemaSchedule.flat();
             //adds ':' after the days if not there.
-            theaters[counter].cinemaSchedule = theaters[counter].cinemaSchedule.map(str => {
-                if (str.includes(':')) return str;
-                return str.replace(/(\.\s*)(\d)/, '.: $2');
+            const withColons = scheduleLines.map(str => str.includes(':') ? str : str.replace(/(\.\s*)(\d)/, '.: $2'));
+            theaters.push({
+                cinema: cinemaTitle,
+                cinemaLocation: location,
+                cinemaAddress,
+                isOutdoor,
+                cinemaSchedule: parseSchedule(withColons),
             });
-            counter++;
         }
-    });
-    theaters.forEach((theater) => {
-        theater.cinemaSchedule = parseSchedule(theater.cinemaSchedule);
     });
 
     return {
@@ -231,7 +228,7 @@ const parseUpcomingFilmDetails = (html_data: string): UpcomingMovieDetails => {
         const duration = container.find('span.duration').first().text().trim();
 
         const reviewTags = container.find('li:contains("Είδος")').find('a');
-        let tags = [];
+        const tags: string[] = [];
         reviewTags.each((i, tag) => {
             if (tags.length < 4) tags.push($(tag).text().trim());
         })
