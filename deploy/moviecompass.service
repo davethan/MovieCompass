@@ -1,0 +1,21 @@
+# systemd service for the Raspberry Pi.
+# Install: sudo cp deploy/moviecompass.service /etc/systemd/system/
+#          sudo systemctl daemon-reload && sudo systemctl enable --now moviecompass
+# Logs:    journalctl -u moviecompass -f
+
+[Unit]
+Description=MovieCompass (Athens Cinemas)
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=unexpected-mushroom
+WorkingDirectory=/home/unexpected-mushroom/MovieCompass/backend
+# Same command as `npm start` in backend/package.json. Run directly, without
+# host-start.js and npm, to save the RAM of two extra Node processes.
+ExecStart=/usr/bin/node --max-old-space-size=160 built/index.js
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
