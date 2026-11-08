@@ -7,6 +7,10 @@
 Description=MovieCompass (Athens Cinemas)
 Wants=network-online.target
 After=network-online.target
+# Give up after 3 starts within 15 minutes, so a crash loop doesn't re-scrape Athinorama and re-download ~240 MB from IMDb over and over.
+# Start again with: sudo systemctl reset-failed moviecompass && sudo systemctl start moviecompass (deploy.sh does this too.) A reboot also starts it again.
+StartLimitIntervalSec=15min
+StartLimitBurst=3
 
 [Service]
 User=unexpected-mushroom

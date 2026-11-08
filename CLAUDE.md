@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-MovieCompass ("Athens Cinemas", https://athenscinemas.onrender.com/) scrapes the movies currently playing in Athens cinemas and shows them in a Vue PWA. Two npm projects, no root `package.json`:
+MovieCompass ("Athens Cinemas", https://athens-cinemas.gr/) scrapes the movies currently playing in Athens cinemas and shows them in a Vue PWA. Two npm projects, no root `package.json`:
 
 - `backend/` — Express + TypeScript (ESM, `nodenext`): scrapes the sites, stores the current movies in SQLite, and serves the built frontend.
 - `frontend/` — Vue 3 + Vite + Pinia + Bootstrap/SCSS, plain JS.
@@ -29,16 +29,18 @@ cd frontend && npm run format         # prettier
 
 The frontend needs `frontend/.env` (not committed) with `VITE_BACKEND_URL='http://localhost:5000/'`, `VITE_OMDB_URL` and `VITE_OMDB_API_KEY`.
 
-Deployment on Render runs `node host-build.js` (installs and builds both, frontend in UPLOAD mode) and `node host-start.js` (backend `npm start`).
+`node host-build.js` installs and builds both (frontend in UPLOAD mode); `node host-start.js` runs the backend's `npm start`.
+
+Hosted on a Raspberry Pi at home, reachable at `https://athens-cinemas.gr` through a Cloudflare Tunnel (`cloudflared` systemd service on the Pi). The old Render site (`athenscinemas.onrender.com`) keeps running until the cutover. To deploy on the Pi, push to `main`, then run `ssh unexpected-mushroom@192.168.2.9 "~/MovieCompass/deploy.sh"` (it pulls, builds with `host-build.js` and restarts the `moviecompass` systemd service from `deploy/moviecompass.service`). That service runs the `npm start` command directly, so keep the two in sync. Render builds with `host-build.js` and starts with `host-start.js`.
 
 ## Architecture
 
 - **Single server in production.** The Vite build writes into `backend/built/dist`, and Express serves it statically plus a catch-all to `index.html`. The frontend talks to the backend through the axios instance in `frontend/src/http/request.js`.
-- **Backend state is in SQLite.** `backend/src/db/` (Node's built-in `node:sqlite`, file `backend/data/moviecompass.db` or `DB_PATH`) holds movies, cinemas and showtimes. `backend/src/scraping/cron.ts` refills it with the Athinorama scrape + IMDb dataset ratings on server start and on a Thursday/Friday schedule. On Render the file is lost on each restart, so the app starts empty until the first scrape finishes. **Failed run rule:** if a scrape fails, the old movies are kept only if they were saved this cinema week (since Thursday 00:00 Athens time); otherwise they're cleared. `GET /cinemas` and `GET /cinemas/:id` serve cinemas and their movies (used by the frontend search and cinema page). Specials (Athinorama) and upcoming movies (Filmy) are not stored; they're scraped on each request in `scrapingActions.ts`. HTML parsing lives in `scraping/transformations.ts` (cheerio); shared types in `src/types.ts`.
-- **Memory is tight.** Render plan is <1 CPU / 512 MB RAM. The `--max-old-space-size=160` cap and the streaming of IMDb datasets are deliberate; don't remove them or add memory-heavy work without measuring.
+- **Backend state is in SQLite.** `backend/src/db/` (Node's built-in `node:sqlite`, file `backend/data/moviecompass.db` or `DB_PATH`) holds movies, cinemas and showtimes. `backend/src/scraping/cron.ts` refills it with the Athinorama scrape + IMDb dataset ratings on server start and on a Thursday/Friday schedule. On the Pi the file survives restarts (the old movies show until the startup scrape replaces them). On Render it's lost on each restart, so the app starts empty until the first scrape finishes. **Failed run rule:** if a scrape fails, the old movies are kept only if they were saved this cinema week (since Thursday 00:00 Athens time); otherwise they're cleared. `GET /cinemas` and `GET /cinemas/:id` serve cinemas and their movies (used by the frontend search and cinema page). Specials (Athinorama) and upcoming movies (Filmy) are not stored; they're scraped on each request in `scrapingActions.ts`. HTML parsing lives in `scraping/transformations.ts` (cheerio); shared types in `src/types.ts`.
+- **Memory is tight.** The Pi 4 has 1 GB RAM, shared with the OS and the builds that `deploy.sh` runs next to the live app. Render has <1 CPU / 512 MB. The `--max-old-space-size=160` cap and the streaming of IMDb datasets are deliberate; don't remove them or add memory-heavy work without measuring.
 - **Frontend data flow.** `App.vue` loads all movies once, then fills in missing ratings via OMDB (`stores/movies.js`). Filters (day, cinema, hour range, location, etc.) live in the movies store and are applied with helpers in `src/tools/tools.js`, both on the home view and the movie page.
 - **Search.** `shared/SearchAutocomplete.vue` (header dropdown on desktop, `SearchDrawer.vue` on mobile) matches movie titles from `MOVIES` and cinema names from `CINEMAS` (`GET /cinemas`, loaded after the movies), shown in two groups.
 - **Cinema page.** `/cinema/:id` (`components/Cinema.vue`) loads its own data from `GET /cinemas/:id`, so it can be opened directly. Cinema ids change after a backend restart, so an old shared link may open another cinema (accepted).
 - **Route guard.** Routes with `meta.isProtected` (`/specials`, `/upcoming`) redirect to `/` when opened directly (no previous route), because they rely on data loaded through the app.
 
-For details on scraping, the cron schedule, IMDb title matching, OMDB fallback and Render hosting, use the `movie-data-flow` skill (`.claude/skills/movie-data-flow/SKILL.md`).
+For details on scraping, the cron schedule, IMDb title matching, OMDB fallback and hosting (Pi and Render), use the `movie-data-flow` skill (`.claude/skills/movie-data-flow/SKILL.md`).
