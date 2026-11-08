@@ -8,7 +8,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 let backendRoot = path.resolve(__dirname, '..', '..');
 if (path.basename(backendRoot) === 'built') backendRoot = path.dirname(backendRoot);
 
-// The file is lost on each Render restart, which is fine: the startup scrape refills it.
+// The file survives restarts, but it's only a cache: each startup scrape refills it.
 const dbPath = process.env.DB_PATH ?? path.join(backendRoot, 'data', 'moviecompass.db');
 fs.mkdirSync(path.dirname(dbPath), { recursive: true });
 

@@ -15,8 +15,8 @@ StartLimitBurst=3
 [Service]
 User=unexpected-mushroom
 WorkingDirectory=/home/unexpected-mushroom/MovieCompass/backend
-# Same command as `npm start` in backend/package.json. Run directly, without
-# host-start.js and npm, to save the RAM of two extra Node processes.
+# Same command as `npm start` in backend/package.json. Run node directly,
+# without npm, to save the RAM of an extra Node process.
 ExecStart=/usr/bin/node --max-old-space-size=160 built/index.js
 Restart=always
 RestartSec=5
