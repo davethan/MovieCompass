@@ -31,7 +31,7 @@ The frontend needs `frontend/.env` (not committed) with `VITE_BACKEND_URL='http:
 
 `node host-build.js` installs and builds both (frontend in UPLOAD mode); `deploy.sh` runs it on the Pi.
 
-Hosted on a Raspberry Pi at home, reachable at `https://athens-cinemas.gr` through a Cloudflare Tunnel (`cloudflared` systemd service on the Pi). To deploy on the Pi, push to `main`, then run `ssh unexpected-mushroom@192.168.2.9 "~/MovieCompass/deploy.sh"` (it pulls, builds with `host-build.js` and restarts the `moviecompass` systemd service from `deploy/moviecompass.service`). That service runs the `npm start` command directly, so keep the two in sync.
+Hosted on a Raspberry Pi at home, reachable at `https://athens-cinemas.gr` through a Cloudflare Tunnel (`cloudflared` systemd service on the Pi). To deploy on the Pi, push to `main`, then run `ssh unexpected-mushroom@192.168.2.9 "~/MovieCompass/deploy.sh"` (it pulls, builds with `host-build.js` and restarts the `moviecompass` systemd service from `deploy/moviecompass.service`). That service runs the `npm start` command directly, so keep the two in sync. `deploy.sh` doesn't install the service file: when `deploy/moviecompass.service` changes, copy it to `/etc/systemd/system/` and run `sudo systemctl daemon-reload` once. The service is sandboxed and can only write to `backend/data`, so a feature that writes files elsewhere needs `ReadWritePaths=` updated.
 
 ## Architecture
 
