@@ -52,8 +52,8 @@
                 <div class="tag-outlined">{{ state.year }} </div>
                 <div class="tag-outlined d-inline-flex align-items-center gap-1" v-if="state.imdbRating"
                   title="Βαθμολογία IMDb">
+                  {{ state.imdbRating === "None" ? '?' : `${state.imdbRating}` }}
                   <span class="imdb-badge">IMDb</span>
-                  {{ state.imdbRating === "None" ? '?/10' : `${state.imdbRating}/10` }}
                 </div>
                 <div v-else class="rating-placeholder placeholder-glow"> <span
                     class="placeholder rounded-3 col-12"></span>
