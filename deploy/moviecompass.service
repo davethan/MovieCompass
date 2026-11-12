@@ -21,5 +21,29 @@ ExecStart=/usr/bin/node --max-old-space-size=160 built/index.js
 Restart=always
 RestartSec=5
 
+# Hardening: if the app is ever hacked, the attacker can't use sudo, change the
+# system or the home folder, or reach much of the Pi. Check with: systemd-analyze security moviecompass
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=read-only
+# The only place the app writes: the SQLite database (and its -wal/-shm files).
+# The folder must exist, or the service won't start (the app creates it on its first run).
+ReadWritePaths=/home/unexpected-mushroom/MovieCompass/backend/data
+PrivateTmp=true
+PrivateDevices=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectKernelLogs=true
+ProtectControlGroups=true
+ProtectClock=true
+ProtectHostname=true
+RestrictSUIDSGID=true
+RestrictNamespaces=true
+RestrictRealtime=true
+LockPersonality=true
+CapabilityBoundingSet=
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX AF_NETLINK
+# No MemoryDenyWriteExecute: Node's JIT needs writable+executable memory.
+
 [Install]
 WantedBy=multi-user.target

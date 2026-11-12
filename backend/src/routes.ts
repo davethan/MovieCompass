@@ -1,6 +1,7 @@
 import express from 'express';
 import path from 'path';
 import { isFilmyUrl } from './tools.js';
+import { cached } from './cache.js';
 import {
     getAthinoramaSpecials,
     getUpcomingLinks,
@@ -72,7 +73,7 @@ router.get("/cinemas/:id", async (req: Request, res: Response) => {
 // Fetches special films
 router.get("/athinoramaSpecials", async (req: Request, res: Response) => {
     try {
-        const specialData = await getAthinoramaSpecials();
+        const specialData = await cached('athinoramaSpecials', getAthinoramaSpecials);
         res.status(200).send(specialData);
     } catch (error) {
         console.error(error);
@@ -83,7 +84,7 @@ router.get("/athinoramaSpecials", async (req: Request, res: Response) => {
 // Fetches all upcoming film links
 router.get("/filmyUpcomingLinksAndBriefFilms", async (req: Request, res: Response) => {
     try {
-        const { links, briefMovies } = await getUpcomingLinks();
+        const { links, briefMovies } = await cached('filmyUpcomingLinks', getUpcomingLinks);
         res.status(200).send({ links, briefMovies });
     } catch (error) {
         console.error(error);
@@ -97,8 +98,12 @@ router.post("/filmyUpcomingFilmDetails", async (req: Request, res: Response) => 
         res.status(400).send("Invalid url");
         return;
     }
+    // Drop the query and hash, so changing them can't get around the cache.
+    const url = new URL(req.body.url);
+    url.search = '';
+    url.hash = '';
     try {
-        const upcomingDetails = await getUpcomingFilmDetails(req.body.url);
+        const upcomingDetails = await cached(`filmyDetails ${url.href}`, () => getUpcomingFilmDetails(url.href));
         res.status(200).send(upcomingDetails);
     } catch (error) {
         console.error(error);
