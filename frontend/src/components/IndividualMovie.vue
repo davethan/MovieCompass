@@ -117,7 +117,8 @@
       </div>
     </div>
   </div>
-  <div v-if="activeFilterLabels.length" class="card border-0 fit-content mx-auto mb-3">
+  <thursday-notice class="mb-3" />
+  <div v-if="activeFilterLabels.length"class="card border-0 fit-content mx-auto mb-3">
     <div class="card-body d-flex flex-wrap align-items-center gap-2">
       <div>
         <template v-if="filteredCinemas.length">

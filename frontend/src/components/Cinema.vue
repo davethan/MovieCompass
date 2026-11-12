@@ -1,5 +1,5 @@
 <template>
-  <div v-if="loading" class="d-flex justify-content-center my-5">
+  <div v-if="loading"class="d-flex justify-content-center my-5">
     <div class="spinner-border text-primary" role="status">
       <span class="visually-hidden">Loading...</span>
     </div>
@@ -38,6 +38,7 @@
         </div>
       </div>
     </div>
+    <thursday-notice class="mb-3" />
     <div class="d-flex flex-column justify-content-center flex-md-row gap-3 flex-md-wrap">
       <expanding-circle-background v-for="film in cinema.movies" :key="film.id"
         cssClass="card border-0 cinema-item cursor-pointer" @clicked="goToMoviePage(film.id)">

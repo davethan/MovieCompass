@@ -11,6 +11,7 @@ import Drawer from '@/shared/Drawer.vue'
 import Range from '@/shared/Range.vue'
 import DoubleRange from '@/shared/DoubleRange.vue'
 import ExpandingCircleBackground from '@/shared/ExpandingCircleBackground.vue'
+import ThursdayNotice from '@/shared/ThursdayNotice.vue'
 
 const updateSW = registerSW({
   immediate: true,
@@ -31,5 +32,6 @@ app
   .component('Range', Range)
   .component('DoubleRange', DoubleRange)
   .component('ExpandingCircleBackground', ExpandingCircleBackground)
+  .component('ThursdayNotice', ThursdayNotice)
 
 app.mount('#app')

@@ -8,7 +8,8 @@
         </div>
       </div>
     </div>
-    <div v-if="!filteredMovies.length" class="col-sm-6 col-md-6 col-lg-4">
+    <thursday-notice class="col-12" />
+    <div v-if="!filteredMovies.length"class="col-sm-6 col-md-6 col-lg-4">
       <div class="card film-item-no-hover">
         <div class="card-header">
           <h2 class="text-primary m-0">Δεν βρέθηκαν ταινίες</h2>
