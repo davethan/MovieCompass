@@ -234,6 +234,17 @@ a,
   border-radius: 0.5rem;
 }
 
+.imdb-badge {
+  background-color: #f5c518;
+  color: #000;
+  font-weight: 900;
+  font-size: 0.75em;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  padding: 0.15em 0.3em;
+  border-radius: 0.2em;
+}
+
 .tag-square {
   border: 1px solid var(--bs-secondary); 
   padding-left: 0.5rem; 

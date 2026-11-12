@@ -9,7 +9,7 @@
       </div>
     </div>
     <thursday-notice class="col-12" />
-    <div v-if="!filteredMovies.length"class="col-sm-6 col-md-6 col-lg-4">
+    <div v-if="!filteredMovies.length" class="col-sm-6 col-md-6 col-lg-4">
       <div class="card film-item-no-hover">
         <div class="card-header">
           <h2 class="text-primary m-0">Δεν βρέθηκαν ταινίες</h2>
@@ -40,8 +40,10 @@
                   </div>
                   <div class="tag-outlined"> {{ formatDuration(movie.duration) }} </div>
                   <div class="tag-outlined">{{ movie.year }} </div>
-                  <div class="tag-outlined" v-if="movie.imdbRating">
-                    {{ movie.imdbRating === "None" ? '?/10' : `${movie.imdbRating}/10` }}
+                  <div class="tag-outlined d-inline-flex align-items-center gap-1" v-if="movie.imdbRating"
+                    title="Βαθμολογία IMDb">
+                    {{ movie.imdbRating === "None" ? '?' : `${movie.imdbRating}` }}
+                    <span class="imdb-badge">IMDb</span>
                   </div>
                   <div v-else class="rating-placeholder placeholder-glow"> <span
                       class="placeholder rounded-3 col-12"></span>
